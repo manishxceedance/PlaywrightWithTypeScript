@@ -1,4 +1,4 @@
-# ZeroToHero TypeScript Static Learning Site
+# Playwright/TypeScript Training Hub
 
 This project is a static website designed for manual testers who want to learn TypeScript from scratch and become confident at an advanced level.
 
