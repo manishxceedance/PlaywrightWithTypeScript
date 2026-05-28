@@ -108,8 +108,57 @@ function setupQuizAutoGrader() {
   });
 }
 
+function normalizePlaywrightSidebar() {
+  const sidebar = document.querySelector('.sidebar');
+  if (!sidebar) {
+    return;
+  }
+
+  const links = Array.from(sidebar.querySelectorAll('a'));
+  const isPlaywrightPage = links.some((link) => {
+    const href = link.getAttribute('href') || '';
+    return href.includes('playwright');
+  });
+
+  if (!isPlaywrightPage) {
+    return;
+  }
+
+  const currentPath = window.location.pathname.replace(/\\/g, '/');
+  const inModulePage = currentPath.includes('/lessons/playwright/modules/');
+  const capstoneHref = inModulePage
+    ? '../99-playwright-capstone-50-mcq.html'
+    : '99-playwright-capstone-50-mcq.html';
+
+  sidebar
+    .querySelectorAll('a[href="$199-playwright-capstone-50-mcq.html"]')
+    .forEach((anchor) => {
+      anchor.setAttribute('href', capstoneHref);
+    });
+
+  // Remove duplicate list entries created by accidental repeated replacements.
+  sidebar.querySelectorAll('ul').forEach((list) => {
+    const seen = new Set();
+
+    list.querySelectorAll('li > a').forEach((anchor) => {
+      const href = anchor.getAttribute('href') || '';
+      const key = `${anchor.textContent.trim()}|${href}`;
+
+      if (seen.has(key)) {
+        if (anchor.parentElement) {
+          anchor.parentElement.remove();
+        }
+        return;
+      }
+
+      seen.add(key);
+    });
+  });
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   injectHomeButton();
+  normalizePlaywrightSidebar();
   toggleMenu();
   setupQuizAutoGrader();
 });
