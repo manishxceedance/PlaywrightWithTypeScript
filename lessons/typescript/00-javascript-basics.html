@@ -124,17 +124,69 @@ result.passed = 9; // allowed
 // console.log(insideBlock); // error</code></pre>
 
         <h2>4. Basic Data Types in JavaScript</h2>
-        <ul>
-          <li><code>string</code>: text, like "test-case-1"</li>
-          <li><code>number</code>: numeric values, like 200 or 3.14</li>
-          <li><code>boolean</code>: true/false</li>
-          <li><code>object</code>: grouped values with keys</li>
-          <li><code>array</code>: ordered list of values</li>
-        </ul>
-        <pre><code>const status = "passed";      // string
-const responseCode = 200;      // number
-const isCritical = true;       // boolean
-const tags = ["smoke", "api"]; // array
+        <p>
+          JavaScript has 7 primitive types and 1 non-primitive base type. Arrays and functions are also objects.
+        </p>
+        <table>
+          <thead>
+            <tr>
+              <th>Type</th>
+              <th>Category</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>string</code></td>
+              <td>Primitive</td>
+              <td>Textual data</td>
+            </tr>
+            <tr>
+              <td><code>number</code></td>
+              <td>Primitive</td>
+              <td>Integers and decimals</td>
+            </tr>
+            <tr>
+              <td><code>boolean</code></td>
+              <td>Primitive</td>
+              <td><code>true</code> or <code>false</code></td>
+            </tr>
+            <tr>
+              <td><code>bigint</code></td>
+              <td>Primitive</td>
+              <td>Large integers</td>
+            </tr>
+            <tr>
+              <td><code>null</code></td>
+              <td>Primitive</td>
+              <td>Empty or absent value</td>
+            </tr>
+            <tr>
+              <td><code>undefined</code></td>
+              <td>Primitive</td>
+              <td>Declared but not assigned</td>
+            </tr>
+            <tr>
+              <td><code>symbol</code></td>
+              <td>Primitive</td>
+              <td>Unique identifier</td>
+            </tr>
+            <tr>
+              <td><code>object</code></td>
+              <td>Non-Primitive</td>
+              <td>Complex collections</td>
+            </tr>
+          </tbody>
+        </table>
+        <pre><code>const status = "passed";                  // string
+const responseCode = 200;                 // number
+const isCritical = true;                  // boolean
+const hugeCount = 9007199254740993n;      // bigint
+const uniqueToken = Symbol("test-run");  // symbol
+const notLoaded = null;                   // null
+let owner;                                // undefined
+
+const tags = ["smoke", "api"];          // object (array)
 const testCase = { id: "TC-10", title: "Login" }; // object</code></pre>
 
         <h2>5. What is get? (Getter in Objects/Classes)</h2>

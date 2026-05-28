@@ -61,11 +61,76 @@ const isRegressionRun: boolean = true;
 // Array of strings
 const tags: string[] = ["smoke", "api", "critical"];
           </code></pre>
+          <p>
+            JavaScript has 7 primitive types and 1 non-primitive base type. TypeScript builds on these runtime types and adds compile-time safety.
+          </p>
+          <table>
+            <thead>
+              <tr>
+                <th>Type</th>
+                <th>Category</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>string</code></td>
+                <td>Primitive</td>
+                <td>Textual data</td>
+              </tr>
+              <tr>
+                <td><code>number</code></td>
+                <td>Primitive</td>
+                <td>Integers and decimals</td>
+              </tr>
+              <tr>
+                <td><code>boolean</code></td>
+                <td>Primitive</td>
+                <td><code>true</code> or <code>false</code></td>
+              </tr>
+              <tr>
+                <td><code>bigint</code></td>
+                <td>Primitive</td>
+                <td>Large integers</td>
+              </tr>
+              <tr>
+                <td><code>null</code></td>
+                <td>Primitive</td>
+                <td>Empty or absent value</td>
+              </tr>
+              <tr>
+                <td><code>undefined</code></td>
+                <td>Primitive</td>
+                <td>Declared but not assigned</td>
+              </tr>
+              <tr>
+                <td><code>symbol</code></td>
+                <td>Primitive</td>
+                <td>Unique identifier</td>
+              </tr>
+              <tr>
+                <td><code>object</code></td>
+                <td>Non-Primitive</td>
+                <td>Complex collections</td>
+              </tr>
+            </tbody>
+          </table>
+          <pre><code>// Less common but important primitive types
+const orderId: bigint = 9007199254740993n;
+const cacheKey: symbol = Symbol("cache-key");
+
+// Null and undefined are explicit states
+let lastRunAt: Date | null = null;
+let reportOwner: string | undefined;
+
+// Non-primitive object type
+const runMeta: object = { suite: "smoke", retries: 1 };
+          </code></pre>
         </section>
 
         <section class="lesson-section">
           <h2>2. Tuples</h2>
-          <p>A <b>tuple</b> is a special array where you know exactly how many items there are, and what type each item should be. Think of it as a fixed-size, ordered list. Use tuples for things like coordinates, RGB colors, or fixed-format data rows.</p>
+          <p><b>Definition:</b> A <b>tuple</b> is a fixed-size, ordered list where each position has a specific type. Use tuples for things like coordinates, RGB colors, or fixed-format data rows.</p>
           <pre><code>// A tuple for a test result: [test case id, status, duration]
 const result: [string, string, number] = ["TC-101", "pass", 2.5];
 // You must provide exactly three items, in the right order and type.
@@ -78,7 +143,7 @@ const point: [number, number] = [10, 20];
 
         <section class="lesson-section">
           <h2>3. Enums</h2>
-          <p>An <b>enum</b> (short for "enumeration") lets you define a set of named constants. Use enums when you want a variable to have one of a few fixed values, and you want those values to have readable names.</p>
+          <p><b>Definition:</b> An <b>enum</b> (short for "enumeration") defines a named set of fixed constants. Use enums when a value should only be one option from a known list.</p>
           <pre><code>// Define an enum for test status
 enum Status {
   Passed = "passed",
@@ -114,7 +179,7 @@ testIdentifier = 101;
 
         <section class="lesson-section">
           <h2>6. Literal and Optional Values</h2>
-          <p><b>Literal types</b> let you specify exact values a variable can have. <b>Optional types</b> let you say a value might be missing (with <code>?</code>).</p>
+          <p><b>Definition:</b> <b>Literal types</b> restrict values to exact choices, and <b>optional values</b> allow a property to be missing using <code>?</code>.</p>
           <pre><code>// Literal type
 type RunStatus = "passed" | "failed" | "blocked";
 let status: RunStatus = "passed";
@@ -130,7 +195,7 @@ type TestCase = {
 
         <section class="lesson-section">
           <h2>7. Type Assertions</h2>
-          <p><b>Type assertion</b> tells TypeScript, "Trust me, I know the type of this value." Use it when you know more than the compiler, but use it carefully!</p>
+          <p><b>Definition:</b> A <b>type assertion</b> tells TypeScript to treat a value as a specific type when you know more than the compiler.</p>
           <pre><code>// Example: reading from a value that could be string or number
 let value: unknown = "123";
 // Tell TypeScript to treat value as a string
@@ -148,7 +213,7 @@ let numValue = <number>(value as unknown as number);
 
         <section class="lesson-section">
           <h2>8. Type Inference</h2>
-          <p><b>Type inference</b> means TypeScript can figure out the type for you, even if you don’t write it. This makes your code shorter and still safe.</p>
+          <p><b>Definition:</b> <b>Type inference</b> means TypeScript automatically determines a value's type from context.</p>
           <pre><code>// TypeScript knows this is a string
 let message = "Hello";
 // message: string
@@ -161,7 +226,7 @@ let count = 42;
 
         <section class="lesson-section">
           <h2>9. Never and Unknown Types</h2>
-          <p><b>never</b> is a type for values that never happen (like a function that always throws or never returns). <b>unknown</b> is a safe type for values you don’t know yet—you must check before using it.</p>
+          <p><b>Definition:</b> <b>never</b> represents impossible values (no result), while <b>unknown</b> represents values you must check before use.</p>
           <pre><code>// never: a function that always throws
 function fail(message: string): never {
   throw new Error(message);
@@ -181,7 +246,7 @@ if (typeof input === "string") {
 
         <section class="lesson-section">
           <h2>10. Type Guards</h2>
-          <p><b>Type guards</b> are ways to check the type of a value at runtime, so TypeScript knows what you’re working with. This keeps your code safe and avoids errors.</p>
+          <p><b>Definition:</b> <b>Type guards</b> are runtime checks that narrow a value to a safer, specific type.</p>
           <pre><code>// Using typeof
 function printId(id: string | number) {
   if (typeof id === "string") {
@@ -207,145 +272,9 @@ function speak(animal: Cat | Dog) {
           </ul>
         </section>
 
-        <h2>2. Tuples</h2>
-        <p>
-          A <b>tuple</b> is a special array where you know exactly how many items there are, and what type each item should be. Think of it as a fixed-size, ordered list.
-        </p>
-        <pre><code>// A tuple for a test result: [test case id, status, duration]
-const result: [string, string, number] = ["TC-101", "pass", 2.5];
-
-// You must provide exactly three items, in the right order and type.
-// result[0] is a string (id), result[1] is a string (status), result[2] is a number (duration)
-
-// Example: representing a coordinate
-const point: [number, number] = [10, 20];
-
-// Why use tuples? When you want to group a small, fixed set of values together, and their order matters.
-</code></pre>
-        <ul>
-          <li>Tuples are stricter than arrays: <code>[string, number]</code> is not the same as <code>[number, string]</code>.</li>
-          <li>Use tuples for things like coordinates, RGB colors, or fixed-format data rows.</li>
-        </ul>
-
-        <h2>3. Enums</h2>
-        <p>
-          An <b>enum</b> (short for "enumeration") lets you define a set of named constants. Use enums when you want a variable to have one of a few fixed values, and you want those values to have readable names.
-        </p>
-        <pre><code>// Define an enum for test status
-enum Status {
-  Passed = "passed",
-  Failed = "failed",
-  Blocked = "blocked"
-}
-
-const runStatus: Status = Status.Passed;
-console.log(runStatus); // "passed"
-</code></pre>
-        <ul>
-          <li>Enums make your code more readable and less error-prone than using plain strings.</li>
-          <li>Use enums for things like status codes, user roles, or fixed categories.</li>
-        </ul>
-
-        <h2>2. Union Types</h2>
-        <p>Union lets a variable accept more than one type.</p>
-        <pre><code>let testIdentifier: string | number;
-
-testIdentifier = "TC-101";
-testIdentifier = 101;</code></pre>
-
-        <h2>3. Type Narrowing</h2>
-        <p>
-          Before using a value, narrow it so TypeScript knows which branch is safe.
-        </p>
-        <pre><code>function printTestIdentifier(id: string | number): void {
-  if (typeof id === "string") {
-    console.log(id.toUpperCase());
-  } else {
-    console.log(id.toFixed(0));
-  }
-}</code></pre>
-
-        <h2>4. Literal and Optional Values</h2>
-                <h2>5. Type Assertions</h2>
-                        <h2>6. Type Inference</h2>
-                                <h2>7. Never and Unknown Types</h2>
-                                        <h2>8. Type Guards</h2>
-                                        <p>
-                                          <b>Type guards</b> are ways to check the type of a value at runtime, so TypeScript knows what you’re working with. This keeps your code safe and avoids errors.
-                                        </p>
-                                        <pre><code>// Using typeof
-                                function printId(id: string | number) {
-                                  if (typeof id === "string") {
-                                    console.log("String id:", id.toUpperCase());
-                                  } else {
-                                    console.log("Number id:", id.toFixed(2));
-                                  }
-                                }
-
-                                // Using 'in' for objects
-                                type Cat = { meow: () => void };
-                                type Dog = { bark: () => void };
-                                function speak(animal: Cat | Dog) {
-                                  if ("meow" in animal) {
-                                    animal.meow();
-                                  } else {
-                                    animal.bark();
-                                  }
-                                }
-                                </code></pre>
-                                        <ul>
-                                          <li>Use <b>typeof</b> for primitives, <b>in</b> for object properties, and <b>instanceof</b> for classes.</li>
-                                        </ul>
-                                <p>
-                                  <b>never</b> is a type for values that never happen (like a function that always throws or never returns). <b>unknown</b> is a safe type for values you don’t know yet—you must check before using it.
-                                </p>
-                                <pre><code>// never: a function that always throws
-                        function fail(message: string): never {
-                          throw new Error(message);
-                        }
-
-                        // unknown: must check type before using
-                        let input: unknown = "hello";
-                        if (typeof input === "string") {
-                          console.log(input.toUpperCase());
-                        }
-                        </code></pre>
-                                <ul>
-                                  <li>Use <b>never</b> for impossible cases or functions that never finish.</li>
-                                  <li>Use <b>unknown</b> for values from outside (like user input or APIs) when you want safety.</li>
-                                </ul>
-                        <p>
-                          <b>Type inference</b> means TypeScript can figure out the type for you, even if you don’t write it. This makes your code shorter and still safe.
-                        </p>
-                        <pre><code>// TypeScript knows this is a string
-                let message = "Hello";
-                // message: string
-
-                // TypeScript knows this is a number
-                let count = 42;
-                // count: number
-                </code></pre>
-                        <ul>
-                          <li>TypeScript infers the type from the value you assign.</li>
-                          <li>You can always add a type if you want to be explicit.</li>
-                        </ul>
-                <p>
-                  <b>Type assertion</b> tells TypeScript, "Trust me, I know the type of this value." Use it when you know more than the compiler, but use it carefully!
-                </p>
-                <pre><code>// Example: reading from a value that could be string or number
-        let value: unknown = "123";
-        // Tell TypeScript to treat value as a string
-        let strValue = value as string;
-        console.log(strValue.length); // 3
-
-        // You can also use the angle-bracket syntax (not in JSX files):
-        let numValue = <number>(value as unknown as number);
-        </code></pre>
-                <ul>
-                  <li>Type assertions do not change the runtime value, only how TypeScript checks it.</li>
-                  <li>Use assertions only when you are sure of the type, or you might get runtime errors.</li>
-                </ul>
-        <pre><code>type RunStatus = "passed" | "failed" | "blocked";
+        <section class="lesson-section">
+          <h2>Practical Tester Example</h2>
+          <pre><code>type RunStatus = "passed" | "failed" | "blocked";
 
 interface TestResult {
   caseId: string;
@@ -353,11 +282,11 @@ interface TestResult {
   defectId?: string;
 }</code></pre>
 
-        <h2>5. Practical Tester Example</h2>
-        <pre><code>function summarize(result: TestResult): string {
+          <pre><code>function summarize(result: TestResult): string {
   const defectText = result.defectId ? `, defect: ${result.defectId}` : "";
   return `${result.caseId} -> ${result.status}${defectText}`;
 }</code></pre>
+        </section>
 
         <section class="exercise">
           <h2>Practice Exercise</h2>
