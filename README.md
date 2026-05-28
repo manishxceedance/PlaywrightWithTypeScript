@@ -38,3 +38,101 @@ Since this is a static site, you can open `index.html` directly, or use a small 
 + `lessons/practice-app/grid-controls.html`: Grid/table with embedded controls
 + `lessons/practice-app/shadow.html` & `shadow.js`: Shadow DOM custom element demo
 + `lessons/practice-app/grid-frame.html` & `mini-form.html`: Table/grid and iframe with mini-form
+
+# Playwright Lessons to Practice App Mapping
+
+This document maps the Playwright lessons and modules to the relevant files in the `practice-app` folder. Use this mapping to practice the concepts taught in each module.
+
+## Mapping
+
+### Module 4: Locators
+- **Lesson Focus**: Locating elements using CSS, XPath, and other strategies.
+- **Practice App Files**:
+  - `grid-controls.html` (Grid elements for practicing locators)
+  - `mini-form.html` (Form elements for locator practice)
+
+### Module 5: Actions and Elements
+- **Lesson Focus**: Interacting with elements (click, type, etc.).
+- **Practice App Files**:
+  - `mini-form.html` (Form interactions)
+  - `grid-controls.html` (Grid interactions)
+
+### Module 6: Wait Handling
+- **Lesson Focus**: Handling dynamic waits and synchronization.
+- **Practice App Files**:
+  - `grid-frame.html` (Dynamic content loading)
+  - `mini-form.html` (Form submission waits)
+
+### Module 7: Browser Handling
+- **Lesson Focus**: Managing browser contexts, tabs, and navigation.
+- **Practice App Files**:
+  - `index.html` (Navigation scenarios)
+  - `grid-frame.html` (Frame handling)
+
+### Module 8: Validation
+- **Lesson Focus**: Validating UI elements and states.
+- **Practice App Files**:
+  - `grid-controls.html` (Grid validation)
+  - `mini-form.html` (Form validation)
+
+### Module 9: Test Data
+- **Lesson Focus**: Using test data for automation.
+- **Practice App Files**:
+  - `custom-controls.js` (Dynamic data handling)
+
+### Module 10: Framework Design
+- **Lesson Focus**: Structuring Playwright test frameworks.
+- **Practice App Files**:
+  - No direct mapping; focus on external framework setup.
+
+### Module 11: API Testing
+- **Lesson Focus**: API testing with Playwright.
+- **Practice App Files**:
+  - No direct mapping; focus on API tools.
+
+### Module 12: Authentication
+- **Lesson Focus**: Handling authentication flows.
+- **Practice App Files**:
+  - `index.html` (Login simulation)
+
+### Module 13: Execution
+- **Lesson Focus**: Running tests in different environments.
+- **Practice App Files**:
+  - No direct mapping; focus on execution strategies.
+
+### Module 14: Reporting
+- **Lesson Focus**: Generating test reports.
+- **Practice App Files**:
+  - No direct mapping; focus on reporting tools.
+
+### Module 15: Debugging
+- **Lesson Focus**: Debugging Playwright tests.
+- **Practice App Files**:
+  - `shadow.html` (Debugging shadow DOM issues)
+
+### Module 16: CI/CD
+- **Lesson Focus**: Integrating Playwright with CI/CD pipelines.
+- **Practice App Files**:
+  - No direct mapping; focus on CI/CD setup.
+
+### Module 17: Advanced Topics
+- **Lesson Focus**: Advanced Playwright features.
+- **Practice App Files**:
+  - `shadow.html` (Advanced shadow DOM handling)
+
+### Module 18: Best Practices
+- **Lesson Focus**: Playwright best practices.
+- **Practice App Files**:
+  - No direct mapping; focus on general practices.
+
+### Module 19: Project Implementation
+- **Lesson Focus**: Implementing a complete project.
+- **Practice App Files**:
+  - All files (Comprehensive practice)
+
+### Module 20: DOM Challenges Lab
+- **Lesson Focus**: Handling frames, shadow DOM, alerts, and duplicate locators.
+- **Practice App Files**:
+  - `grid-frame.html` (Frame handling)
+  - `shadow.html` (Shadow DOM handling)
+  - `mini-form.html` (Alerts and duplicate locators)
