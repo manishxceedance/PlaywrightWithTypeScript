@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lesson 8 - tsconfig and Modules</title>
+    <link rel="stylesheet" href="../../assets/styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <a class="brand" href="../../index.html">ZeroToHero TypeScript Academy</a>
+      <button class="menu-toggle" data-menu-toggle>Open Menu</button>
+    </header>
+
+    <div class="layout">
+      <aside class="sidebar" data-sidebar>
+        <h2>Learning Menus</h2>
+        <div class="menu-group">
+          <p class="menu-group-title">TypeScript</p>
+          <ul>
+            <li><a href="../typescript/00-javascript-basics.html">0. JavaScript Basics (Must Learn First)</a></li>
+            <li><a href="../typescript/01-introduction.html">1. Introduction and Setup</a></li>
+            <li><a href="../typescript/02-types-and-unions.html">2. Types, Unions, and Narrowing</a></li>
+            <li><a href="../typescript/03-functions-and-objects.html">3. Functions and Object Types</a></li>
+            <li><a href="../typescript/04-interfaces-and-type-aliases.html">4. Interfaces and Type Aliases</a></li>
+            <li><a href="../capstone.html">Final Capstone Assessment</a></li>
+          </ul>
+        </div>
+        <div class="menu-group">
+          <p class="menu-group-title">Type Script</p>
+          <ul>
+            <li><a href="05-classes-and-oop.html">5. Classes and OOP</a></li>
+            <li><a href="06-generics.html">6. Generics</a></li>
+            <li><a href="07-async-and-errors.html">7. Async Patterns and Error Handling</a></li>
+            <li><a class="active" href="08-tsconfig-and-modules.html">8. tsconfig and Modules</a></li>
+          </ul>
+        </div>
+      </aside>
+
+      <main class="content lesson">
+
+        <h1>Lesson 8: tsconfig, Modules, and Project Quality</h1>
+        <p class="lesson-meta">
+          <span class="difficulty-badge">Level: Advanced</span>
+          Learn how to configure, organize, and scale TypeScript projects for teams.
+        </p>
+        <p>
+          This lesson teaches how to set up your project for long-term quality, collaboration, and maintainability.
+        </p>
+
+        <section class="lesson-section">
+          <h2>1. Key tsconfig Settings</h2>
+          <p>Your <code>tsconfig.json</code> controls how TypeScript checks and compiles your code. Here’s a safe starting point:</p>
+          <pre><code>{
+  "compilerOptions": {
+    "target": "ES2020",
+    "module": "ESNext",
+    "rootDir": "src",
+    "outDir": "dist",
+    "strict": true,
+    "noUnusedLocals": true,
+    "noImplicitReturns": true
+  },
+  "include": ["src"]
+}
+          </code></pre>
+        </section>
+
+        <section class="lesson-section">
+          <h2>2. Why strict mode matters</h2>
+          <p><code>strict: true</code> enables a group of checks that catch risky mistakes. For testing code, this helps avoid hidden null issues and incorrect payload handling.</p>
+        </section>
+
+        <section class="lesson-section">
+          <h2>3. ES Modules: Export and Import</h2>
+          <p>Use <code>export</code> and <code>import</code> to split code into reusable modules.</p>
+          <pre><code>// src/utils/math.ts
+export function passRate(passed: number, total: number): number {
+  return total === 0 ? 0 : (passed / total) * 100;
+}
+
+// src/index.ts
+import { passRate } from "./utils/math";
+console.log(passRate(47, 50));
+          </code></pre>
+        </section>
+
+        <section class="lesson-section">
+          <h2>4. Module Patterns</h2>
+          <p>Organize code by feature (e.g., <code>utils</code>, <code>services</code>, <code>models</code>). Use one file per type or interface for clarity.</p>
+        </section>
+
+        <section class="lesson-section">
+          <h2>5. Suggested Scripts for Team Projects</h2>
+          <p>Automate common tasks with npm scripts.</p>
+          <pre><code>{
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "clean": "rimraf dist",
+    "typecheck": "tsc --noEmit"
+  }
+}
+          </code></pre>
+        </section>
+
+        <section class="lesson-section">
+          <h2>6. Common Utility Types</h2>
+          <p>TypeScript comes with built-in <b>utility types</b> that help you transform and work with types more easily. Here are the most useful ones for beginners:</p>
+          <ul>
+            <li>
+              <b>Partial&lt;T&gt;</b>: Makes all properties in a type optional.
+              <pre><code>interface Bug {
+  id: string;
+  summary: string;
+  severity: string;
+}
+// Partial<Bug> means all fields are optional
+const draft: Partial<Bug> = { summary: "Crash on login" };
+              </code></pre>
+            </li>
+            <li>
+              <b>Pick&lt;T, K&gt;</b>: Lets you create a type with only some properties from another type.
+              <pre><code>// Only id and summary from Bug
+type BugSummary = Pick<Bug, "id" | "summary">;
+const summary: BugSummary = { id: "B-1", summary: "Crash" };
+              </code></pre>
+            </li>
+            <li>
+              <b>Omit&lt;T, K&gt;</b>: Like Pick, but removes properties.
+              <pre><code>// All Bug fields except severity
+type BugNoSeverity = Omit<Bug, "severity">;
+const bug: BugNoSeverity = { id: "B-2", summary: "Slow" };
+              </code></pre>
+            </li>
+            <li>
+              <b>Record&lt;K, T&gt;</b>: Makes an object type with keys of type K and values of type T.
+              <pre><code>// Map test case IDs to results
+type TestResults = Record<string, "pass" | "fail">;
+const results: TestResults = { "TC-1": "pass", "TC-2": "fail" };
+              </code></pre>
+            </li>
+          </ul>
+          <p><b>Tip:</b> Utility types help you avoid repeating yourself and make your code safer and more flexible.</p>
+        </section>
+
+        <section class="lesson-section">
+          <h2>7. Real Project Checklist</h2>
+          <ul>
+            <li>Enable strict mode and keep it on.</li>
+            <li>Use clear module boundaries (<code>utils</code>, <code>services</code>, <code>models</code>).</li>
+            <li>Use separate files for types/interfaces.</li>
+            <li>Run typecheck command in CI pipeline.</li>
+          </ul>
+        </section>
+
+        <section class="exercise">
+          <h2>Practice Exercise</h2>
+          <ol>
+            <li>Create your own <code>tsconfig.json</code> with strict settings.</li>
+            <li>Split code into two modules and import exported functions.</li>
+            <li>Add <code>typecheck</code> script and run it.</li>
+            <li>Introduce one deliberate type error and verify TypeScript catches it.</li>
+          </ol>
+        </section>
+
+        <section class="quiz" data-quiz>
+          <h2>MCQ Self-Check</h2>
+
+          <div class="question" data-answer="a">
+            <p>1. Which option outputs JS to a dedicated folder?</p>
+            <label><input type="radio" name="quiz-0-q0" value="a" /> outDir</label>
+            <label><input type="radio" name="quiz-0-q0" value="b" /> include</label>
+            <label><input type="radio" name="quiz-0-q0" value="c" /> sourceMap</label>
+          </div>
+
+          <div class="question" data-answer="b">
+            <p>2. Command for type checking without JS generation?</p>
+            <label><input type="radio" name="quiz-0-q1" value="a" /> tsc --build-only</label>
+            <label><input type="radio" name="quiz-0-q1" value="b" /> tsc --noEmit</label>
+            <label><input type="radio" name="quiz-0-q1" value="c" /> tsc --types-only</label>
+          </div>
+
+          <div class="question" data-answer="c">
+            <p>3. Strongly recommended baseline compiler mode is:</p>
+            <label><input type="radio" name="quiz-0-q2" value="a" /> loose</label>
+            <label><input type="radio" name="quiz-0-q2" value="b" /> basic</label>
+            <label><input type="radio" name="quiz-0-q2" value="c" /> strict</label>
+          </div>
+
+          <button class="grade-btn" type="button" data-grade>Grade Me</button>
+          <p class="result" data-result aria-live="polite"></p>
+        </section>
+      </main>
+    </div>
+
+    <script src="../../assets/app.js"></script>
+  </body>
+</html>

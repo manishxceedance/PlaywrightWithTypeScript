@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Final Capstone Assessment - TypeScript</title>
+    <link rel="stylesheet" href="../assets/styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <a class="brand" href="../index.html">ZeroToHero TypeScript Academy</a>
+      <button class="menu-toggle" data-menu-toggle>Open Menu</button>
+    </header>
+
+    <div class="layout">
+      <aside class="sidebar" data-sidebar>
+        <h2>Learning Menus</h2>
+
+        <div class="menu-group">
+          <p class="menu-group-title">TypeScript</p>
+          <ul>
+            <li><a href="typescript/00-javascript-basics.html">0. JavaScript Basics (Must Learn First)</a></li>
+            <li><a href="typescript/01-introduction.html">1. Introduction and Setup</a></li>
+            <li><a href="typescript/02-types-and-unions.html">2. Types, Unions, and Narrowing</a></li>
+            <li><a href="typescript/03-functions-and-objects.html">3. Functions and Object Types</a></li>
+            <li><a href="typescript/04-interfaces-and-type-aliases.html">4. Interfaces and Type Aliases</a></li>
+            <li><a class="active" href="capstone.html">Final Capstone Assessment</a></li>
+          </ul>
+        </div>
+
+        <div class="menu-group">
+          <p class="menu-group-title">Type Script</p>
+          <ul>
+            <li><a href="type-script/05-classes-and-oop.html">5. Classes and OOP</a></li>
+            <li><a href="type-script/06-generics.html">6. Generics</a></li>
+            <li><a href="type-script/07-async-and-errors.html">7. Async Patterns and Error Handling</a></li>
+            <li><a href="type-script/08-tsconfig-and-modules.html">8. tsconfig and Modules</a></li>
+            <li><a class="active" href="capstone.html">Final Capstone Assessment</a></li>
+          </ul>
+        </div>
+      </aside>
+
+      <main class="content lesson">
+        <h1>Final Capstone Assessment</h1>
+        <p class="lesson-meta">
+          <span class="difficulty-badge">Level: Master Check</span>
+          Combine all topics and target at least 10/12 before calling yourself production-ready.
+        </p>
+        <p>
+          This capstone includes setup, typing, functions, interfaces, OOP, generics, async behavior, and tsconfig understanding.
+        </p>
+
+        <section class="exercise">
+          <h2>Final Practice Exercise (Build Mini Project)</h2>
+          <ol>
+            <li>Create a TypeScript project with strict config and src/dist structure.</li>
+            <li>Define interfaces and type aliases for test case and test result.</li>
+            <li>Write reusable generic utilities to process arrays of results.</li>
+            <li>Create one class-based reporter that implements an interface.</li>
+            <li>Add one async function that fetches or simulates API health status.</li>
+            <li>Run typecheck and fix all compile-time issues.</li>
+          </ol>
+        </section>
+
+        <section class="quiz" data-quiz>
+          <h2>Capstone MCQ</h2>
+
+          <div class="question" data-answer="b">
+            <p>1. Command to initialize tsconfig is:</p>
+            <label><input type="radio" name="quiz-0-q0" value="a" /> npm init ts</label>
+            <label><input type="radio" name="quiz-0-q0" value="b" /> npx tsc --init</label>
+            <label><input type="radio" name="quiz-0-q0" value="c" /> node tsconfig init</label>
+          </div>
+
+          <div class="question" data-answer="c">
+            <p>2. Correct union type for id:</p>
+            <label><input type="radio" name="quiz-0-q1" value="a" /> id: string, number</label>
+            <label><input type="radio" name="quiz-0-q1" value="b" /> id: [string|number]</label>
+            <label><input type="radio" name="quiz-0-q1" value="c" /> id: string | number</label>
+          </div>
+
+          <div class="question" data-answer="a">
+            <p>3. Optional property in interface uses:</p>
+            <label><input type="radio" name="quiz-0-q2" value="a" /> ?</label>
+            <label><input type="radio" name="quiz-0-q2" value="b" /> !</label>
+            <label><input type="radio" name="quiz-0-q2" value="c" /> optional keyword</label>
+          </div>
+
+          <div class="question" data-answer="b">
+            <p>4. Reusable type-safe container pattern is:</p>
+            <label><input type="radio" name="quiz-0-q3" value="a" /> namespaces only</label>
+            <label><input type="radio" name="quiz-0-q3" value="b" /> generics</label>
+            <label><input type="radio" name="quiz-0-q3" value="c" /> comments</label>
+          </div>
+
+          <div class="question" data-answer="b">
+            <p>5. A class implementing interface uses:</p>
+            <label><input type="radio" name="quiz-0-q4" value="a" /> extends</label>
+            <label><input type="radio" name="quiz-0-q4" value="b" /> implements</label>
+            <label><input type="radio" name="quiz-0-q4" value="c" /> inherits</label>
+          </div>
+
+          <div class="question" data-answer="a">
+            <p>6. async function returns:</p>
+            <label><input type="radio" name="quiz-0-q5" value="a" /> Promise&lt;T&gt;</label>
+            <label><input type="radio" name="quiz-0-q5" value="b" /> T directly only</label>
+            <label><input type="radio" name="quiz-0-q5" value="c" /> never</label>
+          </div>
+
+          <div class="question" data-answer="c">
+            <p>7. Best compile safety baseline is:</p>
+            <label><input type="radio" name="quiz-0-q6" value="a" /> strict: false</label>
+            <label><input type="radio" name="quiz-0-q6" value="b" /> no checks</label>
+            <label><input type="radio" name="quiz-0-q6" value="c" /> strict: true</label>
+          </div>
+
+          <div class="question" data-answer="a">
+            <p>8. Type check without generating JS:</p>
+            <label><input type="radio" name="quiz-0-q7" value="a" /> tsc --noEmit</label>
+            <label><input type="radio" name="quiz-0-q7" value="b" /> tsc --skipJs</label>
+            <label><input type="radio" name="quiz-0-q7" value="c" /> tsc --preview</label>
+          </div>
+
+          <div class="question" data-answer="b">
+            <p>9. Array of typed objects syntax:</p>
+            <label><input type="radio" name="quiz-0-q8" value="a" /> ArrayObject&lt;TestCase&gt;</label>
+            <label><input type="radio" name="quiz-0-q8" value="b" /> TestCase[]</label>
+            <label><input type="radio" name="quiz-0-q8" value="c" /> TestCase{}[]</label>
+          </div>
+
+          <div class="question" data-answer="c">
+            <p>10. Proper runtime async error handling:</p>
+            <label><input type="radio" name="quiz-0-q9" value="a" /> remove await</label>
+            <label><input type="radio" name="quiz-0-q9" value="b" /> ignore failures</label>
+            <label><input type="radio" name="quiz-0-q9" value="c" /> try/catch and log context</label>
+          </div>
+
+          <div class="question" data-answer="a">
+            <p>11. Better for unions/intersections:</p>
+            <label><input type="radio" name="quiz-0-q10" value="a" /> type alias</label>
+            <label><input type="radio" name="quiz-0-q10" value="b" /> only interface</label>
+            <label><input type="radio" name="quiz-0-q10" value="c" /> package.json</label>
+          </div>
+
+          <div class="question" data-answer="b">
+            <p>12. Which helps compile output folder control?</p>
+            <label><input type="radio" name="quiz-0-q11" value="a" /> include</label>
+            <label><input type="radio" name="quiz-0-q11" value="b" /> outDir</label>
+            <label><input type="radio" name="quiz-0-q11" value="c" /> targetMap</label>
+          </div>
+
+          <button class="grade-btn" type="button" data-grade>Grade Me</button>
+          <p class="result" data-result aria-live="polite"></p>
+        </section>
+      </main>
+    </div>
+
+    <script src="../assets/app.js"></script>
+  </body>
+</html>

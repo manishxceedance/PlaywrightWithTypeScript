@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lesson 4 - Interfaces and Type Aliases</title>
+    <link rel="stylesheet" href="../../assets/styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <a class="brand" href="../../index.html">ZeroToHero TypeScript Academy</a>
+      <button class="menu-toggle" data-menu-toggle>Open Menu</button>
+    </header>
+
+    <div class="layout">
+      <aside class="sidebar" data-sidebar>
+        <h2>Learning Menus</h2>
+        <div class="menu-group">
+          <p class="menu-group-title">TypeScript</p>
+          <ul>
+            <li><a href="00-javascript-basics.html">0. JavaScript Basics (Must Learn First)</a></li>
+            <li><a href="01-introduction.html">1. Introduction and Setup</a></li>
+            <li><a href="02-types-and-unions.html">2. Types, Unions, and Narrowing</a></li>
+            <li><a href="03-functions-and-objects.html">3. Functions and Object Types</a></li>
+            <li><a class="active" href="04-interfaces-and-type-aliases.html">4. Interfaces and Type Aliases</a></li>
+            <li><a href="../capstone.html">Final Capstone Assessment</a></li>
+          </ul>
+        </div>
+        <div class="menu-group">
+          <p class="menu-group-title">Type Script</p>
+          <ul>
+            <li><a href="../type-script/05-classes-and-oop.html">5. Classes and OOP</a></li>
+            <li><a href="../type-script/06-generics.html">6. Generics</a></li>
+            <li><a href="../type-script/07-async-and-errors.html">7. Async Patterns and Error Handling</a></li>
+            <li><a href="../type-script/08-tsconfig-and-modules.html">8. tsconfig and Modules</a></li>
+            <li><a href="../capstone.html">Final Capstone Assessment</a></li>
+          </ul>
+        </div>
+      </aside>
+
+      <main class="content lesson">
+
+        <h1>Lesson 4: Interfaces and Type Aliases</h1>
+        <p class="lesson-meta">
+          <span class="difficulty-badge">Level: Intermediate</span>
+          Learn how to describe the shape of your data in TypeScript, so your code is clear and safe—even if you’ve never seen these terms before.
+        </p>
+        <p>
+          In TypeScript, you use <b>interfaces</b> and <b>type aliases</b> to tell the computer what your data should look like. This helps you catch mistakes early and makes your code easier to understand.
+        </p>
+
+        <section class="lesson-section">
+          <h2>1. Interface Basics</h2>
+          <p>An <b>interface</b> describes the structure of an object—what properties it must have and their types. Think of it as a contract: "Any object of this type must have these fields." </p>
+          <pre><code>// This interface describes a user story in a test management tool.
+interface UserStory {
+  id: string;              // unique identifier
+  title: string;           // short description
+  sprint: number;          // which sprint it belongs to
+  isReadyForTest: boolean; // is it ready for QA?
+}
+
+// Example usage:
+const story: UserStory = {
+  id: "US-101",
+  title: "Login page",
+  sprint: 3,
+  isReadyForTest: true
+};
+          </code></pre>
+        </section>
+
+        <section class="lesson-section">
+          <h2>2. Type Alias Basics</h2>
+          <p>A <b>type alias</b> is like giving a nickname to a type. It helps you avoid repeating yourself and makes your code easier to read.</p>
+          <pre><code>// Allowed environments for a test run
+type Environment = "dev" | "qa" | "staging" | "prod";
+let env: Environment = "qa"; // Only these four values are allowed
+// env = "production"; // Error: not allowed
+
+// Build information for a release
+type BuildInfo = {
+  version: string;
+  environment: Environment;
+};
+const build: BuildInfo = {
+  version: "1.2.3",
+  environment: "qa"
+};
+          </code></pre>
+          <p><b>Real-world analogy:</b> Think of a type alias like a label on a folder. Instead of writing out everything inside the folder every time, you just use the label.</p>
+        </section>
+
+        <section class="lesson-section">
+          <h2>3. Extending Interfaces (Inheritance)</h2>
+          <p>You can make one interface build on top of another. This is called <b>interface inheritance</b> and lets you reuse common fields.</p>
+          <pre><code>// Base interface for test results.
+interface BaseResult {
+  caseId: string;
+  status: "pass" | "fail";
+}
+// ApiResult adds more fields to BaseResult.
+interface ApiResult extends BaseResult {
+  endpoint: string;
+  responseTimeMs: number;
+}
+const result: ApiResult = {
+  caseId: "TC-1",
+  status: "pass",
+  endpoint: "/api/health",
+  responseTimeMs: 120
+};
+          </code></pre>
+        </section>
+
+        <section class="lesson-section">
+          <h2>4. Combining Types with Intersections</h2>
+          <p>You can combine multiple types into one using <b>intersection types</b> (the <code>&</code> symbol). This is useful for adding metadata or extra info.</p>
+          <pre><code>// Audit info type.
+type AuditMeta = {
+  executedBy: string;
+  executedAt: string;
+};
+// Combine ApiResult and AuditMeta into one type.
+type AuditedApiResult = ApiResult & AuditMeta;
+const audited: AuditedApiResult = {
+  caseId: "TC-1",
+  status: "pass",
+  endpoint: "/api/health",
+  responseTimeMs: 120,
+  executedBy: "Neha",
+  executedAt: "2026-05-27"
+};
+          </code></pre>
+        </section>
+
+        <section class="lesson-section">
+          <h2>5. Readonly and ReadonlyArray</h2>
+          <p><b>readonly</b> makes a property or array element unchangeable after it’s set. This helps prevent bugs by making sure some values never change.</p>
+          <pre><code>// Readonly property in an interface
+interface Config {
+  readonly apiUrl: string;
+}
+const cfg: Config = { apiUrl: "https://api.example.com" };
+// cfg.apiUrl = "..."; // Error: cannot assign to readonly property
+
+// Readonly array
+const nums: ReadonlyArray<number> = [1, 2, 3];
+// nums[0] = 99; // Error: cannot modify
+          </code></pre>
+          <ul>
+            <li>Use <b>readonly</b> for config, constants, or anything that should never change after creation.</li>
+            <li>Use <b>ReadonlyArray</b> to prevent accidental changes to arrays.</li>
+          </ul>
+        </section>
+
+        <section class="lesson-section">
+          <h2>6. When to Use Interface vs Type Alias?</h2>
+          <ul>
+            <li><b>Use interface</b> when you are describing the shape of an object (like a contract for a function or class).</li>
+            <li><b>Use type alias</b> for unions (<code>"a" | "b"</code>), intersections (<code>A & B</code>), or when you want to combine types.</li>
+            <li>Pick clear, domain-specific names: <code>TestCase</code>, <code>ApiContract</code>, <code>BugPayload</code>.</li>
+          </ul>
+        </section>
+
+        <section class="exercise">
+          <h2>Practice Exercise</h2>
+          <ol>
+            <li>Create interface <code>Bug</code> with fields id, summary, severity, open.</li>
+            <li>Create type alias <code>Severity</code> with literal values.</li>
+            <li>Extend interface <code>Bug</code> into <code>BugWithAssignee</code>.</li>
+            <li>Create intersection type combining bug and audit metadata.</li>
+          </ol>
+        </section>
+
+        <section class="quiz" data-quiz>
+          <h2>MCQ Self-Check</h2>
+
+          <div class="question" data-answer="a">
+            <p>1. Which is best for union values like dev/qa/prod?</p>
+            <label><input type="radio" name="quiz-0-q0" value="a" /> type alias</label>
+            <label><input type="radio" name="quiz-0-q0" value="b" /> class</label>
+            <label><input type="radio" name="quiz-0-q0" value="c" /> enum object only</label>
+          </div>
+
+          <div class="question" data-answer="c">
+            <pre><code>// This type alias describes allowed environments.
+          <div class="question" data-answer="b">
+
+    // This type alias describes a build info object.
+            <p>3. Intersection type symbol is:</p>
+            <label><input type="radio" name="quiz-0-q2" value="a" /> |</label>
+            <label><input type="radio" name="quiz-0-q2" value="b" /> &amp;</label>
+            <label><input type="radio" name="quiz-0-q2" value="c" /> *</label>
+
+    const build: BuildInfo = {
+      version: "1.2.3",
+      environment: "qa"
+    };</code></pre>
+          </div>
+
+          <button class="grade-btn" type="button" data-grade>Grade Me</button>
+          <p class="result" data-result aria-live="polite"></p>
+        </section>
+      </main>
+    </div>
+
+    <script src="../../assets/app.js"></script>
+  </body>
+</html>

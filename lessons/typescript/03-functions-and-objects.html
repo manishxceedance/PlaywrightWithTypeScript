@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lesson 3 - Functions and Object Types</title>
+    <link rel="stylesheet" href="../../assets/styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <a class="brand" href="../../index.html">ZeroToHero TypeScript Academy</a>
+      <button class="menu-toggle" data-menu-toggle>Open Menu</button>
+    </header>
+
+    <div class="layout">
+      <aside class="sidebar" data-sidebar>
+        <h2>Learning Menus</h2>
+        <div class="menu-group">
+          <p class="menu-group-title">TypeScript</p>
+          <ul>
+            <li><a href="00-javascript-basics.html">0. JavaScript Basics (Must Learn First)</a></li>
+            <li><a href="01-introduction.html">1. Introduction and Setup</a></li>
+            <li><a href="02-types-and-unions.html">2. Types, Unions, and Narrowing</a></li>
+            <li><a class="active" href="03-functions-and-objects.html">3. Functions and Object Types</a></li>
+            <li><a href="04-interfaces-and-type-aliases.html">4. Interfaces and Type Aliases</a></li>
+            <li><a href="../capstone.html">Final Capstone Assessment</a></li>
+          </ul>
+        </div>
+        <div class="menu-group">
+          <p class="menu-group-title">Type Script</p>
+          <ul>
+            <li><a href="../type-script/05-classes-and-oop.html">5. Classes and OOP</a></li>
+            <li><a href="../type-script/06-generics.html">6. Generics</a></li>
+            <li><a href="../type-script/07-async-and-errors.html">7. Async Patterns and Error Handling</a></li>
+            <li><a href="../type-script/08-tsconfig-and-modules.html">8. tsconfig and Modules</a></li>
+            <li><a href="../capstone.html">Final Capstone Assessment</a></li>
+          </ul>
+        </div>
+      </aside>
+
+      <main class="content lesson">
+        <h1>Lesson 3: Functions and Object Types</h1>
+        <p class="lesson-meta">
+          <span class="difficulty-badge">Level: Beginner-Intermediate</span>
+          Learn how to write, type, and use functions and objects in TypeScript with clear, practical examples.
+        </p>
+
+        <section class="lesson-section">
+          <h2>1. Functions: The Basics</h2>
+          <p>A function is a reusable block of code. You give it input (parameters), it does something, and it can return a result.</p>
+          <pre><code>// Add two numbers and return the result
+function add(a: number, b: number): number {
+  return a + b;
+}
+const sum = add(2, 3); // 5
+console.log(sum);
+</code></pre>
+        </section>
+
+        <section class="lesson-section">
+          <h2>2. Optional and Default Parameters</h2>
+          <p>You can make a parameter optional (with <code>?</code>) or give it a default value.</p>
+          <pre><code>// 'cycle' has a default, 'owner' is optional
+function buildReportTitle(project: string, cycle = "Sprint-1", owner?: string): string {
+  const ownerText = owner ? ` by ${owner}` : "";
+  return `${project} - ${cycle}${ownerText}`;
+}
+console.log(buildReportTitle("Payments")); // Payments - Sprint-1
+console.log(buildReportTitle("Payments", "Sprint-2", "Asha")); // Payments - Sprint-2 by Asha
+</code></pre>
+        </section>
+
+        <section class="lesson-section">
+          <h2>3. Function Type Aliases</h2>
+          <p>Type aliases let you describe the shape of a function, so you can reuse it and make your code safer.</p>
+          <pre><code>// Comparator is a function that takes two numbers and returns a boolean
+type Comparator = (actual: number, expected: number) => boolean;
+const isEqual: Comparator = (a, b) => a === b;
+console.log(isEqual(5, 5)); // true
+</code></pre>
+        </section>
+
+        <section class="lesson-section">
+          <h2>4. Typing Object Parameters</h2>
+          <p>Use object types to make sure a function only accepts objects with the right properties.</p>
+          <pre><code>// Define the shape of the input object
+type ApiCheckInput = {
+  endpoint: string;
+  expectedStatus: number;
+  requiresAuth: boolean;
+};
+function describeApiCheck(input: ApiCheckInput): string {
+  const authTag = input.requiresAuth ? "Auth" : "NoAuth";
+  return `${authTag}: ${input.endpoint} should return ${input.expectedStatus}`;
+}
+console.log(describeApiCheck({ endpoint: "/api/health", expectedStatus: 200, requiresAuth: true }));
+</code></pre>
+        </section>
+
+        <section class="lesson-section">
+          <h2>5. Array of Objects Example</h2>
+          <p>Arrays let you store lists of things. In TypeScript, you can make arrays of objects with a specific shape.</p>
+          <pre><code>// Define the shape of a test case
+type TestCase = {
+  id: string;
+  title: string;
+  automated: boolean;
+};
+const testCases: TestCase[] = [
+  { id: "TC-1", title: "Login success", automated: true },
+  { id: "TC-2", title: "Forgot password", automated: false }
+];
+// Print only the automated test cases
+testCases.forEach(tc => {
+  if (tc.automated) {
+    console.log(tc.id, tc.title);
+  }
+});
+</code></pre>
+        </section>
+
+        <section class="lesson-section">
+          <h2>6. Function Overloading</h2>
+          <p>Function overloading lets you write one function that works with different types or numbers of arguments, while keeping type safety.</p>
+          <pre><code>// Overload signatures
+function combine(a: string, b: string): string;
+function combine(a: number, b: number): number;
+// Implementation
+function combine(a: any, b: any): any {
+  return a + b;
+}
+const result1 = combine("Hello, ", "world!"); // string
+const result2 = combine(2, 3); // number
+</code></pre>
+        </section>
+
+        <section class="exercise">
+          <h2>Practice Exercise</h2>
+          <ol>
+            <li>Create a function <code>calculatePassRate</code> with typed params and return type.</li>
+            <li>Create an object type for API schema checks and pass it to a function.</li>
+            <li>Create an array of typed test cases and print only automated ones.</li>
+            <li>Create a function type alias and use it for a validation function.</li>
+          </ol>
+        </section>
+
+        <section class="quiz" data-quiz>
+          <h2>MCQ Self-Check</h2>
+          <div class="question" data-answer="a">
+            <p>1. Best way to type a function return value?</p>
+            <label><input type="radio" name="quiz-0-q0" value="a" /> function f(): number { ... }</label>
+            <label><input type="radio" name="quiz-0-q0" value="b" /> function f() => number { ... }</label>
+            <label><input type="radio" name="quiz-0-q0" value="c" /> return number function f { ... }</label>
+          </div>
+          <div class="question" data-answer="c">
+            <p>2. Which is a valid function type alias?</p>
+            <label><input type="radio" name="quiz-0-q1" value="a" /> type F = function(a: number): number</label>
+            <label><input type="radio" name="quiz-0-q1" value="b" /> type F = (a) number</label>
+            <label><input type="radio" name="quiz-0-q1" value="c" /> type F = (a: number) => number</label>
+          </div>
+          <div class="question" data-answer="b">
+            <p>3. Type for array of objects is:</p>
+            <label><input type="radio" name="quiz-0-q2" value="a" /> TestCase{}</label>
+            <label><input type="radio" name="quiz-0-q2" value="b" /> TestCase[]</label>
+            <label><input type="radio" name="quiz-0-q2" value="c" /> array<TestCase>[]</label>
+          </div>
+          <button class="grade-btn" type="button" data-grade>Grade Me</button>
+          <p class="result" data-result aria-live="polite"></p>
+        </section>
+      </main>
+    </div>
+
+    <script src="../../assets/app.js"></script>
+  </body>
+</html>
+        <ul>
+          <li><b>Type safety</b>: If you try to add a test case without <code>id</code>, <code>title</code>, or <code>automated</code>, TypeScript will show an error.</li>
+        </ul>

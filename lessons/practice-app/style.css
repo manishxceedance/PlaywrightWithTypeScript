@@ -1,0 +1,165 @@
+
+body {
+	font-family: 'Segoe UI', Arial, sans-serif;
+	background: linear-gradient(120deg, #f7f7f7 60%, #e3f2fd 100%);
+	margin: 0;
+	padding: 0;
+}
+
+nav {
+	background: #1976d2;
+	color: #fff;
+	padding: 1.2em 1em 1em 1em;
+	text-align: center;
+	box-shadow: 0 2px 8px rgba(25,118,210,0.08);
+	border-bottom-left-radius: 16px;
+	border-bottom-right-radius: 16px;
+	margin-bottom: 2em;
+}
+
+nav a {
+	color: #fff;
+	text-decoration: none;
+	margin: 0 1.2em;
+	font-weight: bold;
+	font-size: 1.1em;
+	letter-spacing: 0.5px;
+	transition: color 0.2s, background 0.2s, border-radius 0.2s;
+	padding: 0.3em 0.8em;
+	border-radius: 6px;
+}
+
+nav a:hover, nav a:focus {
+	color: #1976d2;
+	background: #ffeb3b;
+	border-radius: 12px;
+	outline: none;
+}
+
+h1, h2, h3 {
+	color: #1976d2;
+	text-align: center;
+	margin-top: 1.2em;
+	letter-spacing: 1px;
+}
+
+form, .container, .shadow-box {
+	background: #fff;
+	max-width: 650px;
+	margin: 2.5em auto;
+	padding: 2.2em 2em 2em 2em;
+	border-radius: 16px;
+	box-shadow: 0 4px 16px rgba(25,118,210,0.10);
+	border: 1.5px solid #e3f2fd;
+}
+
+label {
+	display: block;
+	margin-top: 1.2em;
+	font-weight: 600;
+	color: #1976d2;
+	letter-spacing: 0.2px;
+}
+
+input, select, textarea {
+	padding: 0.6em;
+	border: 1.5px solid #bdbdbd;
+	border-radius: 7px;
+	margin-bottom: 0.7em;
+	width: 100%;
+	font-size: 1.05em;
+	box-sizing: border-box;
+	background: #f9f9f9;
+	transition: border 0.2s;
+}
+
+input:focus, select:focus, textarea:focus {
+	border: 1.5px solid #1976d2;
+	outline: none;
+}
+
+button, input[type="submit"] {
+	background: linear-gradient(90deg, #1976d2 70%, #388e3c 100%);
+	color: #fff;
+	border: none;
+	cursor: pointer;
+	font-weight: bold;
+	font-size: 1.08em;
+	border-radius: 7px;
+	margin-top: 1.2em;
+	padding: 0.7em 0;
+	transition: background 0.2s, box-shadow 0.2s;
+	box-shadow: 0 2px 8px rgba(56,142,60,0.08);
+}
+
+button:hover, input[type="submit"]:hover {
+	background: linear-gradient(90deg, #388e3c 70%, #1976d2 100%);
+	box-shadow: 0 4px 16px rgba(25,118,210,0.12);
+}
+
+table {
+	border-collapse: collapse;
+	width: 100%;
+	margin-bottom: 2em;
+}
+
+td, th {
+	padding: 0.7em 1.2em;
+	border: 1px solid #bbb;
+	font-size: 1.04em;
+}
+
+fieldset {
+	border: 1.5px solid #bbb;
+	border-radius: 8px;
+	padding: 0.7em 1.2em;
+	margin-bottom: 1.2em;
+}
+
+legend {
+	color: #1976d2;
+	font-weight: bold;
+	font-size: 1.08em;
+}
+
+/* Custom Controls Section */
+#custom {
+	background: linear-gradient(90deg, #e3f2fd 60%, #c8e6c9 100%);
+	border-radius: 12px;
+	padding: 1.5em 1em 1em 1em;
+	margin-bottom: 2em;
+	box-shadow: 0 2px 8px rgba(56,142,60,0.07);
+	border: 1.5px solid #bdbdbd;
+}
+
+#custom label {
+	color: #388e3c;
+	font-weight: 700;
+	margin-top: 0.7em;
+}
+
+#custom h2 {
+	color: #388e3c;
+	margin-bottom: 1em;
+	font-size: 1.3em;
+	letter-spacing: 0.5px;
+}
+
+.custom-dropdown, .multi-select-dropdown, .checkbox-dropdown {
+	display: block;
+	margin: 0.7em 0 1.7em 0;
+	padding: 0.7em;
+	border: 1.5px solid #bdbdbd;
+	border-radius: 8px;
+	background: #f5faff;
+	font-size: 1.05em;
+	min-width: 220px;
+	box-shadow: 0 2px 8px rgba(25,118,210,0.09);
+	transition: border 0.2s, box-shadow 0.2s;
+}
+
+.custom-dropdown:focus, .multi-select-dropdown:focus, .checkbox-dropdown:focus {
+	outline: 2px solid #388e3c;
+	border: 1.5px solid #388e3c;
+	box-shadow: 0 0 0 2px #c8e6c9;
+}

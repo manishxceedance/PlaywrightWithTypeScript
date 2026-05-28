@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lesson 6 - Generics</title>
+    <link rel="stylesheet" href="../../assets/styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <a class="brand" href="../../index.html">ZeroToHero TypeScript Academy</a>
+      <button class="menu-toggle" data-menu-toggle>Open Menu</button>
+    </header>
+
+    <div class="layout">
+      <aside class="sidebar" data-sidebar>
+        <h2>Learning Menus</h2>
+        <div class="menu-group">
+          <p class="menu-group-title">TypeScript</p>
+          <ul>
+            <li><a href="../typescript/00-javascript-basics.html">0. JavaScript Basics (Must Learn First)</a></li>
+            <li><a href="../typescript/01-introduction.html">1. Introduction and Setup</a></li>
+            <li><a href="../typescript/02-types-and-unions.html">2. Types, Unions, and Narrowing</a></li>
+            <li><a href="../typescript/03-functions-and-objects.html">3. Functions and Object Types</a></li>
+            <li><a href="../typescript/04-interfaces-and-type-aliases.html">4. Interfaces and Type Aliases</a></li>
+            <li><a href="../capstone.html">Final Capstone Assessment</a></li>
+          </ul>
+        </div>
+        <div class="menu-group">
+          <p class="menu-group-title">Type Script</p>
+          <ul>
+            <li><a href="05-classes-and-oop.html">5. Classes and OOP</a></li>
+            <li><a class="active" href="06-generics.html">6. Generics</a></li>
+            <li><a href="07-async-and-errors.html">7. Async Patterns and Error Handling</a></li>
+            <li><a href="08-tsconfig-and-modules.html">8. tsconfig and Modules</a></li>
+          </ul>
+        </div>
+      </aside>
+
+      <main class="content lesson">
+
+        <h1>Lesson 6: Generics for Reusable Components</h1>
+        <p class="lesson-meta">
+          <span class="difficulty-badge">Level: Intermediate-Advanced</span>
+          Learn how to write reusable, type-safe code using TypeScript generics.
+        </p>
+        <p>
+          Generics let you write code that works with any type, while keeping type safety. They’re essential for building flexible utilities, data structures, and APIs.
+        </p>
+
+        <section class="lesson-section">
+          <h2>1. What is a Generic?</h2>
+          <p>A <b>generic</b> is a placeholder for a type. It lets you write one function, class, or type that works for many types.</p>
+          <pre><code>// Generic function
+function wrapInArray<T>(value: T): T[] {
+  return [value];
+}
+const numbers = wrapInArray(10);      // number[]
+const names = wrapInArray("Neha");   // string[]
+          </code></pre>
+        </section>
+
+        <section class="lesson-section">
+          <h2>2. Generic Types and Interfaces</h2>
+          <p>You can use generics in type aliases and interfaces to describe reusable shapes.</p>
+          <pre><code>// Generic API response type
+type ApiResponse<T> = {
+  status: number;
+  data: T;
+  error?: string;
+};
+
+type UserPayload = { id: string; name: string };
+const response: ApiResponse<UserPayload> = {
+  status: 200,
+  data: { id: "U1", name: "Anu" }
+};
+          </code></pre>
+        </section>
+
+        <section class="lesson-section">
+          <h2>3. Generic Constraints</h2>
+          <p>Use <code>extends</code> to require that a generic type has certain properties.</p>
+          <pre><code>// Only accepts values with a length property
+function printLength<T extends { length: number }>(value: T): void {
+  console.log(value.length);
+}
+printLength([1, 2, 3]); // OK
+printLength("hello");   // OK
+// printLength(42);     // Error
+          </code></pre>
+        </section>
+
+        <section class="lesson-section">
+          <h2>4. Multiple Type Parameters & Defaults</h2>
+          <p>You can use more than one generic, and provide default types.</p>
+          <pre><code>// Pair of values
+type Pair<A, B = string> = { first: A; second: B };
+const p1: Pair<number, boolean> = { first: 1, second: true };
+const p2: Pair<number> = { first: 2, second: "default" };
+          </code></pre>
+        </section>
+
+        <section class="lesson-section">
+          <h2>5. Generic Classes and Interfaces</h2>
+          <p>Classes and interfaces can be generic too.</p>
+          <pre><code>// Generic class for a simple stack
+class Stack<T> {
+  private items: T[] = [];
+  push(item: T) { this.items.push(item); }
+  pop(): T | undefined { return this.items.pop(); }
+}
+const numStack = new Stack<number>();
+numStack.push(1);
+numStack.push(2);
+console.log(numStack.pop());
+          </code></pre>
+        </section>
+
+        <section class="lesson-section">
+          <h2>6. Utility Generics</h2>
+          <p>Many built-in utility types use generics (like <code>Partial</code>, <code>Record</code>, etc.).</p>
+          <pre><code>// Partial makes all fields optional
+type Bug = { id: string; summary: string };
+const draft: Partial<Bug> = { summary: "Crash" };
+
+// Record creates a map
+type TestResults = Record<string, "pass" | "fail">;
+const results: TestResults = { "TC-1": "pass" };
+          </code></pre>
+        </section>
+
+        <section class="lesson-section">
+          <h2>7. Practical Utility: Test Data</h2>
+          <p>Use generics to write flexible, type-safe utilities for test data.</p>
+          <pre><code>// Get the first item of any array
+function firstItem<T>(items: T[]): T | undefined {
+  return items[0];
+}
+const firstCase = firstItem(["TC-1", "TC-2"]);
+          </code></pre>
+        </section>
+
+        <section class="exercise">
+          <h2>Practice Exercise</h2>
+          <ol>
+            <li>Create generic function <code>lastItem&lt;T&gt;</code>.</li>
+            <li>Create generic type <code>Paginated&lt;T&gt;</code> with page info and data.</li>
+            <li>Create constrained generic that accepts objects with <code>id</code>.</li>
+            <li>Apply generic response type to a defect list payload.</li>
+          </ol>
+        </section>
+
+        <section class="quiz" data-quiz>
+          <h2>MCQ Self-Check</h2>
+
+          <div class="question" data-answer="c">
+            <p>1. Generic placeholder is usually represented by:</p>
+            <label><input type="radio" name="quiz-0-q0" value="a" /> G</label>
+            <label><input type="radio" name="quiz-0-q0" value="b" /> X</label>
+            <label><input type="radio" name="quiz-0-q0" value="c" /> T</label>
+          </div>
+
+          <div class="question" data-answer="a">
+            <p>2. Which syntax creates a generic function?</p>
+            <label><input type="radio" name="quiz-0-q1" value="a" /> function f&lt;T&gt;(arg: T): T</label>
+            <label><input type="radio" name="quiz-0-q1" value="b" /> generic function f(arg)</label>
+            <label><input type="radio" name="quiz-0-q1" value="c" /> function f(T arg): T</label>
+          </div>
+
+          <div class="question" data-answer="b">
+            <p>3. <code>T extends { length: number }</code> means:</p>
+            <label><input type="radio" name="quiz-0-q2" value="a" /> T can only be number</label>
+            <label><input type="radio" name="quiz-0-q2" value="b" /> T must have a length property</label>
+            <label><input type="radio" name="quiz-0-q2" value="c" /> T cannot be object</label>
+          </div>
+
+          <button class="grade-btn" type="button" data-grade>Grade Me</button>
+          <p class="result" data-result aria-live="polite"></p>
+        </section>
+      </main>
+    </div>
+
+    <script src="../../assets/app.js"></script>
+  </body>
+</html>

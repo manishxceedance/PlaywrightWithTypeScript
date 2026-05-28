@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Practice App - Home</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <section class="home-hero" style="margin-bottom:2.5rem;">
+    <h1 style="font-size:2.2rem; margin-bottom:0.5rem;">Practice App: Basic Controls</h1>
+    <div class="home-meta" style="margin-bottom:1.2rem;">
+      <span class="home-pill" style="background:var(--accent-soft);color:var(--accent);margin-right:0.7em;">Practice Lab</span>
+      <span class="home-pill" style="background:var(--warm);color:#fff;">UI Automation</span>
+    </div>
+    <p style="font-size:1.15rem;max-width:600px;">Use this page to practice Playwright locators, form actions, and custom control handling. Try every field and see how selectors work in real UI.</p>
+  </section>
+
+  <nav style="margin-bottom:2rem;">
+    <a href="index.html">Basic Controls</a> |
+    <a href="grid-frame.html">Grid & Frame</a> |
+    <a href="grid-controls.html"><b>Grid with Controls</b></a> |
+    <a href="shadow.html">Shadow DOM</a> |
+    <a href="#custom">Custom Controls</a>
+  </nav>
+
+  <section class="home-card" style="margin-bottom:2.5rem;">
+    <form id="basic-form">
+      <h2 style="color:#388e3c;">New: Advanced & Custom Controls</h2>
+      <div id="custom" style="margin-bottom:2em;">
+        <label>Custom Dropdown:</label><br>
+        <custom-dropdown></custom-dropdown><br><br>
+        <label>Multi-Select Dropdown:</label><br>
+        <multi-select-dropdown></multi-select-dropdown><br><br>
+        <label>Checkbox with Dropdown:</label><br>
+        <checkbox-dropdown></checkbox-dropdown>
+      </div>
+      <label for="text">Text Input:</label>
+      <input type="text" id="text" name="text"><br><br>
+
+      <label for="password">Password:</label>
+      <input type="password" id="password" name="password"><br><br>
+
+      <label for="email">Email:</label>
+      <input type="email" id="email" name="email"><br><br>
+
+      <label for="number">Number:</label>
+      <input type="number" id="number" name="number"><br><br>
+
+      <label for="textarea">Textarea:</label><br>
+      <textarea id="textarea" name="textarea"></textarea><br><br>
+
+      <label for="select">Select:</label>
+      <select id="select" name="select">
+        <option value="">--Choose--</option>
+        <option value="one">One</option>
+        <option value="two">Two</option>
+        <option value="three">Three</option>
+      </select><br><br>
+
+      <fieldset>
+        <legend>Checkboxes</legend>
+        <input type="checkbox" id="cb1" name="cbgroup" value="A">
+        <label for="cb1">A</label>
+        <input type="checkbox" id="cb2" name="cbgroup" value="B">
+        <label for="cb2">B</label>
+        <input type="checkbox" id="cb3" name="cbgroup" value="C">
+        <label for="cb3">C</label>
+      </fieldset><br>
+
+      <fieldset>
+        <legend>Radio Buttons</legend>
+        <input type="radio" id="r1" name="rgroup" value="X">
+        <label for="r1">X</label>
+        <input type="radio" id="r2" name="rgroup" value="Y">
+        <label for="r2">Y</label>
+        <input type="radio" id="r3" name="rgroup" value="Z">
+        <label for="r3">Z</label>
+      </fieldset><br>
+
+      <button type="submit">Submit</button>
+      <button type="reset">Reset</button>
+    </form>
+  </section>
+
+  <a href="../../index.html" class="home-btn floating-home-btn" title="Back to Home">&#8962; Home</a>
+  <script src="../../assets/app.js"></script>
+  <script src="custom-controls.js"></script>
+</body>
+</html>

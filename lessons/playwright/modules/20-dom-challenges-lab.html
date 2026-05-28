@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Module 20 - DOM Challenges Lab</title>
+    <link rel="stylesheet" href="../../../assets/styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <a class="brand" href="../../../index.html">ZeroToHero TypeScript Academy</a>
+      <button class="menu-toggle" data-menu-toggle>Open Menu</button>
+    </header>
+
+    <div class="layout">
+      <aside class="sidebar" data-sidebar>
+        <h2>Playwright Learning</h2>
+        <div class="menu-group">
+          <p class="menu-group-title">Track</p>
+          <ul>
+            <li><a href="../01-playwright-complete-guide.html">Playwright Mastery Roadmap</a></li>
+            <li><a href="../00-playwright-for-absolutely-beginners.html">0. Absolute Beginner Start Here</a></li>
+            <li><a href="01-basics.html">1. Basics</a></li>
+            <li><a href="02-setup.html">2. Setup</a></li>
+            <li><a href="03-core-playwright.html">3. Core Playwright</a></li>
+            <li><a href="04-locators.html">4. Locators</a></li>
+            <li><a href="05-actions-elements.html">5. Actions and Elements</a></li>
+            <li><a href="06-wait-handling.html">6. Wait Handling</a></li>
+            <li><a href="07-browser-handling.html">7. Browser Handling</a></li>
+            <li><a href="08-validation.html">8. Validation</a></li>
+            <li><a href="09-test-data.html">9. Test Data</a></li>
+            <li><a href="10-framework-design.html">10. Framework Design</a></li>
+            <li><a href="11-api-testing.html">11. API Testing</a></li>
+            <li><a href="12-authentication.html">12. Authentication</a></li>
+            <li><a href="13-execution.html">13. Execution</a></li>
+            <li><a href="14-reporting.html">14. Reporting</a></li>
+            <li><a href="15-debugging.html">15. Debugging</a></li>
+            <li><a href="16-ci-cd.html">16. CI/CD</a></li>
+            <li><a href="17-advanced-topics.html">17. Advanced Topics</a></li>
+            <li><a href="18-best-practices.html">18. Best Practices</a></li>
+            <li><a href="19-project-implementation.html">19. Project Implementation</a></li>
+            <li><a href="20-dom-challenges-lab.html">20. DOM Challenges Lab</a></li>
+            <li><a href="../99-playwright-capstone-50-mcq.html">Final Capstone (50 MCQ)</a></li>
+          </ul>
+        </div>
+      </aside>
+      <main class="content lesson">
+        <h1>Module 20: DOM Challenges Lab (Frames, Shadow DOM, Alerts, Duplicate Locators)</h1>
+        <p class="lesson-meta">
+          <span class="difficulty-badge">Hands-On Lab</span>
+          This module is a practical workshop where you solve common real-world Playwright blockers using TypeScript.
+        </p>
+
+        <h2>What You Will Learn</h2>
+        <p>How to handle iframe content, shadow DOM, browser dialogs, and multiple similar elements with stable assertions.</p>
+
+        <h2>Lab Targets in Your Workspace</h2>
+        <ol>
+          <li><code>/lessons/practice-app/grid-frame.html</code> for iframe and grid validations.</li>
+          <li><code>/lessons/practice-app/shadow.html</code> for shadow DOM interaction.</li>
+          <li><code>/lessons/practice-app/grid-controls.html</code> for duplicate controls in table rows.</li>
+        </ol>
+
+        <h2>1) Iframe Handling with Assertions</h2>
+        <pre><code>import { test, expect } from '@playwright/test';
+
+test('fill mini form inside iframe', async ({ page }) =&gt; {
+  await page.goto('/lessons/practice-app/grid-frame.html');
+
+  const miniForm = page.frameLocator('iframe[title="Mini Form"]');
+  await miniForm.locator('#mini-text').fill('Playwright Frame Test');
+  await miniForm.locator('#mini-check').check();
+
+  await expect(miniForm.locator('#mini-text')).toHaveValue('Playwright Frame Test');
+  await expect(miniForm.locator('#mini-check')).toBeChecked();
+});</code></pre>
+
+        <h2>2) Shadow DOM Handling</h2>
+        <pre><code>import { test, expect } from '@playwright/test';
+
+test('interact with open shadow root', async ({ page }) =&gt; {
+  await page.goto('/lessons/practice-app/shadow.html');
+
+  const host = page.locator('practice-shadow');
+  await host.locator('#shadow-input').fill('shadow value');
+  await host.locator('#shadow-btn').click();
+
+  await expect(host.locator('#shadow-msg')).toHaveText('You typed: shadow value');
+});</code></pre>
+
+        <h2>3) Multiple Elements with Same Property</h2>
+        <pre><code>import { test, expect } from '@playwright/test';
+
+test('update only Bob row when many controls are similar', async ({ page }) =&gt; {
+  await page.goto('/lessons/practice-app/grid-controls.html');
+
+  const bobRow = page.locator('#practice-grid tbody tr').filter({ hasText: 'Bob' });
+
+  await bobRow.locator('input[type="text"]').fill('Bob updated note');
+  await bobRow.locator('select').selectOption('Two');
+  await bobRow.locator('input[type="checkbox"]').check();
+
+  await expect(bobRow.locator('input[type="text"]')).toHaveValue('Bob updated note');
+  await expect(bobRow.locator('select')).toHaveValue('Two');
+  await expect(bobRow.locator('input[type="checkbox"]')).toBeChecked();
+});</code></pre>
+
+        <h2>4) Alert Handling Pattern</h2>
+        <p>The practice app does not currently include a native alert button, so this lab uses a self-contained demo page setup.</p>
+        <pre><code>import { test, expect } from '@playwright/test';
+
+test('handle confirm dialog safely', async ({ page }) =&gt; {
+  await page.setContent(`
+    &lt;button id="danger" onclick="confirm('Are you sure you want to continue?')"&gt;Danger&lt;/button&gt;
+  `);
+
+  page.once('dialog', async dialog =&gt; {
+    await expect(dialog.type()).toBe('confirm');
+    await expect(dialog.message()).toContain('Are you sure');
+    await dialog.accept();
+  });
+
+  await page.locator('#danger').click();
+});</code></pre>
+
+        <section class="exercise">
+          <h2>Beginner Notes (Important Rules)</h2>
+          <ol>
+            <li>Register dialog listeners before clicking the element that opens the dialog.</li>
+            <li>Always scope duplicate locators by row, card, or section before acting.</li>
+            <li>Use <code>frameLocator()</code> for iframe content, not top-level page locators.</li>
+            <li>With open shadow DOM, chain from host locator to inner locator.</li>
+            <li>Add assertions right after actions so failures are easier to debug.</li>
+          </ol>
+        </section>
+
+        <section class="exercise">
+          <h2>Practice Exercise</h2>
+          <ol>
+            <li>In <code>grid-frame.html</code>, fill iframe text and verify checkbox state.</li>
+            <li>In <code>shadow.html</code>, submit any value and verify generated message text.</li>
+            <li>In <code>grid-controls.html</code>, update only Alice row and verify Bob/Charlie are unchanged.</li>
+            <li>Create one test that intentionally uses broad locator first, then refactor with row scoping.</li>
+          </ol>
+        </section>
+
+        <section class="quiz" data-quiz>
+          <h2>MCQ Self-Check</h2>
+          <div class="question" data-answer="a">
+            <p>1. Best first step for multiple similar elements is:</p>
+            <label><input type="radio" name="quiz-0-q0" value="a" /> Scope to a parent row/section and then locate child</label>
+            <label><input type="radio" name="quiz-0-q0" value="b" /> Use nth(0) everywhere</label>
+            <label><input type="radio" name="quiz-0-q0" value="c" /> Add hard waits</label>
+          </div>
+
+          <div class="question" data-answer="a">
+            <p>2. Correct way to interact with iframe elements:</p>
+            <label><input type="radio" name="quiz-0-q1" value="a" /> Use frameLocator and then child locators</label>
+            <label><input type="radio" name="quiz-0-q1" value="b" /> Use only page.locator for all iframe fields</label>
+            <label><input type="radio" name="quiz-0-q1" value="c" /> Reload page before each click</label>
+          </div>
+
+          <button class="grade-btn" type="button" data-grade>Grade Me</button>
+          <p class="result" data-result aria-live="polite"></p>
+        </section>
+
+        <section class="exercise">
+          <h2>Navigation</h2>
+          <p><a href="19-project-implementation.html">Previous</a> | <a href="../99-playwright-capstone-50-mcq.html">Next</a></p>
+        </section>
+      </main>
+    </div>
+
+    <script src="../../../assets/app.js"></script>
+  </body>
+</html>

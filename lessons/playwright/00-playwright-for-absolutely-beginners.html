@@ -1,0 +1,178 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Playwright for Absolute Beginners</title>
+    <link rel="stylesheet" href="../../assets/styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <a class="brand" href="../../index.html">ZeroToHero TypeScript Academy</a>
+      <button class="menu-toggle" data-menu-toggle>Open Menu</button>
+    </header>
+
+    <div class="layout">
+      <aside class="sidebar" data-sidebar>
+        <h2>Playwright Learning</h2>
+        <div class="menu-group">
+          <p class="menu-group-title">Track</p>
+          <ul>
+            <li><a href="01-playwright-complete-guide.html">Playwright Mastery Roadmap</a></li>
+            <li><a href="00-playwright-for-absolutely-beginners.html">0. Absolute Beginner Start Here</a></li>
+            <li><a href="modules/01-basics.html">1. Basics</a></li>
+            <li><a href="modules/02-setup.html">2. Setup</a></li>
+            <li><a href="modules/03-core-playwright.html">3. Core Playwright</a></li>
+            <li><a href="modules/04-locators.html">4. Locators</a></li>
+            <li><a href="modules/05-actions-elements.html">5. Actions and Elements</a></li>
+            <li><a href="modules/06-wait-handling.html">6. Wait Handling</a></li>
+            <li><a href="modules/07-browser-handling.html">7. Browser Handling</a></li>
+            <li><a href="modules/08-validation.html">8. Validation</a></li>
+            <li><a href="modules/09-test-data.html">9. Test Data</a></li>
+            <li><a href="modules/10-framework-design.html">10. Framework Design</a></li>
+            <li><a href="modules/11-api-testing.html">11. API Testing</a></li>
+            <li><a href="modules/12-authentication.html">12. Authentication</a></li>
+            <li><a href="modules/13-execution.html">13. Execution</a></li>
+            <li><a href="modules/14-reporting.html">14. Reporting</a></li>
+            <li><a href="modules/15-debugging.html">15. Debugging</a></li>
+            <li><a href="modules/16-ci-cd.html">16. CI/CD</a></li>
+            <li><a href="modules/17-advanced-topics.html">17. Advanced Topics</a></li>
+            <li><a href="modules/18-best-practices.html">18. Best Practices</a></li>
+            <li><a href="modules/19-project-implementation.html">19. Project Implementation</a></li>
+            <li><a href="99-playwright-capstone-50-mcq.html">Final Capstone (50 MCQ)</a></li>
+          </ul>
+        </div>
+      </aside>
+
+      <main class="content lesson">
+        <h1>Playwright for Absolute Beginners</h1>
+        <p class="lesson-meta">
+          <span class="difficulty-badge">Level: No Background Needed</span>
+          If you are new to both coding and automation, start here.
+        </p>
+
+        <h2>What Is Automation in Simple Language?</h2>
+        <p>
+          Imagine you must check the same website flow every day: login, click button, verify message.
+          Instead of doing this manually 100 times, you write one script. The script repeats the same steps consistently.
+          That is automation testing.
+        </p>
+
+        <h2>What Is Playwright?</h2>
+        <p>
+          Playwright is a tool that opens a browser and performs steps like a human user:
+          click, type, select, and verify. It can run these checks quickly and report what passed or failed.
+        </p>
+
+        <h2>What You Need Before Starting</h2>
+        <ol>
+          <li>Basic computer usage and browser usage.</li>
+          <li>Willingness to learn small code snippets step by step.</li>
+          <li>No prior programming experience is required.</li>
+        </ol>
+
+        <h2>Can You Really Become Expert Without Coding Background?</h2>
+        <p>
+          Yes, if you learn in this order: TypeScript basics, Playwright modules, daily hands-on automation,
+          and repeat failure analysis using trace/report evidence.
+        </p>
+
+        <h2>First 14 Days Plan (No Fear Path)</h2>
+        <ol>
+          <li>Day 1-3: Learn JavaScript and TypeScript basics from the TypeScript track.</li>
+          <li>Day 4-6: Finish Playwright Modules 1-3 and run sample tests locally.</li>
+          <li>Day 7-9: Complete locators/actions/waits modules and automate one login flow.</li>
+          <li>Day 10-12: Add assertions, data inputs, and one negative test scenario.</li>
+          <li>Day 13-14: Debug one failing test using trace and fix locator or timing root cause.</li>
+        </ol>
+
+        <h2>Tiny Example: Read It Like a Story</h2>
+        <pre><code>import { test, expect } from '@playwright/test';
+
+test('homepage title check', async ({ page }) => {
+  await page.goto('https://example.com');
+  await expect(page).toHaveTitle(/Example/);
+});</code></pre>
+
+        <h3>How to read the code above</h3>
+        <ol>
+          <li><code>test(...)</code> means: create one test case.</li>
+          <li><code>page.goto(...)</code> means: open this website.</li>
+          <li><code>expect(...)</code> means: verify expected result.</li>
+        </ol>
+
+        <h2>Most Important Words (Beginner Glossary)</h2>
+        <ul>
+          <li><strong>Test</strong>: one scenario you want to validate.</li>
+          <li><strong>Assertion</strong>: a check that confirms expected behavior.</li>
+          <li><strong>Locator</strong>: a way to find an element (button, input, text) on page.</li>
+          <li><strong>Flaky test</strong>: test that sometimes passes, sometimes fails without code change.</li>
+          <li><strong>Headless</strong>: browser runs in background without visible UI.</li>
+        </ul>
+
+        <h2>Your Learning Path (Recommended)</h2>
+        <ol>
+          <li>Finish this beginner page fully.</li>
+          <li>Complete TypeScript fundamentals before deep Playwright coding.</li>
+          <li>Open Module 1 and Module 2.</li>
+          <li>Practice each exercise before moving ahead.</li>
+          <li>Take capstone only after all modules.</li>
+        </ol>
+
+        <h2>Expert Means This (Practical Definition)</h2>
+        <ul>
+          <li>You can automate a new business flow in any web application independently.</li>
+          <li>You can make tests stable by improving locators, waits, and data strategy.</li>
+          <li>You can maintain framework code in TypeScript with clean reusable design.</li>
+          <li>You can run suites in CI and explain failures to developers clearly.</li>
+        </ul>
+
+        <section class="exercise">
+          <h2>Practice Exercise (No Coding Fear)</h2>
+          <ol>
+            <li>Write in your own words what automation testing means.</li>
+            <li>Copy the tiny example and explain each line to yourself.</li>
+            <li>List 3 tasks in your current project that can be automated.</li>
+            <li>Create a simple daily habit: automate one tiny check every day for 14 days.</li>
+          </ol>
+        </section>
+
+        <section class="quiz" data-quiz>
+          <h2>MCQ Self-Check</h2>
+
+          <div class="question" data-answer="b">
+            <p>1. Automation testing mainly helps to:</p>
+            <label><input type="radio" name="quiz-0-q0" value="a" /> Make reports colorful</label>
+            <label><input type="radio" name="quiz-0-q0" value="b" /> Repeat checks quickly and consistently</label>
+            <label><input type="radio" name="quiz-0-q0" value="c" /> Remove all manual testing permanently</label>
+          </div>
+
+          <div class="question" data-answer="c">
+            <p>2. In Playwright, <code>expect</code> is used for:</p>
+            <label><input type="radio" name="quiz-0-q1" value="a" /> Opening browser</label>
+            <label><input type="radio" name="quiz-0-q1" value="b" /> Clicking links</label>
+            <label><input type="radio" name="quiz-0-q1" value="c" /> Validating expected result</label>
+          </div>
+
+          <div class="question" data-answer="a">
+            <p>3. A locator is:</p>
+            <label><input type="radio" name="quiz-0-q2" value="a" /> A way to find page elements</label>
+            <label><input type="radio" name="quiz-0-q2" value="b" /> A CI server</label>
+            <label><input type="radio" name="quiz-0-q2" value="c" /> A screenshot format</label>
+          </div>
+
+          <button class="grade-btn" type="button" data-grade>Grade Me</button>
+          <p class="result" data-result aria-live="polite"></p>
+        </section>
+
+        <section class="exercise">
+          <p><a href="modules/01-basics.html">Go to Module 1: Basics</a></p>
+        </section>
+      </main>
+    </div>
+
+    <script src="../../assets/app.js"></script>
+  </body>
+</html>
+
+

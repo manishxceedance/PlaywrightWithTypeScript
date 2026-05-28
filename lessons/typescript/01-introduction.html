@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lesson 1 - TypeScript Introduction and Setup</title>
+    <link rel="stylesheet" href="../../assets/styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <a class="brand" href="../../index.html">ZeroToHero TypeScript Academy</a>
+      <button class="menu-toggle" data-menu-toggle>Open Menu</button>
+    </header>
+
+    <div class="layout">
+      <aside class="sidebar" data-sidebar>
+        <h2>Learning Menus</h2>
+        <div class="menu-group">
+          <p class="menu-group-title">TypeScript</p>
+          <ul>
+            <li><a href="00-javascript-basics.html">0. JavaScript Basics (Must Learn First)</a></li>
+            <li><a class="active" href="01-introduction.html">1. Introduction and Setup</a></li>
+            <li><a href="02-types-and-unions.html">2. Types, Unions, and Narrowing</a></li>
+            <li><a href="03-functions-and-objects.html">3. Functions and Object Types</a></li>
+            <li><a href="04-interfaces-and-type-aliases.html">4. Interfaces and Type Aliases</a></li>
+            <li><a href="../capstone.html">Final Capstone Assessment</a></li>
+          </ul>
+        </div>
+        <div class="menu-group">
+          <p class="menu-group-title">Type Script</p>
+          <ul>
+            <li><a href="../type-script/05-classes-and-oop.html">5. Classes and OOP</a></li>
+            <li><a href="../type-script/06-generics.html">6. Generics</a></li>
+            <li><a href="../type-script/07-async-and-errors.html">7. Async Patterns and Error Handling</a></li>
+            <li><a href="../type-script/08-tsconfig-and-modules.html">8. tsconfig and Modules</a></li>
+            <li><a href="../capstone.html">Final Capstone Assessment</a></li>
+          </ul>
+        </div>
+      </aside>
+
+      <main class="content lesson">
+        <h1>Lesson 1: Start from Scratch - Prerequisites and Project Setup</h1>
+        <p class="lesson-meta">
+          <span class="difficulty-badge">Level: Beginner</span>
+          Zero experience assumed. Follow these steps in sequence.
+        </p>
+        <p>
+          This lesson is for absolute beginners. By the end, you will have a running TypeScript project and understand each setup step.
+        </p>
+
+        <h2>1. Why TypeScript for Manual Testers?</h2>
+        <p>
+          TypeScript helps you catch defects early while writing scripts, test utilities, and API data checks. Instead of finding mistakes only at runtime,
+          TypeScript reports many issues while coding.
+        </p>
+
+        <h2>2. Prerequisites (Install These First)</h2>
+        <h3>A. Node.js and npm</h3>
+        <p>
+          TypeScript compiler is installed through npm, which comes with Node.js.
+        </p>
+        <pre><code>node -v
+npm -v</code></pre>
+        <p>If both commands return version numbers, your environment is ready.</p>
+
+        <h3>B. Visual Studio Code</h3>
+        <p>
+          Install VS Code and recommended extensions:
+        </p>
+        <ul>
+          <li>ESLint</li>
+          <li>Prettier - Code formatter</li>
+          <li>TypeScript and JavaScript Language Features (usually built-in)</li>
+        </ul>
+
+        <h3>C. Basic terminal knowledge</h3>
+        <p>
+          You should know how to open a terminal and run commands in your project folder.
+        </p>
+
+        <h2>3. Create Your First TypeScript Project</h2>
+        <p>Create a folder and move into it:</p>
+        <pre><code>mkdir ts-from-scratch
+cd ts-from-scratch</code></pre>
+
+        <p>Initialize npm package:</p>
+        <pre><code>npm init -y</code></pre>
+
+        <p>Install TypeScript as a dev dependency:</p>
+        <pre><code>npm install -D typescript</code></pre>
+
+        <p>Create TypeScript configuration:</p>
+        <pre><code>npx tsc --init</code></pre>
+
+        <p>
+          After creating <code>tsconfig.json</code>, set these beginner-friendly options so compile output always goes to <code>dist</code>.
+        </p>
+        <pre><code>{
+  "compilerOptions": {
+    "rootDir": "src",
+    "outDir": "dist",
+    "strict": true
+  },
+  "include": ["src"]
+}</code></pre>
+
+        <h2>4. Recommended Beginner Folder Structure</h2>
+        <pre><code>ts-from-scratch/
+  src/
+    index.ts
+  dist/
+  package.json
+  tsconfig.json</code></pre>
+
+    <p>Create the folder and file with commands:</p>
+    <pre><code>mkdir src
+  New-Item src/index.ts -ItemType File</code></pre>
+
+        <p>Create source file and add sample code:</p>
+        <pre><code>// src/index.ts
+const testerName: string = "Asha";
+const executedCases: number = 24;
+
+console.log(`${testerName} executed ${executedCases} test cases today.`);</code></pre>
+
+        <h2>5. Compile and Run</h2>
+        <p>Compile TypeScript into JavaScript:</p>
+        <pre><code>npx tsc</code></pre>
+
+        <p>Run generated JavaScript:</p>
+        <pre><code>node dist/index.js</code></pre>
+
+        <p>
+          If your output path is different, check your <code>tsconfig.json</code> values for <code>rootDir</code> and <code>outDir</code>.
+        </p>
+
+        <h3>First-run troubleshooting (important for beginners)</h3>
+        <ul>
+          <li><code>npx tsc</code> says file not found: verify <code>src/index.ts</code> exists.</li>
+          <li><code>node dist/index.js</code> fails: compile again and confirm <code>outDir</code> is <code>dist</code>.</li>
+          <li>PowerShell says command not found: close and reopen terminal after installing Node.js.</li>
+        </ul>
+
+        <h2>6. Add Helpful npm Scripts</h2>
+        <p>Update your package scripts:</p>
+        <pre><code>{
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "tsc --watch"
+  }
+}</code></pre>
+
+        <p>Now your daily commands are easier:</p>
+        <pre><code>npm run build
+npm run start</code></pre>
+
+        <h2>7. Common Setup Mistakes</h2>
+        <ul>
+          <li>Node.js not installed, so npm commands fail.</li>
+          <li>Running commands outside project folder.</li>
+          <li>Wrong file path in run command (for example, <code>dist/index.js</code> not found).</li>
+          <li>Not creating <code>src/index.ts</code> before compile.</li>
+        </ul>
+
+        <section class="exercise">
+          <h2>Practice Exercise</h2>
+          <ol>
+            <li>Create a new project named <code>qa-ts-lab</code>.</li>
+            <li>Initialize npm and install TypeScript locally.</li>
+            <li>Create <code>src/index.ts</code> with your name and one testing metric.</li>
+            <li>Compile and run the file successfully.</li>
+            <li>Add scripts: <code>build</code>, <code>start</code>, and <code>dev</code>.</li>
+          </ol>
+        </section>
+
+        <section class="quiz" data-quiz>
+          <h2>MCQ Self-Check</h2>
+
+          <div class="question" data-answer="b">
+            <p>1. Which tool compiles TypeScript to JavaScript?</p>
+            <label><input type="radio" name="quiz-0-q0" value="a" /> node</label>
+            <label><input type="radio" name="quiz-0-q0" value="b" /> tsc</label>
+            <label><input type="radio" name="quiz-0-q0" value="c" /> jest</label>
+          </div>
+
+          <div class="question" data-answer="a">
+            <p>2. Which command creates a default tsconfig file?</p>
+            <label><input type="radio" name="quiz-0-q1" value="a" /> npx tsc --init</label>
+            <label><input type="radio" name="quiz-0-q1" value="b" /> npm run init-ts</label>
+            <label><input type="radio" name="quiz-0-q1" value="c" /> node --ts</label>
+          </div>
+
+          <div class="question" data-answer="c">
+            <p>3. What is the main benefit of TypeScript?</p>
+            <label><input type="radio" name="quiz-0-q2" value="a" /> Smaller file size</label>
+            <label><input type="radio" name="quiz-0-q2" value="b" /> No need for Node.js</label>
+            <label><input type="radio" name="quiz-0-q2" value="c" /> Catching type-related issues while coding</label>
+          </div>
+
+          <button class="grade-btn" type="button" data-grade>Grade Me</button>
+          <p class="result" data-result aria-live="polite"></p>
+        </section>
+      </main>
+    </div>
+
+    <script src="../../assets/app.js"></script>
+  </body>
+</html>

@@ -1,0 +1,141 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Module 5 - Actions and Elements</title>
+    <link rel="stylesheet" href="../../../assets/styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <a class="brand" href="../../../index.html">ZeroToHero TypeScript Academy</a>
+      <button class="menu-toggle" data-menu-toggle>Open Menu</button>
+    </header>
+
+    <div class="layout">
+      <aside class="sidebar" data-sidebar>
+        <h2>Playwright Learning</h2>
+        <div class="menu-group">
+          <p class="menu-group-title">Track</p>
+          <ul>
+            <li><a href="../01-playwright-complete-guide.html">Playwright Mastery Roadmap</a></li>
+            <li><a href="../00-playwright-for-absolutely-beginners.html">0. Absolute Beginner Start Here</a></li>
+            <li><a href="01-basics.html">1. Basics</a></li>
+            <li><a href="02-setup.html">2. Setup</a></li>
+            <li><a href="03-core-playwright.html">3. Core Playwright</a></li>
+            <li><a href="04-locators.html">4. Locators</a></li>
+            <li><a href="05-actions-elements.html">5. Actions and Elements</a></li>
+            <li><a href="06-wait-handling.html">6. Wait Handling</a></li>
+            <li><a href="07-browser-handling.html">7. Browser Handling</a></li>
+            <li><a href="08-validation.html">8. Validation</a></li>
+            <li><a href="09-test-data.html">9. Test Data</a></li>
+            <li><a href="10-framework-design.html">10. Framework Design</a></li>
+            <li><a href="11-api-testing.html">11. API Testing</a></li>
+            <li><a href="12-authentication.html">12. Authentication</a></li>
+            <li><a href="13-execution.html">13. Execution</a></li>
+            <li><a href="14-reporting.html">14. Reporting</a></li>
+            <li><a href="15-debugging.html">15. Debugging</a></li>
+            <li><a href="16-ci-cd.html">16. CI/CD</a></li>
+            <li><a href="17-advanced-topics.html">17. Advanced Topics</a></li>
+            <li><a href="18-best-practices.html">18. Best Practices</a></li>
+            <li><a href="19-project-implementation.html">19. Project Implementation</a></li>
+            <li><a href="../99-playwright-capstone-50-mcq.html">Final Capstone (50 MCQ)</a></li>
+          </ul>
+        </div>
+      </aside>
+      <main class="content lesson">
+        <h1>Module 5: Actions and Elements</h1>
+        <p class="lesson-meta">
+          <span class="difficulty-badge">Beginner Friendly</span>
+          This module explains concepts in plain language and then gives practical examples.
+        </p>
+
+        <h2>What You Will Learn</h2>
+        <p>How to perform common UI actions safely, including alerts, iframes, and shadow DOM components.</p>
+
+        <h2>Simple Explanation</h2>
+        <p>Playwright can click, type, select dropdown values, check options, handle browser alerts, and work inside iframes and shadow DOM. These are common real-world blockers for beginners.</p>
+
+        <h2>Real-World Example</h2>
+        <p>A checkout flow usually needs typing address, selecting country, accepting terms, confirming an alert, and entering payment details inside iframe fields.</p>
+
+        <h2>Step-by-Step Example (Code)</h2>
+        <pre><code>await page.getByRole('button', { name: 'Checkout' }).click();
+      await page.getByLabel('Address').fill('Bengaluru');
+      await page.locator('#country').selectOption('IN');
+      await page.getByLabel('I agree').check();
+
+      // Alert handling: register listener before clicking the alert trigger
+      page.once('dialog', async dialog =&gt; {
+        await expect(dialog.message()).toContain('Are you sure');
+        await dialog.accept();
+      });
+      await page.getByRole('button', { name: 'Delete item' }).click();
+
+      // Frame handling: switch to iframe with frameLocator
+      const paymentFrame = page.frameLocator('#payment-frame');
+      await paymentFrame.getByPlaceholder('1234 1234 1234 1234').fill('4242 4242 4242 4242');
+      await paymentFrame.getByLabel('Expiry').fill('12/30');
+
+      // Shadow DOM handling: Playwright supports open shadow roots through locator chaining
+      await page.locator('user-card').locator('[data-testid="menu-button"]').click();</code></pre>
+        <section class="exercise">
+          <h2>Beginner Notes (Line by Line)</h2>
+          <ol>
+            <li><code>await page.getByRole('button', { name: 'Checkout' }).click();</code> - This finds a button or link by its label and clicks it.</li>
+            <li><code>await page.getByLabel('Address').fill('Bengaluru');</code> - This finds a text box by its label and types in the value.</li>
+            <li><code>await page.locator('#country').selectOption('IN');</code> - This picks a value from a dropdown menu.</li>
+            <li><code>await page.getByLabel('I agree').check();</code> - This checks a checkbox or radio button.</li>
+            <li><code>page.once('dialog', ...)</code> - Use this to handle one alert/confirm/prompt event safely.</li>
+            <li><code>await expect(dialog.message()).toContain('Are you sure');</code> - You can verify alert text before accepting.</li>
+            <li><code>const paymentFrame = page.frameLocator('#payment-frame');</code> - This lets you work inside an embedded frame (iframe).</li>
+            <li><code>paymentFrame.getByPlaceholder(...).fill(...)</code> - Interact with iframe controls just like normal locators.</li>
+            <li><code>page.locator('user-card').locator('[data-testid="menu-button"]')</code> - For open shadow DOM, chain locators from host to internal element.</li>
+</ol>
+        </section>
+
+        <h2>Common Mistake to Avoid</h2>
+        <p>Trying to interact with iframe elements directly from page or adding dialog listener after click. Register dialog handler first, then trigger action.</p>
+
+        <section class="exercise">
+          <h2>Practice Exercise</h2>
+          <ol>
+            <li>Automate a form with text, dropdown, checkbox, and submit.</li>
+            <li>Handle one confirm alert and validate its message text.</li>
+            <li>Fill one card field inside iframe and click one element inside shadow DOM.</li>
+          </ol>
+        </section>
+
+        <section class="quiz" data-quiz>
+          <h2>MCQ Self-Check</h2>
+          <div class="question" data-answer="a">
+            <p>1. For iframe interaction, use:</p>
+            <label><input type="radio" name="quiz-0-q0" value="a" /> frameLocator</label>
+            <label><input type="radio" name="quiz-0-q0" value="b" /> window.switch</label>
+            <label><input type="radio" name="quiz-0-q0" value="c" /> hoverOnly</label>
+          </div>
+
+          <div class="question" data-answer="a">
+            <p>2. Dropdown value selection method is:</p>
+            <label><input type="radio" name="quiz-0-q1" value="a" /> selectOption</label>
+            <label><input type="radio" name="quiz-0-q1" value="b" /> chooseText</label>
+            <label><input type="radio" name="quiz-0-q1" value="c" /> fillOption</label>
+          </div>
+
+          <button class="grade-btn" type="button" data-grade>Grade Me</button>
+          <p class="result" data-result aria-live="polite"></p>
+        </section>
+
+        <section class="exercise">
+          <h2>Navigation</h2>
+          <p><a href="04-locators.html">Previous</a> | <a href="06-wait-handling.html">Next</a></p>
+        </section>
+      </main>
+    </div>
+
+    <script src="../../../assets/app.js"></script>
+  </body>
+</html>
+
+
+

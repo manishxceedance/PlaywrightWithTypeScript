@@ -1,0 +1,124 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Module 13 - Execution</title>
+    <link rel="stylesheet" href="../../../assets/styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <a class="brand" href="../../../index.html">ZeroToHero TypeScript Academy</a>
+      <button class="menu-toggle" data-menu-toggle>Open Menu</button>
+    </header>
+
+    <div class="layout">
+      <aside class="sidebar" data-sidebar>
+        <h2>Playwright Learning</h2>
+        <div class="menu-group">
+          <p class="menu-group-title">Track</p>
+          <ul>
+            <li><a href="../01-playwright-complete-guide.html">Playwright Mastery Roadmap</a></li>
+            <li><a href="../00-playwright-for-absolutely-beginners.html">0. Absolute Beginner Start Here</a></li>
+            <li><a href="01-basics.html">1. Basics</a></li>
+            <li><a href="02-setup.html">2. Setup</a></li>
+            <li><a href="03-core-playwright.html">3. Core Playwright</a></li>
+            <li><a href="04-locators.html">4. Locators</a></li>
+            <li><a href="05-actions-elements.html">5. Actions and Elements</a></li>
+            <li><a href="06-wait-handling.html">6. Wait Handling</a></li>
+            <li><a href="07-browser-handling.html">7. Browser Handling</a></li>
+            <li><a href="08-validation.html">8. Validation</a></li>
+            <li><a href="09-test-data.html">9. Test Data</a></li>
+            <li><a href="10-framework-design.html">10. Framework Design</a></li>
+            <li><a href="11-api-testing.html">11. API Testing</a></li>
+            <li><a href="12-authentication.html">12. Authentication</a></li>
+            <li><a href="13-execution.html">13. Execution</a></li>
+            <li><a href="14-reporting.html">14. Reporting</a></li>
+            <li><a href="15-debugging.html">15. Debugging</a></li>
+            <li><a href="16-ci-cd.html">16. CI/CD</a></li>
+            <li><a href="17-advanced-topics.html">17. Advanced Topics</a></li>
+            <li><a href="18-best-practices.html">18. Best Practices</a></li>
+            <li><a href="19-project-implementation.html">19. Project Implementation</a></li>
+            <li><a href="../99-playwright-capstone-50-mcq.html">Final Capstone (50 MCQ)</a></li>
+          </ul>
+        </div>
+      </aside>
+      <main class="content lesson">
+        <h1>Module 13: Execution</h1>
+        <p class="lesson-meta">
+          <span class="difficulty-badge">Beginner Friendly</span>
+          This module explains concepts in plain language and then gives practical examples.
+        </p>
+
+        <h2>What You Will Learn</h2>
+        <p>How to run tests in parallel and across browsers.</p>
+
+        <h2>Simple Explanation</h2>
+        <p>Parallel workers reduce total runtime. Browser projects help verify behavior on multiple engines.</p>
+
+        <h2>Real-World Example</h2>
+        <p>A flow works in Chromium but fails in WebKit due to rendering difference. Cross-browser run finds this early.</p>
+
+        <h2>Step-by-Step Example (Code)</h2>
+        <pre><code>// playwright.config.ts
+projects: [
+  { name: 'chromium', use: { browserName: 'chromium' } },
+  { name: 'firefox', use: { browserName: 'firefox' } },
+  { name: 'webkit', use: { browserName: 'webkit' } }
+];</code></pre>
+        <section class="exercise">
+          <h2>Beginner Notes (Line by Line)</h2>
+          <ol>
+            <li><code>// playwright.config.ts</code> - This is a comment describing the next step.</li>
+            <li><code>projects: [</code> - This sets up which browsers to test in.</li>
+            <li><code>{ name: 'chromium', use: { browserName: 'chromium' } },</code> - This is a supporting line for the Execution example.</li>
+            <li><code>{ name: 'firefox', use: { browserName: 'firefox' } },</code> - This is a supporting line for the Execution example.</li>
+            <li><code>{ name: 'webkit', use: { browserName: 'webkit' } }</code> - This is a supporting line for the Execution example.</li>
+            <li><code>];</code> - This is a supporting line for the Execution example.</li>
+</ol>
+        </section>
+
+        <h2>Common Mistake to Avoid</h2>
+        <p>Setting too many workers for unstable test environment. Tune worker count to infrastructure capacity.</p>
+
+        <section class="exercise">
+          <h2>Practice Exercise</h2>
+          <ol>
+            <li>Run suite with 2 workers and compare runtime.</li>
+            <li>Run same test in Chromium and Firefox and compare behavior.</li>
+          </ol>
+        </section>
+
+        <section class="quiz" data-quiz>
+          <h2>MCQ Self-Check</h2>
+          <div class="question" data-answer="a">
+            <p>1. Parallel execution improves mostly:</p>
+            <label><input type="radio" name="quiz-0-q0" value="a" /> Total runtime</label>
+            <label><input type="radio" name="quiz-0-q0" value="b" /> Code formatting</label>
+            <label><input type="radio" name="quiz-0-q0" value="c" /> Color theme</label>
+          </div>
+
+          <div class="question" data-answer="a">
+            <p>2. Cross-browser testing means:</p>
+            <label><input type="radio" name="quiz-0-q1" value="a" /> Run on multiple browser engines</label>
+            <label><input type="radio" name="quiz-0-q1" value="b" /> Run only on one browser</label>
+            <label><input type="radio" name="quiz-0-q1" value="c" /> No browser required</label>
+          </div>
+
+          <button class="grade-btn" type="button" data-grade>Grade Me</button>
+          <p class="result" data-result aria-live="polite"></p>
+        </section>
+
+        <section class="exercise">
+          <h2>Navigation</h2>
+          <p><a href="12-authentication.html">Previous</a> | <a href="14-reporting.html">Next</a></p>
+        </section>
+      </main>
+    </div>
+
+    <script src="../../../assets/app.js"></script>
+  </body>
+</html>
+
+
+

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Practice App - Shadow DOM</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <section class="home-hero" style="margin-bottom:2.5rem;">
+    <h1 style="font-size:2.2rem; margin-bottom:0.5rem;">Practice App: Shadow DOM</h1>
+    <div class="home-meta" style="margin-bottom:1.2rem;">
+      <span class="home-pill" style="background:var(--accent-soft);color:var(--accent);margin-right:0.7em;">Practice Lab</span>
+      <span class="home-pill" style="background:var(--warm);color:#fff;">Shadow DOM</span>
+    </div>
+    <p style="font-size:1.15rem;max-width:600px;">Practice handling shadow DOM elements and custom elements. Use this page to master Playwright's shadow DOM selectors and automation.</p>
+  </section>
+
+  <nav style="margin-bottom:2rem;">
+    <a href="index.html">Basic Controls</a> |
+    <a href="grid-frame.html">Grid & Frame</a> |
+    <a href="grid-controls.html">Grid with Controls</a> |
+    <a href="shadow.html"><b>Shadow DOM</b></a> |
+    <a href="index.html">Practice App Home</a>
+  </nav>
+
+  <section class="home-card" style="margin-bottom:2.5rem;">
+    <h2 style="margin-top:0;">Shadow DOM Component</h2>
+    <practice-shadow></practice-shadow>
+  </section>
+
+  <a href="../../index.html" class="home-btn floating-home-btn" title="Back to Home">&#8962; Home</a>
+  <script src="../../assets/app.js"></script>
+  <script src="shadow.js"></script>
+</body>
+</html>

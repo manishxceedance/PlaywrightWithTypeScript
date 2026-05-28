@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lesson 5 - Classes and OOP</title>
+    <link rel="stylesheet" href="../../assets/styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <a class="brand" href="../../index.html">ZeroToHero TypeScript Academy</a>
+      <button class="menu-toggle" data-menu-toggle>Open Menu</button>
+    </header>
+
+    <div class="layout">
+      <aside class="sidebar" data-sidebar>
+        <h2>Learning Menus</h2>
+        <div class="menu-group">
+          <p class="menu-group-title">TypeScript</p>
+          <ul>
+            <li><a href="../typescript/00-javascript-basics.html">0. JavaScript Basics (Must Learn First)</a></li>
+            <li><a href="../typescript/01-introduction.html">1. Introduction and Setup</a></li>
+            <li><a href="../typescript/02-types-and-unions.html">2. Types, Unions, and Narrowing</a></li>
+            <li><a href="../typescript/03-functions-and-objects.html">3. Functions and Object Types</a></li>
+            <li><a href="../typescript/04-interfaces-and-type-aliases.html">4. Interfaces and Type Aliases</a></li>
+            <li><a href="../capstone.html">Final Capstone Assessment</a></li>
+          </ul>
+        </div>
+        <div class="menu-group">
+          <p class="menu-group-title">Type Script</p>
+          <ul>
+            <li><a class="active" href="05-classes-and-oop.html">5. Classes and OOP</a></li>
+            <li><a href="06-generics.html">6. Generics</a></li>
+            <li><a href="07-async-and-errors.html">7. Async Patterns and Error Handling</a></li>
+            <li><a href="08-tsconfig-and-modules.html">8. tsconfig and Modules</a></li>
+          </ul>
+        </div>
+      </aside>
+
+      <main class="content lesson">
+
+        <h1>Lesson 5: Classes and OOP (Object-Oriented Programming)</h1>
+        <p class="lesson-meta">
+          <span class="difficulty-badge">Level: Intermediate</span>
+          Learn how to build reusable, organized code using TypeScript classes and OOP features.
+        </p>
+        <p>
+          Classes help you build reusable framework components like page objects, API clients, and test reporters. OOP lets you organize code for real-world automation and apps.
+        </p>
+
+        <section class="lesson-section">
+          <h2>1. What is a Class?</h2>
+          <p>A <b>class</b> is a blueprint for creating objects with shared structure and behavior. Use classes for things that have properties and actions.</p>
+          <pre><code>// A simple test suite class
+class TestSuite {
+  name: string;
+  totalCases: number;
+
+  constructor(name: string, totalCases: number) {
+    this.name = name;
+    this.totalCases = totalCases;
+  }
+
+  getSummary(): string {
+    return `${this.name}: ${this.totalCases} cases`;
+  }
+}
+
+const suite = new TestSuite("Login", 12);
+console.log(suite.getSummary()); // Login: 12 cases
+          </code></pre>
+        </section>
+
+        <section class="lesson-section">
+          <h2>2. Access Modifiers</h2>
+          <p>Access modifiers control where a property or method can be used.</p>
+          <ul>
+            <li><code>public</code>: accessible everywhere (default).</li>
+            <li><code>private</code>: only inside this class.</li>
+            <li><code>protected</code>: inside this class and subclasses.</li>
+          </ul>
+          <pre><code>class User {
+  public name: string;
+  private password: string;
+  protected role: string;
+
+  constructor(name: string, password: string, role: string) {
+    this.name = name;
+    this.password = password;
+    this.role = role;
+  }
+}
+          </code></pre>
+        </section>
+
+        <section class="lesson-section">
+          <h2>3. Inheritance and super()</h2>
+          <p>One class can <b>extend</b> another to reuse and customize behavior. Use <code>super()</code> to call the parent’s constructor or methods.</p>
+          <pre><code>class BasePage {
+  navigate(url: string): void {
+    console.log(`Open ${url}`);
+  }
+}
+
+class LoginPage extends BasePage {
+  login(user: string, pass: string): void {
+    console.log(`Login with ${user}`);
+  }
+}
+
+const page = new LoginPage();
+page.navigate("/login");
+page.login("alice", "secret");
+          </code></pre>
+        </section>
+
+        <section class="lesson-section">
+          <h2>4. Static Members</h2>
+          <p><b>static</b> properties and methods belong to the class itself, not to instances. Use them for helpers or shared values.</p>
+          <pre><code>class MathUtils {
+  static PI = 3.14;
+  static square(x: number) {
+    return x * x;
+  }
+}
+console.log(MathUtils.PI);
+console.log(MathUtils.square(5));
+          </code></pre>
+        </section>
+
+        <section class="lesson-section">
+          <h2>5. Abstract Classes</h2>
+          <p>An <b>abstract class</b> can’t be created directly. It defines a contract for subclasses to implement.</p>
+          <pre><code>abstract class Reporter {
+  abstract report(message: string): void;
+  log(msg: string) {
+    console.log("LOG:", msg);
+  }
+}
+
+class ConsoleReporter extends Reporter {
+  report(message: string): void {
+    console.log(`[REPORT] ${message}`);
+  }
+}
+
+const rep = new ConsoleReporter();
+rep.report("All tests passed");
+          </code></pre>
+        </section>
+
+        <section class="lesson-section">
+          <h2>6. Interface + Class Contract</h2>
+          <p>Classes can <b>implement</b> interfaces to guarantee they provide certain methods or properties.</p>
+          <pre><code>interface Logger {
+  log(message: string): void;
+}
+
+class FileLogger implements Logger {
+  log(message: string): void {
+    // Write to file (simulated)
+    console.log(`[FILE] ${message}`);
+  }
+}
+          </code></pre>
+        </section>
+
+        <section class="lesson-section">
+          <h2>7. Real-World Example: API Client</h2>
+          <p>Combine these features to build a real-world API client class.</p>
+          <pre><code>class ApiClient {
+  constructor(private baseUrl: string) {}
+  get(endpoint: string) {
+    console.log(`GET ${this.baseUrl}${endpoint}`);
+  }
+}
+
+class SecuredApiClient extends ApiClient {
+  constructor(baseUrl: string, private token: string) {
+    super(baseUrl);
+  }
+  get(endpoint: string) {
+    console.log(`GET ${endpoint} with token ${this.token}`);
+  }
+}
+          </code></pre>
+        </section>
+
+        <section class="exercise">
+          <h2>Practice Exercise</h2>
+          <ol>
+            <li>Create class <code>ApiClient</code> with base URL in constructor.</li>
+            <li>Add method <code>get</code> that prints endpoint URL.</li>
+            <li>Create child class <code>SecuredApiClient</code> with token field.</li>
+            <li>Implement interface <code>Logger</code> in class <code>FileLogger</code>.</li>
+          </ol>
+        </section>
+
+        <section class="quiz" data-quiz>
+          <h2>MCQ Self-Check</h2>
+
+          <div class="question" data-answer="b">
+            <p>1. Which keyword is used for class inheritance?</p>
+            <label><input type="radio" name="quiz-0-q0" value="a" /> implement</label>
+            <label><input type="radio" name="quiz-0-q0" value="b" /> extends</label>
+            <label><input type="radio" name="quiz-0-q0" value="c" /> supertype</label>
+          </div>
+
+          <div class="question" data-answer="a">
+            <p>2. Which access modifier restricts use to class only?</p>
+            <label><input type="radio" name="quiz-0-q1" value="a" /> private</label>
+            <label><input type="radio" name="quiz-0-q1" value="b" /> public</label>
+            <label><input type="radio" name="quiz-0-q1" value="c" /> export</label>
+          </div>
+
+          <div class="question" data-answer="c">
+            <p>3. Class following an interface uses:</p>
+            <label><input type="radio" name="quiz-0-q2" value="a" /> extends</label>
+            <label><input type="radio" name="quiz-0-q2" value="b" /> include</label>
+            <label><input type="radio" name="quiz-0-q2" value="c" /> implements</label>
+          </div>
+
+          <button class="grade-btn" type="button" data-grade>Grade Me</button>
+          <p class="result" data-result aria-live="polite"></p>
+        </section>
+      </main>
+    </div>
+
+    <script src="../../assets/app.js"></script>
+  </body>
+</html>

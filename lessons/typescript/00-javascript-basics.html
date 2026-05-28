@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lesson 0 - JavaScript Basics Before TypeScript</title>
+    <link rel="stylesheet" href="../../assets/styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <a class="brand" href="../../index.html">ZeroToHero TypeScript Academy</a>
+      <button class="menu-toggle" data-menu-toggle>Open Menu</button>
+    </header>
+
+    <div class="layout">
+      <aside class="sidebar" data-sidebar>
+        <h2>Learning Menus</h2>
+        <div class="menu-group">
+          <p class="menu-group-title">TypeScript</p>
+          <ul>
+            <li><a class="active" href="00-javascript-basics.html">0. JavaScript Basics (Must Learn First)</a></li>
+            <li><a href="01-introduction.html">1. Introduction and Setup</a></li>
+            <li><a href="02-types-and-unions.html">2. Types, Unions, and Narrowing</a></li>
+            <li><a href="03-functions-and-objects.html">3. Functions and Object Types</a></li>
+            <li><a href="04-interfaces-and-type-aliases.html">4. Interfaces and Type Aliases</a></li>
+            <li><a href="../capstone.html">Final Capstone Assessment</a></li>
+          </ul>
+        </div>
+        <div class="menu-group">
+          <p class="menu-group-title">Type Script</p>
+          <ul>
+            <li><a href="../type-script/05-classes-and-oop.html">5. Classes and OOP</a></li>
+            <li><a href="../type-script/06-generics.html">6. Generics</a></li>
+            <li><a href="../type-script/07-async-and-errors.html">7. Async Patterns and Error Handling</a></li>
+            <li><a href="../type-script/08-tsconfig-and-modules.html">8. tsconfig and Modules</a></li>
+            <li><a href="../capstone.html">Final Capstone Assessment</a></li>
+          </ul>
+        </div>
+      </aside>
+
+      <main class="content lesson">
+        <h1>Lesson 0: JavaScript Basics Before TypeScript</h1>
+        <p class="lesson-meta">
+          <span class="difficulty-badge">Level: Absolute Beginner</span>
+          No programming background required. Learn these basics first.
+        </p>
+        <p>
+          TypeScript is built on top of JavaScript. If you are new to coding, this lesson gives you the exact concepts you must understand before writing TypeScript.
+        </p>
+
+        <h2>0. Before Coding: How to Run a File and Read Syntax</h2>
+        <p>
+          New learners often struggle not because of logic, but because they do not know how to execute code. Start here.
+        </p>
+        <ul>
+          <li>Create a file named <code>basics.js</code>.</li>
+          <li>Write one line: <code>console.log("Hello, JavaScript")</code>.</li>
+          <li>Open terminal in the same folder and run <code>node basics.js</code>.</li>
+          <li>If you see output, your environment is working.</li>
+        </ul>
+        <p>
+          How to read a statement: <code>console.log("Hello")</code> means call the <code>log</code> function from <code>console</code> and print text.
+        </p>
+
+        <h2>1. What is a Variable?</h2>
+        <p>
+          A variable is a named box that stores data. You create a variable, put a value in it, and reuse it later.
+        </p>
+        <pre><code>let testerName = "Riya";
+let totalCases = 30;
+console.log(testerName, totalCases);</code></pre>
+
+        <h2>2. Difference Between var, let, and const</h2>
+        <p>
+          This is one of the most important beginner topics.
+        </p>
+
+        <h3>A. var (old style, avoid in modern code)</h3>
+        <p>
+          <code>var</code> is function-scoped and can be re-declared in the same scope, which can create bugs.
+        </p>
+        <pre><code>var environment = "qa";
+var environment = "staging"; // allowed, but risky
+console.log(environment);</code></pre>
+
+        <h3>B. let (preferred for values that change)</h3>
+        <p>
+          <code>let</code> is block-scoped and can be reassigned, but cannot be re-declared in the same block.
+        </p>
+        <pre><code>let passed = 12;
+passed = 13; // allowed
+// let passed = 14; // not allowed in the same block</code></pre>
+
+        <h3>C. const (preferred by default)</h3>
+        <p>
+          <code>const</code> is block-scoped and cannot be reassigned. Use <code>const</code> unless you know the variable itself will change.
+        </p>
+        <pre><code>const projectName = "Billing Portal";
+// projectName = "Payments Portal"; // error</code></pre>
+
+        <p>
+          Important beginner note: with <code>const</code> object variables, object properties can still change.
+        </p>
+        <pre><code>const result = { passed: 8 };
+result.passed = 9; // allowed
+// result = { passed: 10 }; // not allowed</code></pre>
+
+        <h3>Quick rule for beginners</h3>
+        <ul>
+          <li>Use <code>const</code> by default.</li>
+          <li>Use <code>let</code> if value must change.</li>
+          <li>Avoid <code>var</code> in modern TypeScript/JavaScript projects.</li>
+        </ul>
+
+        <h2>3. What is Scope? (Why let/const are safer)</h2>
+        <p>
+          Scope means where a variable is accessible. Block scope is code inside <code>{ }</code>.
+        </p>
+        <pre><code>if (true) {
+  let insideBlock = "visible only here";
+  const anotherOne = "also only here";
+}
+
+// console.log(insideBlock); // error</code></pre>
+
+        <h2>4. Basic Data Types in JavaScript</h2>
+        <ul>
+          <li><code>string</code>: text, like "test-case-1"</li>
+          <li><code>number</code>: numeric values, like 200 or 3.14</li>
+          <li><code>boolean</code>: true/false</li>
+          <li><code>object</code>: grouped values with keys</li>
+          <li><code>array</code>: ordered list of values</li>
+        </ul>
+        <pre><code>const status = "passed";      // string
+const responseCode = 200;      // number
+const isCritical = true;       // boolean
+const tags = ["smoke", "api"]; // array
+const testCase = { id: "TC-10", title: "Login" }; // object</code></pre>
+
+        <h2>5. What is get? (Getter in Objects/Classes)</h2>
+        <p>
+          <code>get</code> creates a getter. A getter lets you read a computed value like a property, without calling it like a function.
+        </p>
+        <pre><code>const report = {
+  passed: 45,
+  failed: 5,
+  get total() {
+    return this.passed + this.failed;
+  }
+};
+
+console.log(report.total); // 50 (notice: no parentheses)</code></pre>
+
+        <p>
+          Why this is useful: you can keep logic in one place and expose a clean read-only style value.
+        </p>
+
+        <p>
+          Compare the two styles below. Both work, but getter style is cleaner at usage point.
+        </p>
+        <pre><code>const reportA = {
+  passed: 10,
+  failed: 2,
+  total() {
+    return this.passed + this.failed;
+  }
+};
+
+const reportB = {
+  passed: 10,
+  failed: 2,
+  get total() {
+    return this.passed + this.failed;
+  }
+};
+
+console.log(reportA.total()); // method call
+console.log(reportB.total);   // getter property</code></pre>
+
+        <p>
+          Related concept: <code>set</code> lets you control how a value is updated.
+        </p>
+        <pre><code>const scoreCard = {
+  _score: 0,
+  get score() {
+    return this._score;
+  },
+  set score(value) {
+    if (value &lt; 0) {
+      this._score = 0;
+      return;
+    }
+    this._score = value;
+  }
+};
+
+scoreCard.score = 15;
+console.log(scoreCard.score); // 15</code></pre>
+
+        <h2>6. Simple If, Loop, and Function (Minimum Required Basics)</h2>
+        <pre><code>const defects = 2;
+
+if (defects > 0) {
+  console.log("Retest required");
+}
+
+for (let i = 1; i &lt;= 3; i += 1) {
+  console.log(`Running test cycle ${i}`);
+}
+
+function add(a, b) {
+  return a + b;
+}
+
+console.log(add(2, 3));</code></pre>
+
+        <h2>7. How this connects to TypeScript</h2>
+        <p>
+          In TypeScript, the same JavaScript syntax is used, but you also define types to prevent mistakes.
+        </p>
+        <pre><code>const tester: string = "Riya";
+let cycleCount: number = 1;
+
+cycleCount = cycleCount + 1;</code></pre>
+
+        <section class="exercise">
+          <h2>Practice Exercise</h2>
+          <ol>
+            <li>Create one variable each using <code>var</code>, <code>let</code>, and <code>const</code>.</li>
+            <li>Try reassigning each and note which are allowed.</li>
+            <li>Create an object with <code>passed</code> and <code>failed</code>.</li>
+            <li>Add a getter named <code>total</code> to return sum.</li>
+            <li>Write one loop printing numbers 1 to 5.</li>
+          </ol>
+        </section>
+
+        <section class="quiz" data-quiz>
+          <h2>MCQ Self-Check</h2>
+
+          <div class="question" data-answer="b">
+            <p>1. Which keyword should be default choice in modern code?</p>
+            <label><input type="radio" name="quiz-0-q0" value="a" /> var</label>
+            <label><input type="radio" name="quiz-0-q0" value="b" /> const</label>
+            <label><input type="radio" name="quiz-0-q0" value="c" /> with</label>
+          </div>
+
+          <div class="question" data-answer="c">
+            <p>2. Which keyword is used when value needs to change?</p>
+            <label><input type="radio" name="quiz-0-q1" value="a" /> const</label>
+            <label><input type="radio" name="quiz-0-q1" value="b" /> final</label>
+            <label><input type="radio" name="quiz-0-q1" value="c" /> let</label>
+          </div>
+
+          <div class="question" data-answer="a">
+            <p>3. Getter with <code>get</code> is accessed as:</p>
+            <label><input type="radio" name="quiz-0-q2" value="a" /> object.total</label>
+            <label><input type="radio" name="quiz-0-q2" value="b" /> object.total()</label>
+            <label><input type="radio" name="quiz-0-q2" value="c" /> get object.total</label>
+          </div>
+
+          <div class="question" data-answer="b">
+            <p>4. Which statement about <code>var</code> is true?</p>
+            <label><input type="radio" name="quiz-0-q3" value="a" /> It is block-scoped and safest</label>
+            <label><input type="radio" name="quiz-0-q3" value="b" /> It is old style and can cause scope confusion</label>
+            <label><input type="radio" name="quiz-0-q3" value="c" /> It cannot be redeclared</label>
+          </div>
+
+          <button class="grade-btn" type="button" data-grade>Grade Me</button>
+          <p class="result" data-result aria-live="polite"></p>
+        </section>
+      </main>
+    </div>
+
+    <script src="../../assets/app.js"></script>
+  </body>
+</html>

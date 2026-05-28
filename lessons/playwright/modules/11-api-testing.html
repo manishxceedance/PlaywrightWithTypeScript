@@ -1,0 +1,128 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Module 11 - API Testing</title>
+    <link rel="stylesheet" href="../../../assets/styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <a class="brand" href="../../../index.html">ZeroToHero TypeScript Academy</a>
+      <button class="menu-toggle" data-menu-toggle>Open Menu</button>
+    </header>
+
+    <div class="layout">
+      <aside class="sidebar" data-sidebar>
+        <h2>Playwright Learning</h2>
+        <div class="menu-group">
+          <p class="menu-group-title">Track</p>
+          <ul>
+            <li><a href="../01-playwright-complete-guide.html">Playwright Mastery Roadmap</a></li>
+            <li><a href="../00-playwright-for-absolutely-beginners.html">0. Absolute Beginner Start Here</a></li>
+            <li><a href="01-basics.html">1. Basics</a></li>
+            <li><a href="02-setup.html">2. Setup</a></li>
+            <li><a href="03-core-playwright.html">3. Core Playwright</a></li>
+            <li><a href="04-locators.html">4. Locators</a></li>
+            <li><a href="05-actions-elements.html">5. Actions and Elements</a></li>
+            <li><a href="06-wait-handling.html">6. Wait Handling</a></li>
+            <li><a href="07-browser-handling.html">7. Browser Handling</a></li>
+            <li><a href="08-validation.html">8. Validation</a></li>
+            <li><a href="09-test-data.html">9. Test Data</a></li>
+            <li><a href="10-framework-design.html">10. Framework Design</a></li>
+            <li><a href="11-api-testing.html">11. API Testing</a></li>
+            <li><a href="12-authentication.html">12. Authentication</a></li>
+            <li><a href="13-execution.html">13. Execution</a></li>
+            <li><a href="14-reporting.html">14. Reporting</a></li>
+            <li><a href="15-debugging.html">15. Debugging</a></li>
+            <li><a href="16-ci-cd.html">16. CI/CD</a></li>
+            <li><a href="17-advanced-topics.html">17. Advanced Topics</a></li>
+            <li><a href="18-best-practices.html">18. Best Practices</a></li>
+            <li><a href="19-project-implementation.html">19. Project Implementation</a></li>
+            <li><a href="../99-playwright-capstone-50-mcq.html">Final Capstone (50 MCQ)</a></li>
+          </ul>
+        </div>
+      </aside>
+      <main class="content lesson">
+        <h1>Module 11: API Testing</h1>
+        <p class="lesson-meta">
+          <span class="difficulty-badge">Beginner Friendly</span>
+          This module explains concepts in plain language and then gives practical examples.
+        </p>
+
+        <h2>What You Will Learn</h2>
+        <p>How to call APIs directly and validate responses.</p>
+
+        <h2>Simple Explanation</h2>
+        <p>Playwright can test API endpoints without opening UI. This speeds up backend checks and supports setup/teardown data creation.</p>
+
+        <h2>Real-World Example</h2>
+        <p>Before UI checkout test, create test order through API so UI scenario starts in the right state.</p>
+
+        <h2>Step-by-Step Example (Code)</h2>
+        <pre><code>test('create booking', async ({ request }) => {
+  const response = await request.post('/api/bookings', {
+    data: { name: 'Asha', room: 'A101' }
+  });
+  expect(response.ok()).toBeTruthy();
+  const body = await response.json();
+  expect(body.name).toBe('Asha');
+});</code></pre>
+        <section class="exercise">
+          <h2>Beginner Notes (Line by Line)</h2>
+          <ol>
+            <li><code>test('create booking', async ({ request }) =&gt; {</code> - This line starts a new test scenario for Api testing.</li>
+            <li><code>const response = await request.post('/api/bookings', {</code> - This sends a direct API request to the server, skipping the UI.</li>
+            <li><code>data: { name: 'Asha', room: 'A101' }</code> - This provides the data to send in an API request.</li>
+            <li><code>});</code> - This is a supporting line for the Api testing example.</li>
+            <li><code>expect(response.ok()).toBeTruthy();</code> - This checks if what happened matches what you expected.</li>
+            <li><code>const body = await response.json();</code> - This gets the details from the server's response.</li>
+            <li><code>expect(body.name).toBe('Asha');</code> - This checks if what happened matches what you expected.</li>
+            <li><code>});</code> - This is a supporting line for the Api testing example.</li>
+</ol>
+        </section>
+
+        <h2>Common Mistake to Avoid</h2>
+        <p>Checking only status code. Also validate key fields in response body.</p>
+
+        <section class="exercise">
+          <h2>Practice Exercise</h2>
+          <ol>
+            <li>Write one GET and one POST API test.</li>
+            <li>Validate status, response fields, and value types.</li>
+          </ol>
+        </section>
+
+        <section class="quiz" data-quiz>
+          <h2>MCQ Self-Check</h2>
+          <div class="question" data-answer="a">
+            <p>1. API calls in Playwright usually use fixture:</p>
+            <label><input type="radio" name="quiz-0-q0" value="a" /> request</label>
+            <label><input type="radio" name="quiz-0-q0" value="b" /> page</label>
+            <label><input type="radio" name="quiz-0-q0" value="c" /> locator</label>
+          </div>
+
+          <div class="question" data-answer="a">
+            <p>2. Good API validation includes:</p>
+            <label><input type="radio" name="quiz-0-q1" value="a" /> Status and response body checks</label>
+            <label><input type="radio" name="quiz-0-q1" value="b" /> Status only</label>
+            <label><input type="radio" name="quiz-0-q1" value="c" /> No checks</label>
+          </div>
+
+          <button class="grade-btn" type="button" data-grade>Grade Me</button>
+          <p class="result" data-result aria-live="polite"></p>
+        </section>
+
+        <section class="exercise">
+          <h2>Navigation</h2>
+          <p><a href="10-framework-design.html">Previous</a> | <a href="12-authentication.html">Next</a></p>
+        </section>
+      </main>
+    </div>
+
+    <script src="../../../assets/app.js"></script>
+  </body>
+</html>
+
+
+

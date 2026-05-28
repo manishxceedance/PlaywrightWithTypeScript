@@ -1,0 +1,155 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Module 3 - Core Playwright</title>
+    <link rel="stylesheet" href="../../../assets/styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <a class="brand" href="../../../index.html">ZeroToHero TypeScript Academy</a>
+      <button class="menu-toggle" data-menu-toggle>Open Menu</button>
+    </header>
+
+    <div class="layout">
+      <aside class="sidebar" data-sidebar>
+        <h2>Playwright Learning</h2>
+        <div class="menu-group">
+          <p class="menu-group-title">Track</p>
+          <ul>
+            <li><a href="../01-playwright-complete-guide.html">Playwright Mastery Roadmap</a></li>
+            <li><a href="../00-playwright-for-absolutely-beginners.html">0. Absolute Beginner Start Here</a></li>
+            <li><a href="01-basics.html">1. Basics</a></li>
+            <li><a href="02-setup.html">2. Setup</a></li>
+            <li><a href="03-core-playwright.html">3. Core Playwright</a></li>
+            <li><a href="04-locators.html">4. Locators</a></li>
+            <li><a href="05-actions-elements.html">5. Actions and Elements</a></li>
+            <li><a href="06-wait-handling.html">6. Wait Handling</a></li>
+            <li><a href="07-browser-handling.html">7. Browser Handling</a></li>
+            <li><a href="08-validation.html">8. Validation</a></li>
+            <li><a href="09-test-data.html">9. Test Data</a></li>
+            <li><a href="10-framework-design.html">10. Framework Design</a></li>
+            <li><a href="11-api-testing.html">11. API Testing</a></li>
+            <li><a href="12-authentication.html">12. Authentication</a></li>
+            <li><a href="13-execution.html">13. Execution</a></li>
+            <li><a href="14-reporting.html">14. Reporting</a></li>
+            <li><a href="15-debugging.html">15. Debugging</a></li>
+            <li><a href="16-ci-cd.html">16. CI/CD</a></li>
+            <li><a href="17-advanced-topics.html">17. Advanced Topics</a></li>
+            <li><a href="18-best-practices.html">18. Best Practices</a></li>
+            <li><a href="19-project-implementation.html">19. Project Implementation</a></li>
+            <li><a href="../99-playwright-capstone-50-mcq.html">Final Capstone (50 MCQ)</a></li>
+          </ul>
+        </div>
+      </aside>
+      <main class="content lesson">
+        <h1>Module 3: Core Playwright</h1>
+        <p class="lesson-meta">
+          <span class="difficulty-badge">Beginner Friendly</span>
+          This module explains concepts in plain language and then gives practical examples.
+        </p>
+
+        <h2>What You Will Learn</h2>
+        <p>How tests are organized, how assertions validate outcomes, and how hooks/fixtures reduce repeated setup.</p>
+
+        <h2>Simple Explanation</h2>
+        <p>test() defines one scenario, describe() groups related scenarios, expect() checks results, and hooks (beforeEach/afterEach) prepare or clean test state.</p>
+
+        <h2>Real-World Example</h2>
+        <p>You can group all checkout tests in one describe block, so anyone can quickly understand that feature coverage.</p>
+
+        <h2>Step-by-Step Example (Code)</h2>
+        <pre><code>import { test, expect } from '@playwright/test';
+
+test.describe('Login', () => {
+  test.beforeEach(async ({ page }) => {
+    await page.goto('https://example.com/login');
+  });
+
+  test('valid login', async ({ page }) => {
+    await expect(page).toHaveURL(/login/);
+  });
+});</code></pre>
+
+        <h2>Extra Essential Topic: Hooks and Fixtures</h2>
+        <p>This is one of the most important ideas for real projects. Put repeated setup in hooks or fixtures so every test stays short and clean.</p>
+        <pre><code>import { test, expect } from '@playwright/test';
+
+test.describe('Cart', () => {
+  test.beforeEach(async ({ page }) => {
+    await page.goto('/');
+    await page.getByRole('button', { name: 'Accept cookies' }).click();
+  });
+
+  test('add one item', async ({ page }) => {
+    await page.getByRole('button', { name: 'Add to cart' }).first().click();
+    await expect(page.getByTestId('cart-count')).toHaveText('1');
+  });
+
+  test('remove item', async ({ page }) => {
+    await page.getByRole('button', { name: 'Add to cart' }).first().click();
+    await page.getByRole('button', { name: 'Remove' }).click();
+    await expect(page.getByTestId('cart-count')).toHaveText('0');
+  });
+});</code></pre>
+        <section class="exercise">
+          <h2>Beginner Notes (Line by Line)</h2>
+          <ol>
+            <li><code>import { test, expect } from '@playwright/test';</code> - This line brings in Playwright's test tools so you can write and run tests.</li>
+            <li><code>test.describe('Login', () =&gt; {</code> - This groups related test cases for the Core playwright feature.</li>
+            <li><code>test.beforeEach(async ({ page }) =&gt; {</code> - This setup runs before each test to make sure the browser is ready.</li>
+            <li><code>await page.goto('https://example.com/login');</code> - This opens the web page you want to test.</li>
+            <li><code>});</code> - This is a supporting line for the Core playwright example.</li>
+            <li><code>test('valid login', async ({ page }) =&gt; {</code> - This line starts a new test scenario for Core playwright.</li>
+            <li><code>await expect(page).toHaveURL(/login/);</code> - This checks if what happened matches what you expected.</li>
+            <li><code>});</code> - This is a supporting line for the Core playwright example.</li>
+            <li><code>});</code> - This is a supporting line for the Core playwright example.</li>
+</ol>
+        </section>
+
+        <h2>Common Mistake to Avoid</h2>
+        <p>Writing long tests with many unrelated checks. Keep one test focused on one behavior.</p>
+
+        <section class="exercise">
+          <h2>Practice Exercise</h2>
+          <ol>
+            <li>Create one describe block with two focused tests.</li>
+            <li>Add one beforeEach hook and at least two expect validations.</li>
+          </ol>
+        </section>
+
+        <section class="quiz" data-quiz>
+          <h2>MCQ Self-Check</h2>
+          <div class="question" data-answer="a">
+            <p>1. describe() is used to:</p>
+            <label><input type="radio" name="quiz-0-q0" value="a" /> Group related tests</label>
+            <label><input type="radio" name="quiz-0-q0" value="b" /> Install browsers</label>
+            <label><input type="radio" name="quiz-0-q0" value="c" /> Create screenshots</label>
+          </div>
+
+          <div class="question" data-answer="a">
+            <p>2. expect() is used to:</p>
+            <label><input type="radio" name="quiz-0-q1" value="a" /> Validate behavior</label>
+            <label><input type="radio" name="quiz-0-q1" value="b" /> Start CI pipeline</label>
+            <label><input type="radio" name="quiz-0-q1" value="c" /> Rename files</label>
+          </div>
+
+          <button class="grade-btn" type="button" data-grade>Grade Me</button>
+          <p class="result" data-result aria-live="polite"></p>
+        </section>
+
+        <section class="exercise">
+          <h2>Navigation</h2>
+          <p><a href="02-setup.html">Previous</a> | <a href="04-locators.html">Next</a></p>
+        </section>
+        <a href="../../../index.html" class="home-btn floating-home-btn" title="Back to Home">&#8962; Home</a>
+      </main>
+    </div>
+
+    <script src="../../../assets/app.js"></script>
+  </body>
+</html>
+
+
+
