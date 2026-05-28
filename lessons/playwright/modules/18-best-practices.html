@@ -67,15 +67,25 @@
 // 2) Stable locators
 // 3) Deterministic data
 // 4) Focused assertions</code></pre>
-        <section class="exercise">
-          <h2>Beginner Notes (Line by Line)</h2>
+
+        <div class="explanation">
+          <b>What each best practice means in practice:</b>
           <ol>
-            <li><code>// Best-practice checklist</code> - This is a comment describing the next step.</li>
-            <li><code>// 1) Clear test names</code> - This is a comment describing the next step.</li>
-            <li><code>// 2) Stable locators</code> - This is a comment describing the next step.</li>
-            <li><code>// 3) Deterministic data</code> - This is a comment describing the next step.</li>
-            <li><code>// 4) Focused assertions</code> - This is a comment describing the next step.</li>
-</ol>
+            <li><b>Clear test names:</b> Write names that describe the expected outcome. Good: <code>test('user sees error message when password is wrong', ...)</code>. Bad: <code>test('test2', ...)</code>. Clear names make reports self-explanatory without reading the code.</li>
+            <li><b>Stable locators:</b> Prefer <code>getByRole</code>, <code>getByLabel</code>, <code>getByTestId</code>. Avoid deep CSS class chains like <code>.container .list:nth-child(2) .btn--primary</code> — they break whenever a developer changes styling or restructures HTML.</li>
+            <li><b>Deterministic data:</b> Use fixed test accounts or generate unique data (e.g., <code>user_${Date.now()}@test.com</code>). Avoid shared accounts that other tests or developers may modify, causing random interference between test runs.</li>
+            <li><b>Focused assertions:</b> Each test should verify one specific outcome. Multiple unrelated checks in one test make it hard to identify exactly what failed. If a test has 10 assertions for 10 different features, split it into 10 tests.</li>
+            <li><b>No fixed sleeps:</b> Never use <code>waitForTimeout(3000)</code> as a substitute for real synchronization. Use <code>waitForURL</code>, <code>toBeVisible</code>, or <code>toHaveText</code> instead — they adapt to page speed automatically.</li>
+          </ol>
+        </div>
+
+        <section class="exercise">
+          <h2>Beginner Notes</h2>
+          <ol>
+            <li>Follow these four rules from the start — retrofitting a large suite to fix bad practices is expensive.</li>
+            <li>Code-review test files the same way you review production code. Quality standards apply equally.</li>
+            <li>Document your team's locator priority order and naming conventions so everyone follows them consistently.</li>
+          </ol>
         </section>
 
         <h2>Common Mistake to Avoid</h2>

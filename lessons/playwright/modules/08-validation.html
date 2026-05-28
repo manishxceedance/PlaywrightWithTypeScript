@@ -84,15 +84,26 @@
 
       // Useful custom failure message
       await expect(page.getByRole('button', { name: 'Pay now' }), 'Pay button should be visible before final submit').toBeVisible();</code></pre>
-        <section class="exercise">
-          <h2>Beginner Notes (Line by Line)</h2>
+
+        <div class="explanation">
+          <b>Key assertion patterns explained:</b>
           <ol>
-            <li><code>await expect(page).toHaveURL(/dashboard/);</code> - Validates navigation outcome by matching URL pattern.</li>
-            <li><code>await expect(...).toBeVisible();</code> - Checks user-visible state, not just element existence in HTML.</li>
-            <li><code>await expect(...).toContainText('100');</code> - Validates dynamic values shown in UI.</li>
-            <li><code>await expect(amount + tax).toBe(118);</code> - You can also validate plain TypeScript calculations.</li>
-            <li><code>expect.soft(...)</code> - Records failure but allows remaining test steps to run.</li>
-</ol>
+            <li><code>await expect(page).toHaveURL(/dashboard/)</code> — Verifies the current URL matches the pattern. Use after navigation actions (login, form submit) to confirm the redirect succeeded.</li>
+            <li><code>await expect(...).toBeVisible()</code> — Checks the element is visible to the user, not just present in the HTML. An element can exist in the DOM but be hidden with CSS — this assertion catches that difference.</li>
+            <li><code>await expect(...).toContainText('100')</code> — Checks that the element's text includes &quot;100&quot; somewhere. Use this for dynamic values like prices or counts that may have surrounding text.</li>
+            <li><code>await expect(amount + tax).toBe(118)</code> — Validates a plain TypeScript/JavaScript calculation, not a UI element. Useful when you read values from the page and want to verify the computed result.</li>
+            <li><code>expect.soft(...)</code> — A soft assertion records the failure but lets the test continue running. All soft failures are reported together at the end, so one soft failure does not hide others.</li>
+            <li><code>'Pay button should be visible before final submit'</code> — A custom message added as the second argument to <code>expect()</code>. Appears in the failure report, making it clear exactly what went wrong and why it matters.</li>
+          </ol>
+        </div>
+
+        <section class="exercise">
+          <h2>Beginner Notes</h2>
+          <ol>
+            <li>Playwright assertions auto-retry until the condition is met or the timeout is reached — no manual waits needed.</li>
+            <li>Strong validation means checking multiple things: URL, visible element, and the actual business data (text, count, state).</li>
+            <li>Use <code>expect.soft()</code> for non-critical checks that should not stop the test but should still be reported.</li>
+          </ol>
         </section>
 
         <h2>Common Mistake to Avoid</h2>

@@ -80,19 +80,29 @@
 
       // Shadow DOM handling: Playwright supports open shadow roots through locator chaining
       await page.locator('user-card').locator('[data-testid="menu-button"]').click();</code></pre>
-        <section class="exercise">
-          <h2>Beginner Notes (Line by Line)</h2>
+
+        <div class="explanation">
+          <b>Line-by-line explanation:</b>
           <ol>
-            <li><code>await page.getByRole('button', { name: 'Checkout' }).click();</code> - This finds a button or link by its label and clicks it.</li>
-            <li><code>await page.getByLabel('Address').fill('Bengaluru');</code> - This finds a text box by its label and types in the value.</li>
-            <li><code>await page.locator('#country').selectOption('IN');</code> - This picks a value from a dropdown menu.</li>
-            <li><code>await page.getByLabel('I agree').check();</code> - This checks a checkbox or radio button.</li>
-            <li><code>page.once('dialog', ...)</code> - Use this to handle one alert/confirm/prompt event safely.</li>
-            <li><code>await expect(dialog.message()).toContain('Are you sure');</code> - You can verify alert text before accepting.</li>
-            <li><code>const paymentFrame = page.frameLocator('#payment-frame');</code> - This lets you work inside an embedded frame (iframe).</li>
-            <li><code>paymentFrame.getByPlaceholder(...).fill(...)</code> - Interact with iframe controls just like normal locators.</li>
-            <li><code>page.locator('user-card').locator('[data-testid="menu-button"]')</code> - For open shadow DOM, chain locators from host to internal element.</li>
-</ol>
+            <li><code>await page.getByRole('button', { name: 'Checkout' }).click()</code> — Finds and clicks the &quot;Checkout&quot; button by its accessible name. Always prefer role-based locators for buttons and links.</li>
+            <li><code>await page.getByLabel('Address').fill('Bengaluru')</code> — Finds the input field associated with the &quot;Address&quot; label and types the value. Works reliably because it uses the HTML <code>&lt;label&gt;</code> element.</li>
+            <li><code>await page.locator('#country').selectOption('IN')</code> — Selects &quot;IN&quot; from a <code>&lt;select&gt;</code> dropdown by its option value. You can also select by visible text: <code>selectOption('India')</code>.</li>
+            <li><code>await page.getByLabel('I agree').check()</code> — Ticks a checkbox. Use <code>uncheck()</code> to untick, or <code>isChecked()</code> to read the current state.</li>
+            <li><code>page.once('dialog', async dialog =&gt; { ... })</code> — Registers a one-time listener for browser dialogs (alert/confirm/prompt). <b>Critical:</b> register this BEFORE clicking the button that triggers the dialog.</li>
+            <li><code>await expect(dialog.message()).toContain('Are you sure')</code> — Validates the dialog message text before accepting, ensuring the right dialog appeared.</li>
+            <li><code>page.frameLocator('#payment-frame')</code> — Creates a scoped reference to an iframe. All locator calls on this reference search only inside that frame. You cannot use <code>page.locator()</code> to reach elements inside iframes directly.</li>
+            <li><code>paymentFrame.getByPlaceholder('1234 ...').fill('4242 ...')</code> — Interacts with an iframe element exactly like a normal page element — after obtaining the frame reference.</li>
+            <li><code>page.locator('user-card').locator('[data-testid="menu-button"]')</code> — For open shadow DOM, chain from the host element (<code>user-card</code>) to an inner element. Playwright automatically pierces open shadow roots when chaining locators.</li>
+          </ol>
+        </div>
+
+        <section class="exercise">
+          <h2>Beginner Notes</h2>
+          <ol>
+            <li>Always register <code>page.once('dialog', ...)</code> <em>before</em> clicking the button that opens the dialog.</li>
+            <li>Use <code>frameLocator()</code> for iframe content — normal <code>page.locator()</code> cannot reach inside iframes.</li>
+            <li>For shadow DOM, chain locators from the host custom element to the internal element.</li>
+          </ol>
         </section>
 
         <h2>Common Mistake to Avoid</h2>

@@ -65,14 +65,25 @@
 await page.context().storageState({
   path: 'playwright/.auth/user.json'
 });</code></pre>
-        <section class="exercise">
-          <h2>Beginner Notes (Line by Line)</h2>
+
+        <div class="explanation">
+          <b>Line-by-line explanation:</b>
           <ol>
-            <li><code>// Save auth state after successful login</code> - This is a comment describing the next step.</li>
-            <li><code>await page.context().storageState({</code> - This saves or loads your login session so you don't have to log in every time.</li>
-            <li><code>path: 'playwright/.auth/user.json'</code> - This is a supporting line for the Authentication example.</li>
-            <li><code>});</code> - This is a supporting line for the Authentication example.</li>
-</ol>
+            <li><code>await page.context().storageState({ path: '...' })</code> — Saves the entire browser session state to a JSON file: cookies, localStorage, and sessionStorage. This is the equivalent of a browser &quot;remembering&quot; you are logged in.</li>
+            <li><code>path: 'playwright/.auth/user.json'</code> — The file path where the session is saved. Playwright reads this file in other tests so they start already authenticated, skipping the login UI completely.</li>
+            <li><b>How to reuse in tests:</b> In <code>playwright.config.ts</code>, add <code>use: { storageState: 'playwright/.auth/user.json' }</code> to the project config. Every test in that project starts with an active session.</li>
+            <li><b>Setup project pattern:</b> Create a special <code>setup</code> project that runs one login test first. Other projects list it as a <code>dependency</code> so they only start after the auth file is created.</li>
+            <li><b>Security note:</b> Add <code>playwright/.auth/</code> to your <code>.gitignore</code> to avoid committing session data. Always use test accounts, never production credentials.</li>
+          </ol>
+        </div>
+
+        <section class="exercise">
+          <h2>Beginner Notes</h2>
+          <ol>
+            <li>Login once, save the session — reuse it across all tests that need an authenticated state.</li>
+            <li>Without auth reuse, 200 tests that each log in via UI could add many minutes to your suite runtime.</li>
+            <li>Different roles (admin, viewer) need separate auth files — one per role.</li>
+          </ol>
         </section>
 
         <h2>Common Mistake to Avoid</h2>

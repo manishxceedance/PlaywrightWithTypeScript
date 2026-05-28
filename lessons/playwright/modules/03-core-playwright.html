@@ -73,6 +73,17 @@ test.describe('Login', () => {
   });
 });</code></pre>
 
+        <div class="explanation">
+          <b>Line-by-line explanation:</b>
+          <ol>
+            <li><code>test.describe('Login', () =&gt; {</code> — Groups related tests under a shared label. In reports, all tests inside appear nested under &quot;Login&quot;, making it easy to see feature-level coverage at a glance.</li>
+            <li><code>test.beforeEach(async ({ page }) =&gt; {</code> — A hook that runs before every test inside this <code>describe</code> block. Use it to set up a known starting state (e.g., open the login page) so each test begins consistently.</li>
+            <li><code>await page.goto('https://example.com/login');</code> — Navigates to the login URL. Because this is in <code>beforeEach</code>, every test in this group automatically starts on the login page without repeating this line.</li>
+            <li><code>test('valid login', async ({ page }) =&gt; {</code> — One focused test scenario. It inherits the setup from <code>beforeEach</code> and only tests one specific behaviour.</li>
+            <li><code>await expect(page).toHaveURL(/login/);</code> — Verifies the URL contains &quot;login&quot;. This confirms the setup step actually landed on the correct page before proceeding.</li>
+          </ol>
+        </div>
+
         <h2>Extra Essential Topic: Hooks and Fixtures</h2>
         <p>This is one of the most important ideas for real projects. Put repeated setup in hooks or fixtures so every test stays short and clean.</p>
         <pre><code>import { test, expect } from '@playwright/test';
@@ -94,19 +105,25 @@ test.describe('Cart', () => {
     await expect(page.getByTestId('cart-count')).toHaveText('0');
   });
 });</code></pre>
-        <section class="exercise">
-          <h2>Beginner Notes (Line by Line)</h2>
+
+        <div class="explanation">
+          <b>Cart example — what each step does:</b>
           <ol>
-            <li><code>import { test, expect } from '@playwright/test';</code> - This line brings in Playwright's test tools so you can write and run tests.</li>
-            <li><code>test.describe('Login', () =&gt; {</code> - This groups related test cases for the Core playwright feature.</li>
-            <li><code>test.beforeEach(async ({ page }) =&gt; {</code> - This setup runs before each test to make sure the browser is ready.</li>
-            <li><code>await page.goto('https://example.com/login');</code> - This opens the web page you want to test.</li>
-            <li><code>});</code> - This is a supporting line for the Core playwright example.</li>
-            <li><code>test('valid login', async ({ page }) =&gt; {</code> - This line starts a new test scenario for Core playwright.</li>
-            <li><code>await expect(page).toHaveURL(/login/);</code> - This checks if what happened matches what you expected.</li>
-            <li><code>});</code> - This is a supporting line for the Core playwright example.</li>
-            <li><code>});</code> - This is a supporting line for the Core playwright example.</li>
-</ol>
+            <li><code>test.describe('Cart', () =&gt; {</code> — Groups the two cart tests together. If either fails, you immediately know it is a Cart-related issue.</li>
+            <li><code>test.beforeEach</code> navigates to the home page and dismisses the cookie banner once, so neither cart test needs to repeat those steps.</li>
+            <li><code>await page.getByRole('button', { name: 'Add to cart' }).first().click();</code> — Finds the first &quot;Add to cart&quot; button on the page and clicks it. <code>.first()</code> is used because multiple products appear on the page.</li>
+            <li><code>await expect(page.getByTestId('cart-count')).toHaveText('1');</code> — Confirms the cart counter now shows &quot;1&quot; after adding one item. <code>getByTestId</code> uses the <code>data-testid</code> attribute set by developers for test stability.</li>
+            <li>The second test adds an item and then removes it, asserting the count returns to &quot;0&quot; — verifying the remove action works correctly.</li>
+          </ol>
+        </div>
+
+        <section class="exercise">
+          <h2>Beginner Notes</h2>
+          <ol>
+            <li><code>describe()</code> groups related tests — think of it as a folder for test cases.</li>
+            <li><code>beforeEach()</code> runs setup steps before every test — keeps each test short and focused.</li>
+            <li><code>expect()</code> with auto-retrying assertions waits for the page to reach the expected state before failing.</li>
+          </ol>
         </section>
 
         <h2>Common Mistake to Avoid</h2>

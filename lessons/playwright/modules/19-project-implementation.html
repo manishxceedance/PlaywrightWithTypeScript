@@ -70,7 +70,17 @@
 5) CI + reports
 6) Reliability tuning</code></pre>
 
-        <h2>TypeScript Project Blueprint (Recommended)</h2>
+        <div class="explanation">
+          <b>What each milestone means:</b>
+          <ol>
+            <li><b>Framework skeleton:</b> Set up the folder structure, <code>playwright.config.ts</code> with <code>baseURL</code>, <code>reporter</code>, <code>retries</code>, and <code>tsconfig.json</code> with strict mode. This is the foundation everything else builds on.</li>
+            <li><b>Page objects + utilities:</b> Create one Page Object Model class per application page. Write utility helpers for generating unique test data, making API setup calls, and formatting dates.</li>
+            <li><b>Smoke suite:</b> Write 5–10 tests covering the most critical user journeys (login, key feature, logout). These should complete in under 5 minutes and run on every pull request to block bad merges.</li>
+            <li><b>Regression suite:</b> Expand coverage with tests tagged <code>@regression</code>. Group by feature area so you can run only the relevant subset when releasing a specific module.</li>
+            <li><b>CI + reports:</b> Connect to GitHub Actions or another CI tool. Upload the <code>playwright-report/</code> folder as a downloadable artifact so anyone can inspect failures without re-running the suite.</li>
+            <li><b>Reliability tuning:</b> Identify flaky tests, fix their root cause (usually a locator, timing, or data dependency issue), and remove any unnecessary <code>waitForTimeout</code> calls. Retries are a safety net, not a fix.</li>
+          </ol>
+        </div>
         <pre><code>playwright-project/
   tests/
     smoke/
@@ -88,6 +98,19 @@
   playwright.config.ts
   tsconfig.json</code></pre>
 
+        <div class="explanation">
+          <b>What each folder and file is for:</b>
+          <ol>
+            <li><code>tests/smoke/</code> and <code>tests/regression/</code> — Separate folders keep fast smoke tests and broader regression tests clearly distinct. Run them independently via <code>--project</code> or <code>--grep</code> flags.</li>
+            <li><code>pages/login.page.ts</code> — One Page Object Model file per application page. Contains all locators and actions for that page. Tests import this class and call readable methods instead of writing raw locator code.</li>
+            <li><code>fixtures/test-fixtures.ts</code> — Custom Playwright fixtures that provide pre-configured objects to tests (e.g., a logged-in <code>page</code>, a pre-created test booking). Tests receive these automatically via dependency injection.</li>
+            <li><code>data/users.json</code> — Test data separated from test logic. Update user credentials or test values here without touching any test file.</li>
+            <li><code>utils/date.util.ts</code>, <code>utils/api.util.ts</code> — Reusable helper functions: format dates, generate unique IDs, call APIs to create or clean up test data before/after tests.</li>
+            <li><code>playwright.config.ts</code> — Master configuration: base URL, browser projects, parallel workers, retry count, trace/screenshot settings, and reporter setup.</li>
+            <li><code>tsconfig.json</code> — TypeScript compiler settings. Always enable <code>strict: true</code> to catch type errors and prevent hidden runtime bugs.</li>
+          </ol>
+        </div>
+
         <h2>Definition of Done for Expert-Level Project</h2>
         <ol>
           <li>Critical smoke flows are automated and stable in CI.</li>
@@ -98,16 +121,12 @@
           <li>Flaky test list is tracked, root cause fixed, and retries are not abused.</li>
         </ol>
         <section class="exercise">
-          <h2>Beginner Notes (Line by Line)</h2>
+          <h2>Beginner Notes</h2>
           <ol>
-            <li><code>Milestone plan:</code> - This is a supporting line for the Project implementation example.</li>
-            <li><code>1) Framework skeleton</code> - This is a step in your project plan.</li>
-            <li><code>2) Page objects + utilities</code> - This is a step in your project plan.</li>
-            <li><code>3) Smoke suite</code> - This is a step in your project plan.</li>
-            <li><code>4) Regression suite</code> - This is a step in your project plan.</li>
-            <li><code>5) CI + reports</code> - This is a step in your project plan.</li>
-            <li><code>6) Reliability tuning</code> - This is a step in your project plan.</li>
-</ol>
+            <li>Build the framework structure before writing tests — retrofitting conventions onto a large suite is expensive.</li>
+            <li>The Definition of Done checklist is your quality bar: every item should be green before you consider the framework &quot;production ready&quot;.</li>
+            <li>Treat test code the same as production code: code reviews, naming conventions, and refactoring all apply.</li>
+          </ol>
         </section>
 
         <h2>Common Mistake to Avoid</h2>

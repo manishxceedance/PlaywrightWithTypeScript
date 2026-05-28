@@ -293,6 +293,31 @@ body {
   color: #2d3d52;
 }
 
+.explanation {
+  background: #eef5ff;
+  border-left: 4px solid #1a4fa0;
+  border-radius: 0 0.5rem 0.5rem 0;
+  padding: 0.85rem 1rem;
+  margin: 0.6rem 0 1.2rem;
+  font-size: 0.93rem;
+  color: #1a2330;
+  line-height: 1.65;
+}
+
+.explanation b {
+  color: #1a4fa0;
+}
+
+.explanation ol,
+.explanation ul {
+  margin: 0.5rem 0 0;
+  padding-left: 1.4rem;
+}
+
+.explanation li {
+  margin: 0.35rem 0;
+}
+
 .grade-btn {
   background: var(--accent);
   color: #ffffff;
@@ -399,14 +424,14 @@ body {
   gap: 0.5rem;
 }
 
-.home-card a {
+.home-card ul a {
   text-decoration: none;
   color: #0d4f94;
   font-weight: 600;
 }
 
-.home-card a:hover,
-.home-card a:focus-visible {
+.home-card ul a:hover,
+.home-card ul a:focus-visible {
   text-decoration: underline;
 }
 

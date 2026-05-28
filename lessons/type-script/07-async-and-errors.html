@@ -62,6 +62,10 @@
   });
 }
           </code></pre>
+
+          <div class="explanation">
+            <b>Explanation:</b> This function returns a Promise that resolves after a given number of milliseconds. It uses <code>setTimeout</code> to wait, then calls <code>resolve</code> with a message. This is a basic pattern for creating asynchronous delays.
+          </div>
         </section>
 
         <section class="lesson-section">
@@ -73,6 +77,10 @@
 }
 runHealthCheck();
           </code></pre>
+
+          <div class="explanation">
+            <b>Explanation:</b> The <code>async</code> keyword makes the function always return a Promise. Inside, <code>await</code> pauses execution until <code>waitMs(300)</code> resolves, then logs the result. This makes async code look and behave more like synchronous code.
+          </div>
         </section>
 
         <section class="lesson-section">
@@ -88,6 +96,10 @@ async function fetchHealth(): Promise<HealthResponse> {
   return (await response.json()) as HealthResponse;
 }
           </code></pre>
+
+          <div class="explanation">
+            <b>Explanation:</b> This function fetches data from <code>/health</code> and expects a JSON response matching the <code>HealthResponse</code> type. If the HTTP response is not OK, it throws an error. This ensures you always get a correctly-typed result or a clear error.
+          </div>
         </section>
 
         <section class="lesson-section">
@@ -106,6 +118,10 @@ async function fetchHealth(): Promise<HealthResponse> {
   }
 }
           </code></pre>
+
+          <div class="explanation">
+            <b>Explanation:</b> This uses <code>try/catch</code> to handle errors from async code. It checks if the error is an instance of <code>Error</code> for safe logging. This pattern prevents crashes and gives meaningful error messages.
+          </div>
         </section>
 
         <section class="lesson-section">
@@ -120,6 +136,10 @@ async function fetchHealth(): Promise<HealthResponse> {
 }
 runAll();
           </code></pre>
+
+          <div class="explanation">
+            <b>Explanation:</b> <code>Promise.all</code> runs multiple async tasks in parallel and waits for all to finish. The results are returned as an array. This is efficient for independent async operations.
+          </div>
         </section>
 
         <section class="lesson-section">
@@ -135,6 +155,10 @@ runAll();
   }
 }
           </code></pre>
+
+          <div class="explanation">
+            <b>Explanation:</b> This generic helper fetches JSON from a URL and returns either the typed result or <code>null</code> if anything fails. It’s a reusable pattern for safe API calls.
+          </div>
         </section>
 
         <section class="exercise">

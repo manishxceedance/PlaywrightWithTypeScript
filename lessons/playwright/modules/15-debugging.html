@@ -63,12 +63,25 @@
         <h2>Step-by-Step Example (Code)</h2>
         <pre><code>npx playwright test --debug
 npx playwright show-trace trace.zip</code></pre>
-        <section class="exercise">
-          <h2>Beginner Notes (Line by Line)</h2>
+
+        <div class="explanation">
+          <b>Line-by-line explanation:</b>
           <ol>
-            <li><code>npx playwright test --debug</code> - This runs a Playwright command in your terminal.</li>
-            <li><code>npx playwright show-trace trace.zip</code> - This runs a Playwright command in your terminal.</li>
-</ol>
+            <li><code>npx playwright test --debug</code> — Opens the Playwright Inspector, a visual debugging tool. Tests pause before each action, letting you step forward one action at a time, inspect the current page state, and try locator expressions interactively in the selector bar.</li>
+            <li><code>npx playwright show-trace trace.zip</code> — Opens the Trace Viewer for a specific trace file. You see a full timeline showing: every action (click, fill, navigate), before-and-after screenshots for each step, console log output, and all network requests. The fastest way to understand exactly what happened in a failed test run.</li>
+            <li><b>Debug a specific test:</b> <code>npx playwright test login.spec.ts --debug</code> — Only runs and debugs that one file.</li>
+            <li><b>Record actions as code:</b> <code>npx playwright codegen https://example.com</code> — Opens a browser where your clicks and typing are automatically recorded as Playwright code. Useful for quickly generating locator examples.</li>
+            <li><b>Screenshot on failure:</b> In <code>playwright.config.ts</code>, set <code>screenshot: 'only-on-failure'</code> to automatically capture a screenshot whenever a test fails, even without the full trace.</li>
+          </ol>
+        </div>
+
+        <section class="exercise">
+          <h2>Beginner Notes</h2>
+          <ol>
+            <li>Always read the trace before re-running a failing test — the trace shows the exact step and screenshot at the moment of failure.</li>
+            <li>Use <code>--debug</code> mode when you cannot figure out why a locator is not finding an element — you can try selectors live in the Inspector.</li>
+            <li>The Trace Viewer is the single most powerful debugging tool in the Playwright ecosystem.</li>
+          </ol>
         </section>
 
         <h2>Common Mistake to Avoid</h2>

@@ -75,16 +75,28 @@
       // 4) Verify uniqueness before action when needed
       await expect(page.getByRole('button', { name: 'Delete' })).toHaveCount(3);
       await page.getByRole('button', { name: 'Delete' }).nth(1).click();</code></pre>
-        <section class="exercise">
-          <h2>Beginner Notes (Line by Line)</h2>
+
+        <div class="explanation">
+          <b>Line-by-line explanation:</b>
           <ol>
-            <li><code>page.getByRole(...)</code> - Role-based locator is usually the most stable starting point.</li>
-            <li><code>const billingSection = page.getByRole('region', { name: 'Billing Address' });</code> - First find the parent area, then find child controls inside it.</li>
-            <li><code>billingSection.getByLabel('Email')</code> - Same label can exist in shipping and billing forms; section scoping solves that.</li>
-            <li><code>filter({ hasText: 'Asha Gupta' })</code> - Narrows many matching rows to the row containing this specific user text.</li>
-            <li><code>toHaveCount(3)</code> - Useful to confirm how many elements matched before using <code>nth()</code>.</li>
-            <li><code>nth(1)</code> - Index-based locator works, but keep it as a fallback when semantic narrowing is not possible.</li>
-</ol>
+            <li><code>page.getByRole('button', { name: 'Sign in' }).click()</code> — The most stable locator style. It finds an element by its semantic role (button, link, heading, etc.) and accessible name. Works even if CSS classes or element positions change.</li>
+            <li><code>const billingSection = page.getByRole('region', { name: 'Billing Address' });</code> — Scopes to a named page section. When the same label (e.g., &quot;Email&quot;) appears in multiple sections, scoping to the parent section makes the locator unambiguous.</li>
+            <li><code>billingSection.getByLabel('Email').fill(...)</code> — Chains the child locator onto the section. Playwright only searches for &quot;Email&quot; inside the billing area, ignoring identical labels elsewhere.</li>
+            <li><code>page.getByRole('row').filter({ hasText: 'Asha Gupta' })</code> — Narrows a list of matching rows to the one row that contains specific text. Much more resilient than positional selectors like <code>nth(2)</code>.</li>
+            <li><code>await expect(...).toHaveCount(3)</code> — Confirms exactly 3 Delete buttons exist before using <code>nth()</code>. This makes your intent clear and catches unexpected UI changes.</li>
+            <li><code>.nth(1)</code> — Selects the second element (0-indexed). Use as a last resort when semantic narrowing is not possible.</li>
+          </ol>
+        </div>
+
+        <section class="exercise">
+          <h2>Beginner Notes (Locator Priority Order)</h2>
+          <ol>
+            <li>Start with <code>getByRole</code> or <code>getByLabel</code> — most stable.</li>
+            <li>Use <code>getByTestId</code> if developers have added <code>data-testid</code> attributes.</li>
+            <li>Scope to a parent section first when duplicate labels/roles exist.</li>
+            <li>Use <code>.filter({ hasText: '...' })</code> to narrow matching rows in lists/tables.</li>
+            <li>Use <code>nth()</code> only as a last resort — it breaks if items are reordered.</li>
+          </ol>
         </section>
 
         <h2>Common Mistake to Avoid</h2>

@@ -65,14 +65,25 @@
 await page.getByRole('link', { name: 'Open docs' }).click();
 const newTab = await newTabPromise;
 const cookies = await page.context().cookies();</code></pre>
-        <section class="exercise">
-          <h2>Beginner Notes (Line by Line)</h2>
+
+        <div class="explanation">
+          <b>Line-by-line explanation:</b>
           <ol>
-            <li><code>const newTabPromise = page.context().waitForEvent('page');</code> - This waits for something to happen, like a new tab opening.</li>
-            <li><code>await page.getByRole('link', { name: 'Open docs' }).click();</code> - This finds a button or link by its label and clicks it.</li>
-            <li><code>const newTab = await newTabPromise;</code> - This is a supporting line for the Browser handling example.</li>
-            <li><code>const cookies = await page.context().cookies();</code> - This gets the cookies (small data) saved by the browser.</li>
-</ol>
+            <li><code>const newTabPromise = page.context().waitForEvent('page')</code> — Creates a listener that will capture the next new browser tab to open. <b>Important:</b> set this up BEFORE clicking the link that opens the new tab, otherwise the tab can open and be missed.</li>
+            <li><code>await page.getByRole('link', { name: 'Open docs' }).click()</code> — Clicks the &quot;Open docs&quot; link. This action causes a new browser tab to open.</li>
+            <li><code>const newTab = await newTabPromise</code> — Waits for the new tab to appear and stores a reference to it. You can now use <code>newTab.url()</code>, <code>newTab.title()</code>, or any other page methods on the new tab.</li>
+            <li><code>await page.context().cookies()</code> — Reads all cookies in the current browser context. Useful to verify session tokens, persistent login cookies, or feature-flag cookies without inspecting DevTools manually.</li>
+            <li><b>Browser context isolation:</b> Each <code>BrowserContext</code> is like an independent incognito profile with its own cookies, localStorage, and sessions. Use separate contexts to test admin and regular user roles in the same test run without interference.</li>
+          </ol>
+        </div>
+
+        <section class="exercise">
+          <h2>Beginner Notes</h2>
+          <ol>
+            <li>Always call <code>waitForEvent('page')</code> before the action that opens a new tab.</li>
+            <li>Each browser context is isolated — like a separate incognito window.</li>
+            <li>Use two contexts to test interactions between two different user roles in one test.</li>
+          </ol>
         </section>
 
         <h2>Common Mistake to Avoid</h2>

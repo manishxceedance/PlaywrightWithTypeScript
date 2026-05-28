@@ -76,6 +76,15 @@ test('fill mini form inside iframe', async ({ page }) =&gt; {
   await expect(miniForm.locator('#mini-check')).toBeChecked();
 });</code></pre>
 
+        <div class="explanation">
+          <b>Iframe example explained:</b>
+          <ol>
+            <li><code>page.frameLocator('iframe[title="Mini Form"]')</code> — Creates a scoped reference to the iframe. All locator calls on <code>miniForm</code> search exclusively inside that frame. You cannot use <code>page.locator()</code> to reach elements inside iframes.</li>
+            <li><code>miniForm.locator('#mini-text').fill('...')</code> — Interacts with an element inside the iframe exactly like a normal page element, but using the frame reference instead of <code>page</code>.</li>
+            <li><code>await expect(miniForm.locator('#mini-check')).toBeChecked()</code> — Assertion inside the iframe. Pass the frame-scoped locator to <code>expect()</code> — assertions work the same way inside frames.</li>
+          </ol>
+        </div>
+
         <h2>2) Shadow DOM Handling</h2>
         <pre><code>import { test, expect } from '@playwright/test';
 
@@ -88,6 +97,16 @@ test('interact with open shadow root', async ({ page }) =&gt; {
 
   await expect(host.locator('#shadow-msg')).toHaveText('You typed: shadow value');
 });</code></pre>
+
+        <div class="explanation">
+          <b>Shadow DOM example explained:</b>
+          <ol>
+            <li><code>page.locator('practice-shadow')</code> — Locates the shadow host element (the custom HTML element that contains the shadow root).</li>
+            <li><code>host.locator('#shadow-input').fill('shadow value')</code> — Playwright automatically pierces open shadow roots when you chain a locator from the host. You do not need any special API or JavaScript — just chain from host to inner element.</li>
+            <li><code>await expect(host.locator('#shadow-msg')).toHaveText('You typed: shadow value')</code> — Verifies the output inside the shadow root using the same chained locator pattern.</li>
+            <li><b>Note:</b> This works only for <em>open</em> shadow roots (<code>mode: 'open'</code>). Closed shadow roots (<code>mode: 'closed'</code>) are intentionally inaccessible and generally should not be automated.</li>
+          </ol>
+        </div>
 
         <h2>3) Multiple Elements with Same Property</h2>
         <pre><code>import { test, expect } from '@playwright/test';
@@ -106,6 +125,16 @@ test('update only Bob row when many controls are similar', async ({ page }) =&gt
   await expect(bobRow.locator('input[type="checkbox"]')).toBeChecked();
 });</code></pre>
 
+        <div class="explanation">
+          <b>Duplicate controls example explained:</b>
+          <ol>
+            <li><code>page.locator('#practice-grid tbody tr').filter({ hasText: 'Bob' })</code> — Gets all table rows and then filters to only the row that contains &quot;Bob&quot;. This is the key pattern for tables where every row has identical controls (same labels, same input types).</li>
+            <li><code>bobRow.locator('input[type="text"]').fill('Bob updated note')</code> — Because <code>bobRow</code> is already scoped to Bob's row, this locator only finds the text input inside that row. Alice and Charlie's inputs are completely unaffected.</li>
+            <li><code>bobRow.locator('select').selectOption('Two')</code> — Same scoping approach for the dropdown — only the select inside Bob's row is targeted.</li>
+            <li>The three <code>expect</code> assertions at the end confirm that Bob's row was updated correctly AND (by implication) that other rows were not accidentally modified.</li>
+          </ol>
+        </div>
+
         <h2>4) Alert Handling Pattern</h2>
         <p>The practice app does not currently include a native alert button, so this lab uses a self-contained demo page setup.</p>
         <pre><code>import { test, expect } from '@playwright/test';
@@ -123,6 +152,17 @@ test('handle confirm dialog safely', async ({ page }) =&gt; {
 
   await page.locator('#danger').click();
 });</code></pre>
+
+        <div class="explanation">
+          <b>Alert handling example explained:</b>
+          <ol>
+            <li><code>page.once('dialog', async dialog =&gt; { ... })</code> — Registers a one-time listener for any browser dialog (alert, confirm, or prompt). <b>Critical rule:</b> register this listener BEFORE clicking the button that opens the dialog.</li>
+            <li><code>await expect(dialog.type()).toBe('confirm')</code> — Verifies the dialog type. Types are: <code>'alert'</code>, <code>'confirm'</code>, <code>'prompt'</code>, <code>'beforeunload'</code>.</li>
+            <li><code>await expect(dialog.message()).toContain('Are you sure')</code> — Validates the dialog message text to confirm the right dialog appeared before accepting it.</li>
+            <li><code>await dialog.accept()</code> — Clicks the OK/Yes button. Use <code>await dialog.dismiss()</code> to click Cancel instead.</li>
+            <li>The handler runs automatically when the click triggers the dialog. The test continues after the handler finishes.</li>
+          </ol>
+        </div>
 
         <section class="exercise">
           <h2>Beginner Notes (Important Rules)</h2>

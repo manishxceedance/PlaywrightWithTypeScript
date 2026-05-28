@@ -70,18 +70,26 @@
     await this.page.getByRole('button', { name: 'Sign in' }).click();
   }
 }</code></pre>
-        <section class="exercise">
-          <h2>Beginner Notes (Line by Line)</h2>
+
+        <div class="explanation">
+          <b>Line-by-line explanation:</b>
           <ol>
-            <li><code>export class LoginPage {</code> - This is a supporting line for the Framework design example.</li>
-            <li><code>constructor(private readonly page: Page) {}</code> - This is a supporting line for the Framework design example.</li>
-            <li><code>async login(email: string, password: string) {</code> - This is a supporting line for the Framework design example.</li>
-            <li><code>await this.page.getByLabel('Email').fill(email);</code> - This finds a text box by its label and types in the value.</li>
-            <li><code>await this.page.getByLabel('Password').fill(password);</code> - This finds a text box by its label and types in the value.</li>
-            <li><code>await this.page.getByRole('button', { name: 'Sign in' }).click();</code> - This finds a button or link by its label and clicks it.</li>
-            <li><code>}</code> - This closes a block of code.</li>
-            <li><code>}</code> - This closes a block of code.</li>
-</ol>
+            <li><code>export class LoginPage {</code> — Defines a reusable Page Object class. <code>export</code> makes it importable in test files. All login-related locators and actions live here — tests never need to know the implementation details.</li>
+            <li><code>constructor(private readonly page: Page) {}</code> — TypeScript constructor that receives the Playwright <code>page</code> object from the test. Stored as <code>this.page</code> so all methods in the class can use it.</li>
+            <li><code>async login(email: string, password: string)</code> — A reusable method that encapsulates the full login sequence. Tests call this one line instead of repeating three separate actions every time.</li>
+            <li><code>await this.page.getByLabel('Email').fill(email)</code> — Uses <code>this.page</code> (the stored browser reference) to type the email. The value comes from the caller, making the method flexible for any user.</li>
+            <li><code>await this.page.getByRole('button', { name: 'Sign in' }).click()</code> — Clicks Sign in to complete the login flow.</li>
+            <li><b>Usage in a test:</b> <code>const loginPage = new LoginPage(page);</code> then <code>await loginPage.login('user@test.com', 'pass');</code> — The test is now two readable lines. If the login UI changes, you update only the <code>LoginPage</code> class.</li>
+          </ol>
+        </div>
+
+        <section class="exercise">
+          <h2>Beginner Notes</h2>
+          <ol>
+            <li>The Page Object Model (POM) pattern puts all locators and actions for one page into one class file.</li>
+            <li>If a locator or label changes in the app, you fix it in one place — all tests that use the class are automatically fixed.</li>
+            <li>Test files should read like plain English: <em>&quot;login, navigate to orders, assert order count&quot;</em> — not raw locator chains.</li>
+          </ol>
         </section>
 
         <h2>Common Mistake to Avoid</h2>

@@ -77,12 +77,12 @@ test('create booking', async ({ request }) => {
 				<section class="exercise">
 					<h2>Beginner Notes (Line by Line)</h2>
 					<ol>
-						<li><code>test('create booking', async ({ request }) =&gt; {</code> creates one API test case.</li>
-						<li><code>request.post(...)</code> sends a POST request directly to backend service.</li>
-						<li><code>data: {...}</code> is the payload sent in request body.</li>
-						<li><code>expect(response.ok())</code> checks the request succeeded.</li>
-						<li><code>await response.json()</code> reads API response body.</li>
-						<li><code>expect(body.name).toBe('Asha')</code> validates business data, not just status code.</li>
+						<li><code>test('create booking', async ({ request }) =&gt; {</code> — Uses the <code>request</code> fixture instead of <code>page</code>. The <code>request</code> fixture is Playwright's built-in HTTP client — no browser window opens, making API tests very fast.</li>
+						<li><code>await request.post('/api/bookings', { data: {...} })</code> — Sends an HTTP POST request to <code>/api/bookings</code> with a JSON payload. Playwright automatically sets the <code>Content-Type: application/json</code> header when you use <code>data:</code>.</li>
+						<li><code>expect(response.ok()).toBeTruthy()</code> — Checks that the HTTP status code is in the 200–299 range (i.e., the request succeeded). <code>response.ok()</code> returns <code>true</code> for any 2xx response.</li>
+						<li><code>const body = await response.json()</code> — Parses the response body as JSON. Always <code>await</code> this, as it reads the response stream asynchronously.</li>
+						<li><code>expect(body.name).toBe('Asha')</code> — Validates a business field in the response. Checking status code alone is not enough — a 200 response can still return wrong data.</li>
+						<li><b>Combine with UI tests:</b> Use an API call in <code>beforeEach</code> to create test data, then let the UI test verify it is displayed correctly. Faster and more reliable than creating data through the UI.</li>
 					</ol>
 				</section>
 

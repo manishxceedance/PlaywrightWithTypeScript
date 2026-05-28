@@ -62,11 +62,27 @@
 
         <h2>Step-by-Step Example (Code)</h2>
         <pre><code>npx playwright test --headed=false</code></pre>
-        <section class="exercise">
-          <h2>Beginner Notes (Line by Line)</h2>
+
+        <div class="explanation">
+          <b>Line-by-line explanation and CI setup guide:</b>
           <ol>
-            <li><code>npx playwright test --headed=false</code> - This runs a Playwright command in your terminal.</li>
-</ol>
+            <li><code>npx playwright test --headed=false</code> — Runs tests in headless mode (no visible browser window). CI servers have no display, so headless is required. It also runs faster than headed mode.</li>
+            <li><b>Typical GitHub Actions pipeline steps:</b></li>
+            <li>Step 1: <code>npm ci</code> — Installs exact dependency versions from <code>package-lock.json</code>. Faster and more reliable than <code>npm install</code> in CI.</li>
+            <li>Step 2: <code>npx playwright install --with-deps</code> — Downloads Playwright browser binaries AND their system-level dependencies (fonts, media codecs) on the CI runner. This step is required because CI machines do not have browsers pre-installed.</li>
+            <li>Step 3: <code>npx playwright test</code> — Runs the full test suite. Exit code 0 means all passed; non-zero causes the pipeline to fail.</li>
+            <li>Step 4: Upload <code>playwright-report/</code> as a CI artifact — Allows team members to download and view the HTML report without needing to re-run the tests locally.</li>
+            <li><b>Smart CI strategy:</b> Run smoke tests on every pull request (fast, blocks bad merges). Run full regression on a nightly schedule (thorough, not blocking every PR).</li>
+          </ol>
+        </div>
+
+        <section class="exercise">
+          <h2>Beginner Notes</h2>
+          <ol>
+            <li>CI gives every code change an automatic quality gate — failing tests block the merge.</li>
+            <li>Always upload test reports as CI artifacts so failures can be investigated without re-running.</li>
+            <li>Smoke on PR + full regression on schedule is the industry-standard CI strategy for test automation.</li>
+          </ol>
         </section>
 
         <h2>Common Mistake to Avoid</h2>

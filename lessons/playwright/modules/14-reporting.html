@@ -62,11 +62,25 @@
 
         <h2>Step-by-Step Example (Code)</h2>
         <pre><code>npx playwright show-report</code></pre>
-        <section class="exercise">
-          <h2>Beginner Notes (Line by Line)</h2>
+
+        <div class="explanation">
+          <b>What this does and how to use reports:</b>
           <ol>
-            <li><code>npx playwright show-report</code> - This runs a Playwright command in your terminal.</li>
-</ol>
+            <li><code>npx playwright show-report</code> — Opens the generated HTML test report in your default browser. Run this after <code>npx playwright test</code> to see a full visual breakdown of results.</li>
+            <li><b>What the HTML report shows:</b> Test names with pass/fail status, duration per test, retry attempts, error messages with stack traces, screenshots taken on failure, and a &quot;Trace&quot; link for deep debugging.</li>
+            <li><b>Enable trace on failure:</b> In <code>playwright.config.ts</code> set <code>trace: 'on-first-retry'</code>. When a test fails and is retried, a trace file is captured automatically and linked in the report.</li>
+            <li><b>Multiple reporters:</b> Set <code>reporter: [['html'], ['list']]</code> in config to get both a visual HTML report and live terminal output at the same time during a test run.</li>
+            <li><b>CI artifact:</b> Upload the <code>playwright-report/</code> folder as a build artifact in your CI pipeline so team members can download and inspect failures without re-running tests.</li>
+          </ol>
+        </div>
+
+        <section class="exercise">
+          <h2>Beginner Notes</h2>
+          <ol>
+            <li>The HTML report is the most useful artifact from a test run — always generate and preserve it.</li>
+            <li>Do not just look at pass/fail counts. Open each failed test and read the step that failed, the error message, and the screenshot.</li>
+            <li>Trace files give you a full step-by-step replay of what happened — use them for any failure you cannot reproduce locally.</li>
+          </ol>
         </section>
 
         <h2>Common Mistake to Avoid</h2>

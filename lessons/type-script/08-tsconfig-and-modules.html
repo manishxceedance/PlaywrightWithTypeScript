@@ -64,6 +64,10 @@
   "include": ["src"]
 }
           </code></pre>
+
+          <div class="explanation">
+            <b>Explanation:</b> This configures TypeScript to use modern JS features, output files to <code>dist</code>, and enforce strict type checks. <code>strict: true</code> enables many safety checks, and <code>noUnusedLocals</code>/<code>noImplicitReturns</code> catch common mistakes.
+          </div>
         </section>
 
         <section class="lesson-section">
@@ -83,6 +87,10 @@ export function passRate(passed: number, total: number): number {
 import { passRate } from "./utils/math";
 console.log(passRate(47, 50));
           </code></pre>
+
+          <div class="explanation">
+            <b>Explanation:</b> <code>export</code> makes a function available to other files. <code>import</code> brings it in for use. This modular approach keeps code organized and reusable.
+          </div>
         </section>
 
         <section class="lesson-section">
@@ -117,6 +125,7 @@ console.log(passRate(47, 50));
 // Partial<Bug> means all fields are optional
 const draft: Partial<Bug> = { summary: "Crash on login" };
               </code></pre>
+              <div class="explanation"><b>Explanation:</b> <code>Partial&lt;T&gt;</code> makes every property in a type optional. Here, <code>draft</code> can have any subset of <code>Bug</code>'s fields.</div>
             </li>
             <li>
               <b>Pick&lt;T, K&gt;</b>: Lets you create a type with only some properties from another type.
@@ -124,6 +133,7 @@ const draft: Partial<Bug> = { summary: "Crash on login" };
 type BugSummary = Pick<Bug, "id" | "summary">;
 const summary: BugSummary = { id: "B-1", summary: "Crash" };
               </code></pre>
+              <div class="explanation"><b>Explanation:</b> <code>Pick&lt;T, K&gt;</code> creates a new type with only the specified properties from the original type. <code>BugSummary</code> has just <code>id</code> and <code>summary</code>.</div>
             </li>
             <li>
               <b>Omit&lt;T, K&gt;</b>: Like Pick, but removes properties.
@@ -131,6 +141,7 @@ const summary: BugSummary = { id: "B-1", summary: "Crash" };
 type BugNoSeverity = Omit<Bug, "severity">;
 const bug: BugNoSeverity = { id: "B-2", summary: "Slow" };
               </code></pre>
+              <div class="explanation"><b>Explanation:</b> <code>Omit&lt;T, K&gt;</code> creates a type with all properties except the ones you list. <code>BugNoSeverity</code> has <code>id</code> and <code>summary</code> only.</div>
             </li>
             <li>
               <b>Record&lt;K, T&gt;</b>: Makes an object type with keys of type K and values of type T.
@@ -138,6 +149,7 @@ const bug: BugNoSeverity = { id: "B-2", summary: "Slow" };
 type TestResults = Record<string, "pass" | "fail">;
 const results: TestResults = { "TC-1": "pass", "TC-2": "fail" };
               </code></pre>
+              <div class="explanation"><b>Explanation:</b> <code>Record&lt;K, T&gt;</code> creates an object type where keys are of type <code>K</code> and values are of type <code>T</code>. Here, <code>results</code> maps test case IDs to their result.</div>
             </li>
           </ul>
           <p><b>Tip:</b> Utility types help you avoid repeating yourself and make your code safer and more flexible.</p>

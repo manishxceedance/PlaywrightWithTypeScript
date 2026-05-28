@@ -69,16 +69,25 @@
 
 await expect(page).toHaveScreenshot('dashboard.png');
 test('checkout @smoke @regression', async ({ page }) => {});</code></pre>
-        <section class="exercise">
-          <h2>Beginner Notes (Line by Line)</h2>
+
+        <div class="explanation">
+          <b>Line-by-line explanation:</b>
           <ol>
-            <li><code>await page.route('**/api/profile', route =&gt; route.fulfill({</code> - This lets you fake or change network responses for testing.</li>
-            <li><code>status: 200,</code> - This is a supporting line for the Advanced topics example.</li>
-            <li><code>body: JSON.stringify({ name: 'Mock User', plan: 'Pro' })</code> - This is a supporting line for the Advanced topics example.</li>
-            <li><code>}));</code> - This is a supporting line for the Advanced topics example.</li>
-            <li><code>await expect(page).toHaveScreenshot('dashboard.png');</code> - This checks if what happened matches what you expected.</li>
-            <li><code>test('checkout @smoke @regression', async ({ page }) =&gt; {});</code> - This line starts a new test scenario for Advanced topics.</li>
-</ol>
+            <li><code>await page.route('**/api/profile', route =&gt; route.fulfill({...}))</code> — Intercepts every HTTP request whose URL matches the pattern and returns your custom fake response instead of calling the real server. The real backend is never contacted. Use this to test error states, loading spinners, or features that depend on backend data not yet built.</li>
+            <li><code>status: 200, body: JSON.stringify({...})</code> — The fake HTTP response: a 200 OK with a JSON body. You can change this to <code>status: 500</code> to simulate server errors and verify that your app handles them gracefully.</li>
+            <li><code>await expect(page).toHaveScreenshot('dashboard.png')</code> — Visual regression test. On the first run, Playwright saves a baseline screenshot. Every subsequent run compares the page pixel-by-pixel against the baseline. If they differ beyond the threshold, the test fails and shows a diff image.</li>
+            <li><code>@smoke</code> and <code>@regression</code> tags in the test name — Allow selective execution. Run only smoke tests with: <code>npx playwright test --grep @smoke</code>. Skip slow visual tests in PR checks with: <code>npx playwright test --grep-invert @visual</code>.</li>
+            <li><b>Retries:</b> Set <code>retries: 1</code> in config for environments with occasional flakiness (network timeouts, CI slowness). Do not use retries to hide real bugs — always investigate root causes.</li>
+          </ol>
+        </div>
+
+        <section class="exercise">
+          <h2>Beginner Notes</h2>
+          <ol>
+            <li>API mocking lets you test UI behaviour in isolation from backend availability — tests become faster and more reliable.</li>
+            <li>Visual regression testing catches unintended layout/style changes that functional assertions miss.</li>
+            <li>Tags allow running specific subsets (smoke, regression, feature) without separate test files.</li>
+          </ol>
         </section>
 
         <h2>Common Mistake to Avoid</h2>

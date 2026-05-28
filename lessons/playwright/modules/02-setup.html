@@ -68,6 +68,18 @@ npm init -y
 npm init playwright@latest
 npx playwright test</code></pre>
 
+        <div class="explanation">
+          <b>What each command does:</b>
+          <ol>
+            <li><code>node -v</code> / <code>npm -v</code> — Verifies Node.js and npm are installed. Playwright requires Node.js 18 or above.</li>
+            <li><code>mkdir playwright-lab</code> — Creates a new project folder. All your test files will live here.</li>
+            <li><code>cd playwright-lab</code> — Moves your terminal into the new folder.</li>
+            <li><code>npm init -y</code> — Creates a <code>package.json</code> (project manifest). The <code>-y</code> flag accepts all default settings automatically.</li>
+            <li><code>npm init playwright@latest</code> — Downloads Playwright, installs the three browsers (Chromium, Firefox, WebKit), and generates a starter <code>playwright.config.ts</code> and example test files.</li>
+            <li><code>npx playwright test</code> — Runs every test file in the project. Results appear in the terminal and in a generated HTML report.</li>
+          </ol>
+        </div>
+
         <section class="exercise">
           <h2>playwright.config.ts Essentials</h2>
           <ul>

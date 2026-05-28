@@ -71,19 +71,25 @@ for (const u of users) {
     await page.getByLabel('Email').fill(u.email);
   });
 }</code></pre>
-        <section class="exercise">
-          <h2>Beginner Notes (Line by Line)</h2>
+
+        <div class="explanation">
+          <b>Line-by-line explanation:</b>
           <ol>
-            <li><code>const users = [</code> - This sets up a list of users to test with.</li>
-            <li><code>{ role: 'admin', email: 'admin@example.com' },</code> - This is a supporting line for the Test data example.</li>
-            <li><code>{ role: 'viewer', email: 'viewer@example.com' }</code> - This is a supporting line for the Test data example.</li>
-            <li><code>];</code> - This is a supporting line for the Test data example.</li>
-            <li><code>for (const u of users) {</code> - This repeats the next steps for each item in a list.</li>
-            <li><code>test(`login ${u.role}`, async ({ page }) =&gt; {</code> - This line starts a new test scenario for Test data.</li>
-            <li><code>await page.getByLabel('Email').fill(u.email);</code> - This finds a text box by its label and types in the value.</li>
-            <li><code>});</code> - This is a supporting line for the Test data example.</li>
-            <li><code>}</code> - This closes a block of code.</li>
-</ol>
+            <li><code>const users = [{ role: 'admin', ... }, { role: 'viewer', ... }]</code> — An array of test user objects. Each object holds the data needed for one test variant. Adding a new user role only requires adding one line here.</li>
+            <li><code>for (const u of users) {</code> — Loops through every user in the array. The code inside runs once per user — Playwright generates a separate, named test for each.</li>
+            <li><code>test(`login ${u.role}`, async ({ page }) =&gt; {</code> — Uses a template literal to create unique test names like <em>&quot;login admin&quot;</em> and <em>&quot;login viewer&quot;</em>. Descriptive names make reports immediately clear about which scenario ran.</li>
+            <li><code>page.getByLabel('Email').fill(u.email)</code> — Types the current user's email automatically. Because <code>u</code> comes from the loop, each iteration uses a different email — no code duplication.</li>
+            <li><b>Why this matters:</b> Without data-driven tests you would copy-paste the same test body for each user, making maintenance much harder. Change the test once and it applies to all data rows.</li>
+          </ol>
+        </div>
+
+        <section class="exercise">
+          <h2>Beginner Notes</h2>
+          <ol>
+            <li>Keep test data in arrays, JSON files, or fixtures — never hardcode credentials directly in test logic.</li>
+            <li>Data-driven tests reduce code duplication: one test body covers many input combinations.</li>
+            <li>Always include negative test data (wrong password, missing field) alongside happy-path data.</li>
+          </ol>
         </section>
 
         <h2>Common Mistake to Avoid</h2>

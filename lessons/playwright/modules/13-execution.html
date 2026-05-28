@@ -67,16 +67,25 @@ projects: [
   { name: 'firefox', use: { browserName: 'firefox' } },
   { name: 'webkit', use: { browserName: 'webkit' } }
 ];</code></pre>
-        <section class="exercise">
-          <h2>Beginner Notes (Line by Line)</h2>
+
+        <div class="explanation">
+          <b>Line-by-line explanation:</b>
           <ol>
-            <li><code>// playwright.config.ts</code> - This is a comment describing the next step.</li>
-            <li><code>projects: [</code> - This sets up which browsers to test in.</li>
-            <li><code>{ name: 'chromium', use: { browserName: 'chromium' } },</code> - This is a supporting line for the Execution example.</li>
-            <li><code>{ name: 'firefox', use: { browserName: 'firefox' } },</code> - This is a supporting line for the Execution example.</li>
-            <li><code>{ name: 'webkit', use: { browserName: 'webkit' } }</code> - This is a supporting line for the Execution example.</li>
-            <li><code>];</code> - This is a supporting line for the Execution example.</li>
-</ol>
+            <li><code>projects: [...]</code> — Defines multiple browser and device configurations. Playwright runs all projects automatically, so your entire test suite executes once per browser entry.</li>
+            <li><code>{ name: 'chromium', use: { browserName: 'chromium' } }</code> — One project for Chromium (the engine behind Chrome and Edge). The <code>name</code> appears in reports to show which browser each result came from.</li>
+            <li><code>{ name: 'firefox', ... }</code> and <code>{ name: 'webkit', ... }</code> — Same pattern for Firefox and Safari (WebKit). Adding these catches browser-specific bugs that would be invisible in Chromium-only testing.</li>
+            <li><b>Run one browser only:</b> <code>npx playwright test --project=chromium</code> — useful during development to run fast and switch to full cross-browser only in CI.</li>
+            <li><b>Parallel workers:</b> Set <code>workers: 4</code> in <code>playwright.config.ts</code> to run 4 tests simultaneously. Each worker gets its own browser context so tests are fully isolated.</li>
+          </ol>
+        </div>
+
+        <section class="exercise">
+          <h2>Beginner Notes</h2>
+          <ol>
+            <li>Parallel execution runs multiple tests at the same time, dramatically reducing total suite runtime.</li>
+            <li>Cross-browser testing reveals rendering differences and browser-specific JavaScript bugs early.</li>
+            <li>Start with Chromium only during development, then run all browsers in CI before release.</li>
+          </ol>
         </section>
 
         <h2>Common Mistake to Avoid</h2>

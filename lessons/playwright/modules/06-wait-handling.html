@@ -63,12 +63,23 @@
         <h2>Step-by-Step Example (Code)</h2>
         <pre><code>await page.waitForURL('**/dashboard');
 await expect(page.getByText('Welcome')).toBeVisible();</code></pre>
-        <section class="exercise">
-          <h2>Beginner Notes (Line by Line)</h2>
+
+        <div class="explanation">
+          <b>Line-by-line explanation:</b>
           <ol>
-            <li><code>await page.waitForURL('**/dashboard');</code> - This waits until the browser shows the right page address.</li>
-            <li><code>await expect(page.getByText('Welcome')).toBeVisible();</code> - This checks if what happened matches what you expected.</li>
-</ol>
+            <li><code>await page.waitForURL('**/dashboard')</code> — Waits until the browser address bar matches the pattern <code>**/dashboard</code> (any URL ending with <em>/dashboard</em>). Use this immediately after an action that causes a redirect, such as a form submission or login.</li>
+            <li><code>await expect(page.getByText('Welcome')).toBeVisible()</code> — Waits until a visible element containing &quot;Welcome&quot; appears on the page. Playwright keeps retrying this assertion until it becomes true or the timeout (default 5 seconds) is reached. No manual <code>sleep()</code> needed.</li>
+            <li><b>Why not use <code>waitForTimeout(5000)</code>?</b> Fixed waits always waste time on fast machines and still fail on slow ones. Condition-based waits adapt to actual page speed.</li>
+          </ol>
+        </div>
+
+        <section class="exercise">
+          <h2>Beginner Notes</h2>
+          <ol>
+            <li>Playwright auto-waits for elements to be ready before actions like <code>click()</code> and <code>fill()</code>.</li>
+            <li>Use <code>waitForURL()</code> after redirects, and assertion-based waits (<code>toBeVisible</code>, <code>toHaveText</code>) for dynamic content.</li>
+            <li>Avoid <code>waitForTimeout()</code> — it is a fixed sleep and causes flaky, slow tests.</li>
+          </ol>
         </section>
 
         <h2>Common Mistake to Avoid</h2>
