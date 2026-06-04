@@ -168,21 +168,33 @@ class FileLogger implements Logger {
         <section class="lesson-section">
           <h2>7. Real-World Example: API Client</h2>
           <p>Combine these features to build a real-world API client class.</p>
-          <pre><code>class ApiClient {
-  constructor(private baseUrl: string) {}
+          <pre><code>
+            class ApiClient {
+  private baseUrl: string;
+  constructor(baseUrl: string) {
+    this.baseUrl = baseUrl;
+  }
   get(endpoint: string) {
     console.log(`GET ${this.baseUrl}${endpoint}`);
   }
 }
 
 class SecuredApiClient extends ApiClient {
-  constructor(baseUrl: string, private token: string) {
+  private token: string;
+  constructor(baseUrl: string, token: string) {
     super(baseUrl);
+    this.token = token;
   }
   get(endpoint: string) {
     console.log(`GET ${endpoint} with token ${this.token}`);
   }
 }
+const api = new SecuredApiClient("https://api.example.com", "my-token");
+api.get("/users");
+ 
+const api2 = new ApiClient("https://api.example.com");
+api2.get("/users");
+            
           </code></pre>
         </section>
 
