@@ -39,8 +39,9 @@
             <li><a href="17-advanced-topics.html">17. Advanced Topics</a></li>
             <li><a href="18-best-practices.html">18. Best Practices</a></li>
             <li><a href="19-project-implementation.html">19. Project Implementation</a></li>
+            <li><a href="20-dom-challenges-lab.html">20. DOM Challenges Lab</a></li>
             <li><a href="../playwright-typescript-expert-project-rubric.html">Final Project Rubric (Playwright + TypeScript)</a></li>
-            <li><a href="99-playwright-capstone-50-mcq.html">Final Capstone (50 MCQ)</a></li>
+            <li><a href="../99-playwright-capstone-50-mcq.html">Final Capstone (50 MCQ)</a></li>
           </ul>
         </div>
       </aside>
@@ -61,7 +62,9 @@
         <p>Login checks for admin, manager, and viewer can run from one loop using different credentials.</p>
 
         <h2>Step-by-Step Example (Code)</h2>
-        <pre><code>const users = [
+        <pre><code>import { test, expect } from '@playwright/test';
+
+const users = [
   { role: 'admin', email: 'admin@example.com' },
   { role: 'viewer', email: 'viewer@example.com' }
 ];
@@ -75,6 +78,7 @@ for (const u of users) {
         <div class="explanation">
           <b>Line-by-line explanation:</b>
           <ol>
+            <li><code>import { test, expect } from '@playwright/test';</code> — Required import at the top of every Playwright test file. <code>test</code> is used to define test cases and <code>expect</code> is used for assertions. Without this line, the <code>test()</code> function on the next lines would not be recognized by TypeScript.</li>
             <li><code>const users = [{ role: 'admin', ... }, { role: 'viewer', ... }]</code> — An array of test user objects. Each object holds the data needed for one test variant. Adding a new user role only requires adding one line here.</li>
             <li><code>for (const u of users) {</code> — Loops through every user in the array. The code inside runs once per user — Playwright generates a separate, named test for each.</li>
             <li><code>test(`login ${u.role}`, async ({ page }) =&gt; {</code> — Uses a template literal to create unique test names like <em>&quot;login admin&quot;</em> and <em>&quot;login viewer&quot;</em>. Descriptive names make reports immediately clear about which scenario ran.</li>
@@ -137,6 +141,7 @@ for (const u of users) {
           <h2>Navigation</h2>
           <p><a href="08-validation.html">Previous</a> | <a href="10-framework-design.html">Next</a></p>
         </section>
+        <a href="../../../index.html" class="home-btn floating-home-btn" title="Back to Home">&#8962; Home</a>
       </main>
     </div>
 

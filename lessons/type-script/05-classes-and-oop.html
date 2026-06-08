@@ -69,6 +69,19 @@ class TestSuite {
 const suite = new TestSuite("Login", 12);
 console.log(suite.getSummary()); // Login: 12 cases
           </code></pre>
+
+          <div class="explanation">
+            <b>Line-by-line explanation:</b>
+            <ol>
+              <li><code>class TestSuite {</code> — Declares a new class named <code>TestSuite</code>. A class is a blueprint. Every time you create one with <code>new TestSuite(...)</code>, you get a fresh independent object with its own data.</li>
+              <li><code>name: string;</code> and <code>totalCases: number;</code> — These are <b>class properties</b>. Every instance of <code>TestSuite</code> will have its own <code>name</code> and <code>totalCases</code>. The types are declared here so TypeScript checks that you only assign the right values.</li>
+              <li><code>constructor(name: string, totalCases: number)</code> — A special method that runs automatically when you use <code>new TestSuite(...)</code>. It receives the initial values and stores them on the instance using <code>this</code>.</li>
+              <li><code>this.name = name</code> — <code>this</code> refers to the specific object being created. Without <code>this.</code>, you would be setting a local variable, not the object's property.</li>
+              <li><code>getSummary(): string</code> — A method on the class. It reads <code>this.name</code> and <code>this.totalCases</code> (the instance's own data) and returns a formatted string.</li>
+              <li><code>new TestSuite("Login", 12)</code> — Creates one instance of the blueprint. The constructor runs, setting <code>name = "Login"</code> and <code>totalCases = 12</code>. The result is stored in <code>suite</code>.</li>
+              <li><code>suite.getSummary()</code> — Calls the method on this specific instance. Output: <code>"Login: 12 cases"</code>.</li>
+            </ol>
+          </div>
         </section>
 
         <section class="lesson-section">
@@ -91,6 +104,16 @@ console.log(suite.getSummary()); // Login: 12 cases
   }
 }
           </code></pre>
+
+          <div class="explanation">
+            <b>Line-by-line explanation:</b>
+            <ol>
+              <li><code>public name: string</code> — Accessible from anywhere: inside the class, in subclasses, and in code that uses the class. This is the default if you omit the modifier. Use <code>public</code> when the property is part of the class's intended public API.</li>
+              <li><code>private password: string</code> — Only accessible inside this exact class. Even a subclass cannot read it. TypeScript will error if you try <code>user.password</code> outside the class. Use <code>private</code> to hide sensitive or implementation-specific data.</li>
+              <li><code>protected role: string</code> — Accessible inside this class AND inside any class that extends it (a subclass). Not accessible from outside. Use <code>protected</code> for data that subclasses need but outside consumers should not touch.</li>
+              <li><b>Quick rule:</b> Start with <code>private</code> for everything. Change to <code>protected</code> only if a subclass needs it. Change to <code>public</code> only if outside code needs it. This discipline prevents accidental external dependencies on internal details.</li>
+            </ol>
+          </div>
         </section>
 
         <section class="lesson-section">
@@ -112,6 +135,19 @@ const page = new LoginPage();
 page.navigate("/login");
 page.login("alice", "secret");
           </code></pre>
+
+          <div class="explanation">
+            <b>Line-by-line explanation:</b>
+            <ol>
+              <li><code>class BasePage</code> — The <b>parent class</b> (also called <em>superclass</em>). It defines shared behaviour that all page classes will inherit. In a real test framework, <code>BasePage</code> might contain navigation, screenshot helpers, or waits.</li>
+              <li><code>navigate(url: string): void</code> — A method on <code>BasePage</code>. Any class that extends <code>BasePage</code> automatically inherits this method for free.</li>
+              <li><code>class LoginPage extends BasePage</code> — <code>LoginPage</code> is a <b>child class</b> (also called <em>subclass</em>). The <code>extends</code> keyword means it inherits everything from <code>BasePage</code> and can add its own methods on top.</li>
+              <li><code>login(user: string, pass: string): void</code> — A method that only exists on <code>LoginPage</code>. <code>BasePage</code> does not have it. This is the child adding its own specific behaviour.</li>
+              <li><code>new LoginPage()</code> — Creates an instance of the child class. No constructor is defined in <code>LoginPage</code>, so TypeScript automatically uses the parent's (which requires no arguments here).</li>
+              <li><code>page.navigate("/login")</code> — Calls a method that was defined in <code>BasePage</code>, not in <code>LoginPage</code>. This works because <code>LoginPage</code> inherited it. You get the parent's functionality without writing it again.</li>
+              <li><code>page.login("alice", "secret")</code> — Calls the method defined only in <code>LoginPage</code>. This would fail if called on a plain <code>BasePage</code> instance.</li>
+            </ol>
+          </div>
         </section>
 
         <section class="lesson-section">
@@ -126,6 +162,17 @@ page.login("alice", "secret");
 console.log(MathUtils.PI);
 console.log(MathUtils.square(5));
           </code></pre>
+
+          <div class="explanation">
+            <b>Line-by-line explanation:</b>
+            <ol>
+              <li><code>static PI = 3.14</code> — A <b>static property</b> belongs to the class itself, not to any instance. There is only one copy of <code>PI</code> shared across the entire program, no matter how many <code>MathUtils</code> instances you create (which you would never do here anyway).</li>
+              <li><code>static square(x: number)</code> — A <b>static method</b>. Does not need <code>this</code> because it does not operate on instance data. It is a pure helper function that is just grouped under the class name for organisation.</li>
+              <li><code>MathUtils.PI</code> — Accessed directly on the class name, not on an instance. Writing <code>new MathUtils().PI</code> would work but is misleading and unnecessary. Static members are always accessed as <code>ClassName.member</code>.</li>
+              <li><code>MathUtils.square(5)</code> — Same pattern. Returns <code>25</code>. No <code>new MathUtils()</code> needed.</li>
+              <li><b>When to use static:</b> Utility functions (math, date formatting, string helpers), factory methods, counters shared across all instances, or constants that belong conceptually to a type.</li>
+            </ol>
+          </div>
         </section>
 
         <section class="lesson-section">
@@ -147,6 +194,18 @@ class ConsoleReporter extends Reporter {
 const rep = new ConsoleReporter();
 rep.report("All tests passed");
           </code></pre>
+
+          <div class="explanation">
+            <b>Line-by-line explanation:</b>
+            <ol>
+              <li><code>abstract class Reporter</code> — The <code>abstract</code> keyword prevents direct instantiation. You cannot write <code>new Reporter()</code>. It exists only as a base for subclasses to build on. This is TypeScript's way of defining a &ldquo;must be extended&rdquo; class.</li>
+              <li><code>abstract report(message: string): void</code> — An <b>abstract method</b> has no body here. It is a contract: every non-abstract subclass <em>must</em> provide its own implementation. TypeScript gives a compile error if a subclass does not implement all abstract methods.</li>
+              <li><code>log(msg: string)</code> — A concrete method with a real body. Subclasses inherit this for free and do not need to re-implement it. Mix abstract and concrete methods to share common logic while enforcing customisation points.</li>
+              <li><code>class ConsoleReporter extends Reporter</code> — A concrete subclass. TypeScript requires it to implement <code>report()</code> because the parent declared it abstract.</li>
+              <li><code>report(message: string): void { console.log(...) }</code> — Fulfils the abstract contract. If this method were missing, TypeScript would error: <em>"Non-abstract class 'ConsoleReporter' does not implement inherited abstract member 'report'"</em>.</li>
+              <li><code>new ConsoleReporter()</code> — Works because <code>ConsoleReporter</code> is concrete (not abstract). The resulting instance has both <code>report()</code> and the inherited <code>log()</code> from <code>Reporter</code>.</li>
+            </ol>
+          </div>
         </section>
 
         <section class="lesson-section">
@@ -163,39 +222,63 @@ class FileLogger implements Logger {
   }
 }
           </code></pre>
+
+          <div class="explanation">
+            <b>Line-by-line explanation:</b>
+            <ol>
+              <li><code>interface Logger</code> — Defines a <b>contract</b>: any class that claims to be a <code>Logger</code> must have a <code>log</code> method with this exact signature. The interface itself has no implementation code.</li>
+              <li><code>log(message: string): void</code> — The shape of the required method. No body here &mdash; just the signature.</li>
+              <li><code>class FileLogger implements Logger</code> — The <code>implements</code> keyword tells TypeScript: &ldquo;this class promises to satisfy the <code>Logger</code> interface.&rdquo; If <code>log()</code> is missing or has a different signature, TypeScript gives a compile error immediately.</li>
+              <li><code>log(message: string): void { ... }</code> — The concrete implementation. This class chose to simulate writing to a file by logging with a <code>[FILE]</code> prefix. Another class implementing <code>Logger</code> could write to a database, an API, or a test report instead.</li>
+              <li><b>Why this pattern matters:</b> Code that accepts a <code>Logger</code> interface can work with any class that implements it &mdash; <code>FileLogger</code>, <code>ConsoleLogger</code>, <code>ApiLogger</code> &mdash; without knowing which one it has. This is called <b>programming to an interface</b> and is fundamental to maintainable architecture.</li>
+            </ol>
+          </div>
         </section>
 
         <section class="lesson-section">
           <h2>7. Real-World Example: API Client</h2>
-          <p>Combine these features to build a real-world API client class.</p>
-          <pre><code>
-            class ApiClient {
-  private baseUrl: string;
+          <p>Combine these features to build a real-world API client class. Notice that <code>baseUrl</code> is <code>protected</code> (not <code>private</code>) so the child class can read it. If it were <code>private</code>, TypeScript would block access in <code>SecuredApiClient</code>.</p>
+          <pre><code>class ApiClient {
+  protected baseUrl: string; // protected: accessible in this class AND any subclass
   constructor(baseUrl: string) {
     this.baseUrl = baseUrl;
   }
-  get(endpoint: string) {
+  get(endpoint: string): void {
     console.log(`GET ${this.baseUrl}${endpoint}`);
   }
 }
 
 class SecuredApiClient extends ApiClient {
-  private token: string;
+  private token: string; // private: only accessible inside SecuredApiClient
   constructor(baseUrl: string, token: string) {
-    super(baseUrl);
+    super(baseUrl); // calls ApiClient constructor to store baseUrl
     this.token = token;
   }
-  get(endpoint: string) {
-    console.log(`GET ${endpoint} with token ${this.token}`);
+  get(endpoint: string): void {
+    // this.baseUrl works here because it is 'protected', not 'private'
+    console.log(`GET ${this.baseUrl}${endpoint} with token ${this.token}`);
   }
 }
+
 const api = new SecuredApiClient("https://api.example.com", "my-token");
 api.get("/users");
- 
+// Output: GET https://api.example.com/users with token my-token
+
 const api2 = new ApiClient("https://api.example.com");
 api2.get("/users");
-            
-          </code></pre>
+// Output: GET https://api.example.com/users</code></pre>
+
+          <div class="explanation">
+            <b>Line-by-line explanation:</b>
+            <ol>
+              <li><code>protected baseUrl: string</code> — Using <code>protected</code> instead of <code>private</code> allows the child class <code>SecuredApiClient</code> to read <code>this.baseUrl</code>. Had it been <code>private</code>, TypeScript would report a compile error when the child tries to access it.</li>
+              <li><code>constructor(baseUrl: string)</code> in <code>ApiClient</code> — Stores the URL when the object is created. Every instance of <code>ApiClient</code> or its subclasses gets their own copy of <code>baseUrl</code>.</li>
+              <li><code>super(baseUrl)</code> — The first line inside any subclass constructor must call <code>super()</code> to run the parent's constructor logic. This is how <code>this.baseUrl</code> gets set for <code>SecuredApiClient</code>.</li>
+              <li><code>private token: string</code> — The token belongs only to <code>SecuredApiClient</code>. Nothing outside this class, not even further subclasses, can access it directly.</li>
+              <li><code>get(endpoint: string)</code> in <code>SecuredApiClient</code> — Overrides the parent method. Both have the same method name but different behaviour. This is called <b>method overriding</b>.</li>
+              <li><code>this.baseUrl</code> inside the child's <code>get()</code> — Works because the field is <code>protected</code>. If you change it to <code>private</code> in <code>ApiClient</code>, TypeScript immediately shows: <em>"Property 'baseUrl' is private and only accessible within class 'ApiClient'"</em>.</li>
+            </ol>
+          </div>
         </section>
 
         <section class="exercise">

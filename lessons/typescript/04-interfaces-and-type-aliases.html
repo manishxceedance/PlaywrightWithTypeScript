@@ -145,7 +145,7 @@ const cfg: Config = { apiUrl: "https://api.example.com" };
 // cfg.apiUrl = "..."; // Error: cannot assign to readonly property
 
 // Readonly array
-const nums: ReadonlyArray<number> = [1, 2, 3];
+const nums: ReadonlyArray&lt;number&gt; = [1, 2, 3];
 // nums[0] = 99; // Error: cannot modify
           </code></pre>
           <ul>
@@ -184,19 +184,17 @@ const nums: ReadonlyArray<number> = [1, 2, 3];
           </div>
 
           <div class="question" data-answer="c">
-            <pre><code>// This type alias describes allowed environments.
-          <div class="question" data-answer="b">
+            <p>2. Which keyword extends one interface with another?</p>
+            <label><input type="radio" name="quiz-0-q1" value="a" /> include</label>
+            <label><input type="radio" name="quiz-0-q1" value="b" /> implement</label>
+            <label><input type="radio" name="quiz-0-q1" value="c" /> extends</label>
+          </div>
 
-    // This type alias describes a build info object.
+          <div class="question" data-answer="b">
             <p>3. Intersection type symbol is:</p>
             <label><input type="radio" name="quiz-0-q2" value="a" /> |</label>
             <label><input type="radio" name="quiz-0-q2" value="b" /> &amp;</label>
             <label><input type="radio" name="quiz-0-q2" value="c" /> *</label>
-
-    const build: BuildInfo = {
-      version: "1.2.3",
-      environment: "qa"
-    };</code></pre>
           </div>
 
           <button class="grade-btn" type="button" data-grade>Grade Me</button>

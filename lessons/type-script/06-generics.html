@@ -52,69 +52,124 @@
           <h2>1. What is a Generic?</h2>
           <p>A <b>generic</b> is a placeholder for a type. It lets you write one function, class, or type that works for many types.</p>
           <pre><code>// Generic function
-function wrapInArray<T>(value: T): T[] {
+function wrapInArray&lt;T&gt;(value: T): T[] {
   return [value];
 }
 const numbers = wrapInArray(10);      // number[]
 const names = wrapInArray("Neha");   // string[]
           </code></pre>
+
+          <div class="explanation">
+            <b>Line-by-line explanation:</b>
+            <ol>
+              <li><code>function wrapInArray&lt;T&gt;</code> — The <code>&lt;T&gt;</code> after the function name declares a <b>generic type parameter</b>. Think of <code>T</code> as a blank label. TypeScript fills it in automatically when you call the function based on what you pass in &mdash; you do not need to specify it yourself.</li>
+              <li><code>(value: T): T[]</code> — The parameter is of type <code>T</code> and the return type is an array of <code>T</code>. Both <code>T</code>s refer to the <em>same resolved type</em>. If <code>T</code> resolves to <code>number</code>, the return type automatically becomes <code>number[]</code>.</li>
+              <li><code>return [value]</code> — Wraps the single input in a new array. Simple logic, but now fully type-safe for any type you pass in &mdash; no code duplication needed.</li>
+              <li><code>wrapInArray(10)</code> — TypeScript sees the argument is <code>10</code> (a number), infers <code>T = number</code>, and the return type is <code>number[]</code>. No annotation needed on the call side.</li>
+              <li><code>wrapInArray("Neha")</code> — TypeScript infers <code>T = string</code> and returns <code>string[]</code>. The <em>same</em> function body handles both types. This is the core value of generics: one implementation, infinite type safety.</li>
+            </ol>
+          </div>
         </section>
 
         <section class="lesson-section">
           <h2>2. Generic Types and Interfaces</h2>
           <p>You can use generics in type aliases and interfaces to describe reusable shapes.</p>
           <pre><code>// Generic API response type
-type ApiResponse<T> = {
+type ApiResponse&lt;T&gt; = {
   status: number;
   data: T;
   error?: string;
 };
 
 type UserPayload = { id: string; name: string };
-const response: ApiResponse<UserPayload> = {
+const response: ApiResponse&lt;UserPayload&gt; = {
   status: 200,
   data: { id: "U1", name: "Anu" }
 };
           </code></pre>
+
+          <div class="explanation">
+            <b>Line-by-line explanation:</b>
+            <ol>
+              <li><code>type ApiResponse&lt;T&gt;</code> — A generic type alias. The <code>&lt;T&gt;</code> is a placeholder for whatever payload type this response will carry. You decide <code>T</code> when you use the type.</li>
+              <li><code>status: number</code> and <code>error?: string</code> — Fields that are the same for every response, regardless of the payload type. These never change.</li>
+              <li><code>data: T</code> — This field's type changes based on what <code>T</code> is. If <code>T</code> is <code>UserPayload</code>, then <code>data</code> must be a <code>UserPayload</code> object.</li>
+              <li><code>type UserPayload = { id: string; name: string }</code> — The specific shape for a user-related response. Defined separately so it can be reused in other places too.</li>
+              <li><code>ApiResponse&lt;UserPayload&gt;</code> — Fills in <code>T</code> with <code>UserPayload</code>. TypeScript now knows that <code>response.data.id</code> is a <code>string</code>. If you had written <code>response.data.email</code> it would fail at compile time because <code>UserPayload</code> has no <code>email</code> field.</li>
+            </ol>
+          </div>
         </section>
 
         <section class="lesson-section">
           <h2>3. Generic Constraints</h2>
           <p>Use <code>extends</code> to require that a generic type has certain properties.</p>
           <pre><code>// Only accepts values with a length property
-function printLength<T extends { length: number }>(value: T): void {
+function printLength&lt;T extends { length: number }&gt;(value: T): void {
   console.log(value.length);
 }
 printLength([1, 2, 3]); // OK
 printLength("hello");   // OK
 // printLength(42);     // Error
           </code></pre>
-        </section>
+          <div class="explanation">
+            <b>Line-by-line explanation:</b>
+            <ol>
+              <li><code>function printLength&lt;T extends { length: number }&gt;</code> — The constraint <code>extends { length: number }</code> means: &ldquo;only accept a <code>T</code> that has a <code>length</code> property of type <code>number</code>.&rdquo; This is how you restrict a generic so it is not completely open to any type.</li>
+              <li><code>(value: T): void</code> — The function takes the constrained type and returns nothing. Declaring <code>void</code> as the return type makes it explicit that this function is called for its side-effect (logging), not its return value.</li>
+              <li><code>console.log(value.length)</code> — Safe to call because TypeScript knows <code>T</code> has a <code>length</code>. Without the constraint, TypeScript would reject this line since not all types have <code>length</code>.</li>
+              <li><code>printLength([1, 2, 3])</code> — Arrays have a <code>length</code> property, so they satisfy the constraint. <code>T</code> resolves to <code>number[]</code>. Logs <code>3</code>.</li>
+              <li><code>printLength("hello")</code> — Strings also have <code>length</code>. <code>T</code> resolves to <code>string</code>. Logs <code>5</code>.</li>
+              <li><code>// printLength(42)</code> — Numbers have no <code>length</code> property. TypeScript rejects this at compile time: <em>"Argument of type 'number' is not assignable to parameter of type '{ length: number }'"</em>. The error is caught before any code runs.</li>
+            </ol>
+          </div>        </section>
 
         <section class="lesson-section">
           <h2>4. Multiple Type Parameters & Defaults</h2>
           <p>You can use more than one generic, and provide default types.</p>
           <pre><code>// Pair of values
-type Pair<A, B = string> = { first: A; second: B };
-const p1: Pair<number, boolean> = { first: 1, second: true };
-const p2: Pair<number> = { first: 2, second: "default" };
+type Pair&lt;A, B = string&gt; = { first: A; second: B };
+const p1: Pair&lt;number, boolean&gt; = { first: 1, second: true };
+const p2: Pair&lt;number&gt; = { first: 2, second: "default" };
           </code></pre>
+
+          <div class="explanation">
+            <b>Line-by-line explanation:</b>
+            <ol>
+              <li><code>type Pair&lt;A, B = string&gt;</code> — Declares two type parameters: <code>A</code> (required) and <code>B</code> (optional, defaults to <code>string</code>). The <code>= string</code> means: if the caller does not provide a second type argument, TypeScript automatically uses <code>string</code>.</li>
+              <li><code>{ first: A; second: B }</code> — The pair object has two properties whose types come from the generic parameters. Both types are set by the caller.</li>
+              <li><code>Pair&lt;number, boolean&gt;</code> — Explicitly sets <code>A = number</code> and <code>B = boolean</code>. So <code>p1.first</code> is a <code>number</code> and <code>p1.second</code> is a <code>boolean</code>. TypeScript verifies the values match.</li>
+              <li><code>Pair&lt;number&gt;</code> — Only provides one type argument. <code>A = number</code> and <code>B</code> falls back to the default <code>string</code>. So <code>p2.second</code> must be a <code>string</code>. Assigning a number there would be a compile error.</li>
+              <li><b>Why defaults are useful:</b> They reduce repetition when most callers use the same second type, while still letting callers override it when needed.</li>
+            </ol>
+          </div>
         </section>
 
         <section class="lesson-section">
           <h2>5. Generic Classes and Interfaces</h2>
           <p>Classes and interfaces can be generic too.</p>
           <pre><code>// Generic class for a simple stack
-class Stack<T> {
+class Stack&lt;T&gt; {
   private items: T[] = [];
   push(item: T) { this.items.push(item); }
   pop(): T | undefined { return this.items.pop(); }
 }
-const numStack = new Stack<number>();
+const numStack = new Stack&lt;number&gt;();
 numStack.push(1);
 numStack.push(2);
 console.log(numStack.pop());
           </code></pre>
+
+          <div class="explanation">
+            <b>Line-by-line explanation:</b>
+            <ol>
+              <li><code>class Stack&lt;T&gt;</code> — A generic class. The <code>&lt;T&gt;</code> is resolved when you create an instance. Every method inside the class can then use <code>T</code> knowing it refers to the same type throughout the class.</li>
+              <li><code>private items: T[] = []</code> — An internal array that holds the stack elements. It is <code>private</code> so nothing outside the class can directly access or modify it. The initial value <code>[]</code> means an empty array at creation.</li>
+              <li><code>push(item: T)</code> — Adds one item of type <code>T</code> to the top of the stack. TypeScript prevents you from pushing the wrong type &mdash; e.g., pushing a string into a <code>Stack&lt;number&gt;</code> is a compile error.</li>
+              <li><code>pop(): T | undefined</code> — Removes and returns the top item. Returns <code>undefined</code> if the stack is empty, which is why the return type is <code>T | undefined</code> rather than just <code>T</code>.</li>
+              <li><code>new Stack&lt;number&gt;()</code> — Creates a stack that only accepts and returns <code>number</code> values. <code>T</code> is now fixed as <code>number</code> for this instance.</li>
+              <li><code>numStack.pop()</code> — Returns <code>2</code> (last item pushed). TypeScript knows the return type is <code>number | undefined</code>, so downstream code must handle both cases.</li>
+            </ol>
+          </div>
         </section>
 
         <section class="lesson-section">
@@ -122,23 +177,44 @@ console.log(numStack.pop());
           <p>Many built-in utility types use generics (like <code>Partial</code>, <code>Record</code>, etc.).</p>
           <pre><code>// Partial makes all fields optional
 type Bug = { id: string; summary: string };
-const draft: Partial<Bug> = { summary: "Crash" };
+const draft: Partial&lt;Bug&gt; = { summary: "Crash" };
 
 // Record creates a map
-type TestResults = Record<string, "pass" | "fail">;
+type TestResults = Record&lt;string, "pass" | "fail"&gt;;
 const results: TestResults = { "TC-1": "pass" };
           </code></pre>
+
+          <div class="explanation">
+            <b>Line-by-line explanation:</b>
+            <ol>
+              <li><code>type Bug = { id: string; summary: string }</code> — Defines a simple two-field bug type. Used as the base for both utility type examples below.</li>
+              <li><code>Partial&lt;Bug&gt;</code> — A built-in TypeScript generic that takes every property in <code>Bug</code> and makes it optional (adds <code>?</code> to each). So <code>draft</code> can have just <code>summary</code>, just <code>id</code>, both, or neither without a TypeScript error. Useful for draft forms or patch payloads.</li>
+              <li><code>const draft: Partial&lt;Bug&gt; = { summary: "Crash" }</code> — Valid because <code>id</code> is now optional. Without <code>Partial</code>, omitting <code>id</code> would be a type error.</li>
+              <li><code>Record&lt;string, "pass" | "fail"&gt;</code> — A built-in generic that creates an object type with string keys and values restricted to <code>"pass"</code> or <code>"fail"</code>. Trying to write <code>{ "TC-1": "skip" }</code> would be a compile error.</li>
+              <li><code>const results: TestResults</code> — You can now add as many test case IDs as you like, and TypeScript will verify each value is either <code>"pass"</code> or <code>"fail"</code>.</li>
+            </ol>
+          </div>
         </section>
 
         <section class="lesson-section">
           <h2>7. Practical Utility: Test Data</h2>
           <p>Use generics to write flexible, type-safe utilities for test data.</p>
           <pre><code>// Get the first item of any array
-function firstItem<T>(items: T[]): T | undefined {
+function firstItem&lt;T&gt;(items: T[]): T | undefined {
   return items[0];
 }
 const firstCase = firstItem(["TC-1", "TC-2"]);
           </code></pre>
+
+          <div class="explanation">
+            <b>Line-by-line explanation:</b>
+            <ol>
+              <li><code>function firstItem&lt;T&gt;(items: T[]): T | undefined</code> — A generic function that accepts an array of any type. The return type is <code>T | undefined</code> because if the array is empty, <code>items[0]</code> is <code>undefined</code>. This is safer than returning just <code>T</code>, which would hide the empty-array case.</li>
+              <li><code>return items[0]</code> — Returns the element at index 0. If the array is empty, JavaScript returns <code>undefined</code> here, which matches the declared return type.</li>
+              <li><code>firstItem(["TC-1", "TC-2"])</code> — TypeScript infers <code>T = string</code> from the array elements. The return type is <code>string | undefined</code>. The result <code>firstCase</code> is <code>"TC-1"</code> but its type is <code>string | undefined</code>, reminding you to check before using string methods on it.</li>
+              <li><b>Why this matters:</b> If you had typed the return as just <code>T</code> (without <code>undefined</code>), calling <code>firstCase.toUpperCase()</code> would look safe but crash at runtime on an empty array. The union return type forces safe handling.</li>
+            </ol>
+          </div>
         </section>
 
         <section class="exercise">

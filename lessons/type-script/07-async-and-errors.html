@@ -56,7 +56,7 @@
         <section class="lesson-section">
           <h2>2. Promise Basics</h2>
           <p>A <b>Promise</b> represents a value that will be available later. Use <code>Promise</code> for async operations.</p>
-          <pre><code>function waitMs(ms: number): Promise<string> {
+          <pre><code>function waitMs(ms: number): Promise&lt;string&gt; {
   return new Promise((resolve) => {
     setTimeout(() => resolve(`Waited ${ms} ms`), ms);
   });
@@ -71,7 +71,7 @@
         <section class="lesson-section">
           <h2>3. async/await</h2>
           <p><code>async</code> functions always return a Promise. Use <code>await</code> to pause until a Promise is ready.</p>
-          <pre><code>async function runHealthCheck(): Promise<void> {
+          <pre><code>async function runHealthCheck(): Promise&lt;void&gt; {
   const message = await waitMs(300);
   console.log(message);
 }
@@ -85,10 +85,14 @@ runHealthCheck();
 
         <section class="lesson-section">
           <h2>4. Typed API Fetch Example</h2>
-          <p>Always type your async results for safety.</p>
-          <pre><code>type HealthResponse = { status: string; uptime: number };
+          <p>Always type your async results for safety. <b>Important:</b> <code>fetch</code> is built into Node.js 18+ and all modern browsers. For TypeScript to recognise it without a <em>"Cannot find name 'fetch'"</em> error, add <code>"lib": ["ES2020", "DOM"]</code> to the <code>compilerOptions</code> in your <code>tsconfig.json</code>.</p>
+          <pre><code>// tsconfig.json — required addition to compilerOptions:
+// "lib": ["ES2020", "DOM"]
+// Without this, TypeScript reports: Cannot find name 'fetch'.
 
-async function fetchHealth(): Promise<HealthResponse> {
+type HealthResponse = { status: string; uptime: number };
+
+async function fetchHealth(): Promise&lt;HealthResponse&gt; {
   const response = await fetch("/health");
   if (!response.ok) {
     throw new Error(`HTTP ${response.status}`);
@@ -98,14 +102,21 @@ async function fetchHealth(): Promise<HealthResponse> {
           </code></pre>
 
           <div class="explanation">
-            <b>Explanation:</b> This function fetches data from <code>/health</code> and expects a JSON response matching the <code>HealthResponse</code> type. If the HTTP response is not OK, it throws an error. This ensures you always get a correctly-typed result or a clear error.
+            <b>Explanation:</b>
+            <ol>
+              <li><code>"lib": ["ES2020", "DOM"]</code> in tsconfig — The <code>DOM</code> lib adds type declarations for browser and Node.js 18+ globals like <code>fetch</code>, <code>Response</code>, and <code>Headers</code>. Without it, TypeScript does not know these exist and rejects the code at compile time.</li>
+              <li><code>type HealthResponse</code> — Declares the shape of the expected JSON response. TypeScript uses this to check that you only access valid fields (e.g. <code>health.status</code>), catching typos like <code>health.stats</code> at compile time.</li>
+              <li><code>await fetch("/health")</code> — Sends an HTTP GET request and waits for the response object. The response body is not yet read at this point.</li>
+              <li><code>if (!response.ok)</code> — <code>response.ok</code> is <code>true</code> for any 2xx status code. Throwing here ensures the caller always gets a typed result or a clear error — never a silent wrong response.</li>
+              <li><code>(await response.json()) as HealthResponse</code> — Reads and parses the response body as JSON, then asserts it matches <code>HealthResponse</code>. The <code>as</code> cast is necessary because <code>response.json()</code> returns <code>any</code> by default.</li>
+            </ol>
           </div>
         </section>
 
         <section class="lesson-section">
           <h2>5. Error Handling Pattern</h2>
           <p>Use <code>try/catch</code> to handle errors in async code. Always check the error type.</p>
-          <pre><code>async function safeHealthCheck(): Promise<void> {
+          <pre><code>async function safeHealthCheck(): Promise&lt;void&gt; {
   try {
     const health = await fetchHealth();
     console.log("Service status:", health.status);
@@ -144,12 +155,13 @@ runAll();
 
         <section class="lesson-section">
           <h2>7. Utility: Safe Fetch Helper</h2>
-          <p>Write a generic async helper for safe API calls.</p>
-          <pre><code>async function safeFetchJson<T>(url: string): Promise<T | null> {
+          <p>Write a generic async helper for safe API calls. Like section 4, this uses <code>fetch</code> — add <code>"lib": ["ES2020", "DOM"]</code> to your <code>tsconfig.json</code> <code>compilerOptions</code> so TypeScript recognises it.</p>
+          <pre><code>// Requires "lib": ["ES2020", "DOM"] in tsconfig.json compilerOptions
+async function safeFetchJson&lt;T&gt;(url: string): Promise&lt;T | null&gt; {
   try {
     const res = await fetch(url);
     if (!res.ok) throw new Error("Bad response");
-    return await res.json();
+    return (await res.json()) as T; // explicit cast: res.json() returns 'any'; cast to T makes the return type safe
   } catch (e) {
     return null;
   }
@@ -157,7 +169,15 @@ runAll();
           </code></pre>
 
           <div class="explanation">
-            <b>Explanation:</b> This generic helper fetches JSON from a URL and returns either the typed result or <code>null</code> if anything fails. It’s a reusable pattern for safe API calls.
+            <b>Line-by-line explanation:</b>
+            <ol>
+              <li><code>async function safeFetchJson&lt;T&gt;</code> — A generic async function. The caller decides what type <code>T</code> represents. For example, <code>safeFetchJson&lt;User&gt;("/api/me")</code> makes the return type <code>Promise&lt;User | null&gt;</code>.</li>
+              <li><code>Promise&lt;T | null&gt;</code> — The return type signals two possible outcomes: a correctly typed value on success, or <code>null</code> if anything went wrong. The caller must handle both without crashing.</li>
+              <li><code>const res = await fetch(url)</code> — Sends the HTTP request and waits for the response headers. The body is not yet read at this point.</li>
+              <li><code>if (!res.ok) throw new Error("Bad response")</code> — Fails fast for any non-2xx status. The thrown error is caught by the <code>catch</code> block, which returns <code>null</code> instead of crashing the caller.</li>
+              <li><code>(await res.json()) as T</code> — Reads and parses the response body as JSON, then <b>explicitly casts</b> it to <code>T</code>. This is necessary because <code>res.json()</code> returns <code>any</code> by default. Without the cast, TypeScript with <code>strict</code> mode may infer an implicit <code>any</code> return, which defeats the purpose of the generic. The cast documents your intent and enables IDE autocomplete on the result.</li>
+              <li><code>catch (e) { return null }</code> — Any error (network failure, JSON parse error, bad status) results in <code>null</code>. The caller only needs one check: <code>if (result === null)</code>. This is much cleaner than propagating errors up the call stack for routine network issues.</li>
+            </ol>
           </div>
         </section>
 

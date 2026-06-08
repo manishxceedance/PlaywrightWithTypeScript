@@ -122,15 +122,15 @@ console.log(passRate(47, 50));
   summary: string;
   severity: string;
 }
-// Partial<Bug> means all fields are optional
-const draft: Partial<Bug> = { summary: "Crash on login" };
+// Partial&lt;Bug&gt; means all fields are optional
+const draft: Partial&lt;Bug&gt; = { summary: "Crash on login" };
               </code></pre>
               <div class="explanation"><b>Explanation:</b> <code>Partial&lt;T&gt;</code> makes every property in a type optional. Here, <code>draft</code> can have any subset of <code>Bug</code>'s fields.</div>
             </li>
             <li>
               <b>Pick&lt;T, K&gt;</b>: Lets you create a type with only some properties from another type.
               <pre><code>// Only id and summary from Bug
-type BugSummary = Pick<Bug, "id" | "summary">;
+type BugSummary = Pick&lt;Bug, "id" | "summary"&gt;;
 const summary: BugSummary = { id: "B-1", summary: "Crash" };
               </code></pre>
               <div class="explanation"><b>Explanation:</b> <code>Pick&lt;T, K&gt;</code> creates a new type with only the specified properties from the original type. <code>BugSummary</code> has just <code>id</code> and <code>summary</code>.</div>
@@ -138,7 +138,7 @@ const summary: BugSummary = { id: "B-1", summary: "Crash" };
             <li>
               <b>Omit&lt;T, K&gt;</b>: Like Pick, but removes properties.
               <pre><code>// All Bug fields except severity
-type BugNoSeverity = Omit<Bug, "severity">;
+type BugNoSeverity = Omit&lt;Bug, "severity"&gt;;
 const bug: BugNoSeverity = { id: "B-2", summary: "Slow" };
               </code></pre>
               <div class="explanation"><b>Explanation:</b> <code>Omit&lt;T, K&gt;</code> creates a type with all properties except the ones you list. <code>BugNoSeverity</code> has <code>id</code> and <code>summary</code> only.</div>
@@ -146,7 +146,7 @@ const bug: BugNoSeverity = { id: "B-2", summary: "Slow" };
             <li>
               <b>Record&lt;K, T&gt;</b>: Makes an object type with keys of type K and values of type T.
               <pre><code>// Map test case IDs to results
-type TestResults = Record<string, "pass" | "fail">;
+type TestResults = Record&lt;string, "pass" | "fail"&gt;;
 const results: TestResults = { "TC-1": "pass", "TC-2": "fail" };
               </code></pre>
               <div class="explanation"><b>Explanation:</b> <code>Record&lt;K, T&gt;</code> creates an object type where keys are of type <code>K</code> and values are of type <code>T</code>. Here, <code>results</code> maps test case IDs to their result.</div>
