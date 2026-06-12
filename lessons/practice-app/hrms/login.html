@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login – HRMS Practice App</title>
+  <link rel="stylesheet" href="css/hrms.css">
+</head>
+<body>
+<div class="login-wrap">
+  <div class="login-card">
+
+    <div class="login-header">
+      <div class="login-logo">🏢</div>
+      <h1>HRMS Practice App</h1>
+      <p>Human Resource Management System</p>
+    </div>
+
+    <div class="login-body">
+      <form id="login-form" novalidate>
+        <!-- Hidden honeypot for Playwright practice -->
+        <input type="text" name="website" style="display:none" tabindex="-1" autocomplete="off">
+
+        <div class="form-group">
+          <label class="form-label" for="username">Username <span class="required">*</span></label>
+          <input type="text" id="username" name="username" class="form-control"
+            placeholder="Enter your username" autocomplete="username"
+            required minlength="3" maxlength="50"
+            data-testid="login-username">
+          <div class="form-error" id="username-error"></div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="password">Password <span class="required">*</span></label>
+          <div style="position:relative">
+            <input type="password" id="password" name="password" class="form-control"
+              placeholder="Enter your password" autocomplete="current-password"
+              required minlength="3"
+              data-testid="login-password">
+            <button type="button" id="toggle-pw" title="Show/hide password"
+              style="position:absolute;right:10px;top:50%;transform:translateY(-50%);
+                     background:none;border:none;cursor:pointer;font-size:1rem;color:#546e7a"
+              data-testid="toggle-password">👁</button>
+          </div>
+          <div class="form-error" id="password-error"></div>
+        </div>
+
+        <div class="form-group" style="display:flex;align-items:center;gap:10px">
+          <label class="check-item" style="margin-bottom:0;width:auto">
+            <input type="checkbox" id="remember" name="remember" data-testid="remember-me">
+            <span>Remember me</span>
+          </label>
+          <a href="#" id="forgot-link" style="margin-left:auto;font-size:0.82rem"
+            data-testid="forgot-password">Forgot password?</a>
+        </div>
+
+        <div id="login-error" class="form-error" style="margin-bottom:12px;font-size:0.88rem"></div>
+
+        <button type="submit" id="login-btn" class="btn btn-primary" style="width:100%"
+          data-testid="login-submit">
+          <span id="login-btn-text">Sign In</span>
+        </button>
+      </form>
+
+      <div class="login-footer">
+        Don't have an account?
+        <a href="register.html" data-testid="register-link">Register here</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Forgot Password Modal -->
+<div class="modal-overlay modal-sm" id="forgot-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <h2>Reset Password</h2>
+      <button class="modal-close" onclick="HRMS.closeModal('forgot-modal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <p style="font-size:0.88rem;color:var(--text-secondary);margin-bottom:16px">
+        Enter your email address and we'll send reset instructions.
+      </p>
+      <div class="form-group">
+        <label class="form-label" for="reset-email">Email Address</label>
+        <input type="email" id="reset-email" class="form-control"
+          placeholder="you@example.com" data-testid="reset-email">
+      </div>
+      <div id="reset-msg" style="font-size:0.82rem;color:var(--success)"></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="HRMS.closeModal('forgot-modal')">Cancel</button>
+      <button class="btn btn-primary" id="reset-btn" data-testid="reset-submit">Send Reset Link</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast-container" class="toast-container"></div>
+
+<script src="js/hrms-data.js"></script>
+<script src="js/hrms.js"></script>
+<script>
+(async () => {
+  const form     = document.getElementById('login-form');
+  const btn      = document.getElementById('login-btn');
+  const btnTxt   = document.getElementById('login-btn-text');
+  const errDiv   = document.getElementById('login-error');
+  const togglePw = document.getElementById('toggle-pw');
+  const pwInput  = document.getElementById('password');
+
+  // Wait for DB to be ready (fast — just IndexedDB open + seed check)
+  await HRMS.init({ requireAuth: false });
+
+  // If already logged in, go to dashboard
+  if (HRMS.Auth.isLoggedIn()) {
+    window.location.href = './index.html';
+    return;
+  }
+
+  // Toggle password visibility
+  togglePw.addEventListener('click', () => {
+    const vis = pwInput.type === 'password';
+    pwInput.type = vis ? 'text' : 'password';
+    togglePw.textContent = vis ? '🙈' : '👁';
+  });
+
+  // Forgot password
+  document.getElementById('forgot-link').addEventListener('click', e => {
+    e.preventDefault();
+    HRMS.openModal('forgot-modal');
+  });
+
+  document.getElementById('reset-btn').addEventListener('click', () => {
+    const email = document.getElementById('reset-email').value.trim();
+    const msg   = document.getElementById('reset-msg');
+    if (!email || !email.includes('@')) {
+      msg.style.color = 'var(--error)'; msg.textContent = 'Please enter a valid email.'; return;
+    }
+    msg.style.color = 'var(--success)'; msg.textContent = '✅ Reset link sent (this is a demo).';
+  });
+
+  // Form submit
+  form.addEventListener('submit', async e => {
+    e.preventDefault();
+    errDiv.textContent = '';
+    const username = document.getElementById('username').value.trim();
+    const password = document.getElementById('password').value;
+
+    if (!username) { document.getElementById('username-error').textContent = 'Username is required'; return; }
+    if (!password) { document.getElementById('password-error').textContent = 'Password is required'; return; }
+    document.getElementById('username-error').textContent = '';
+    document.getElementById('password-error').textContent = '';
+
+    btn.disabled = true;
+    btnTxt.textContent = 'Signing in…';
+
+    try {
+      await HRMS.Auth.login(username, password);
+      HRMS.toast('Welcome back!', 'success', 1500);
+      setTimeout(() => window.location.href = './index.html', 800);
+    } catch (err) {
+      errDiv.textContent = err.message || 'Login failed. Check credentials.';
+      btn.disabled = false;
+      btnTxt.textContent = 'Sign In';
+    }
+  });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>API Docs – HRMS Practice App</title>
+  <link rel="stylesheet" href="css/hrms.css">
+</head>
+<body>
+<div class="app-layout">
+
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      <div class="brand-icon">🏢</div>
+      <div class="brand-name">HRMS<small>Practice App</small></div>
+    </div>
+    <nav class="sidebar-nav" aria-label="Main navigation">
+      <div class="nav-section-label">Main</div>
+      <a class="nav-item" href="index.html" data-testid="nav-dashboard"><span class="nav-icon">📊</span> Dashboard</a>
+      <a class="nav-item" href="employees.html" data-testid="nav-employees"><span class="nav-icon">👥</span> Employees</a>
+      <a class="nav-item" href="register.html" data-testid="nav-register"><span class="nav-icon">➕</span> Add Employee</a>
+      <div class="nav-section-label">Tools</div>
+      <a class="nav-item active" href="api-docs.html" data-testid="nav-api"><span class="nav-icon">🔌</span> API Docs</a>
+      <a class="nav-item" href="../index.html" data-testid="nav-practice"><span class="nav-icon">🧪</span> Practice Labs</a>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="sidebar-user">
+        <div class="sidebar-avatar" id="sidebar-avatar">A</div>
+        <div class="sidebar-user-info">
+          <div class="name" id="sidebar-user-name">Loading…</div>
+          <div class="role" id="sidebar-user-role">employee</div>
+        </div>
+      </div>
+      <button class="nav-item" data-action="logout" data-testid="logout-btn" style="width:100%;margin-top:6px">
+        <span class="nav-icon">🚪</span> Logout
+      </button>
+    </div>
+  </aside>
+
+  <!-- Main -->
+  <div class="main-content">
+    <header class="topbar">
+      <button class="menu-toggle-btn" style="display:none" aria-label="Menu">☰</button>
+      <div class="topbar-title">REST API Documentation</div>
+      <div class="topbar-actions">
+        <span id="auth-status" style="font-size:0.8rem;color:var(--text-muted)"></span>
+      </div>
+    </header>
+
+    <div class="page-body">
+
+      <!-- Hero -->
+      <div class="api-hero" data-testid="api-hero">
+        <h1>🔌 HRMS REST API</h1>
+        <p>A fully functional REST API running via Service Worker — no server required. All requests are intercepted and processed locally with IndexedDB persistence. Use this page to explore endpoints, read request/response schemas, and try live calls directly in the browser.</p>
+        <div class="api-base-url" data-testid="base-url">
+          <span>Base URL:</span>
+          <strong id="base-url-display">./hrms-api</strong>
+        </div>
+      </div>
+
+      <!-- Auth token display -->
+      <div class="card mb-24">
+        <div class="card-header">
+          <h2>🔐 Authentication</h2>
+        </div>
+        <div class="card-body">
+          <p style="font-size:0.88rem;color:var(--text-secondary);margin-bottom:14px">
+            Most write operations require a Bearer token. Obtain one via <code>POST /auth/login</code>.
+            Include it as: <code>Authorization: Bearer &lt;token&gt;</code>
+          </p>
+          <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+            <div class="form-group" style="margin:0;flex:1;min-width:200px">
+              <input type="text" id="try-username" class="form-control" placeholder="Username" value="admin" data-testid="try-username">
+            </div>
+            <div class="form-group" style="margin:0;flex:1;min-width:200px">
+              <input type="password" id="try-password" class="form-control" placeholder="Password" value="admin" data-testid="try-password">
+            </div>
+            <button class="btn btn-primary" id="btn-get-token" data-testid="btn-get-token">Get Token</button>
+          </div>
+          <div id="token-display" style="margin-top:12px"></div>
+        </div>
+      </div>
+
+      <!-- Auth Endpoints -->
+      <div class="endpoint-group" data-testid="auth-endpoints">
+        <div class="endpoint-group-title">Authentication</div>
+
+        <!-- POST /auth/login -->
+        <div class="endpoint-card" data-testid="ep-login">
+          <div class="endpoint-summary" data-testid="ep-login-summary" onclick="toggleEndpoint(this)">
+            <span class="method method-post">POST</span>
+            <span class="endpoint-path">/auth/login</span>
+            <span class="endpoint-desc">Authenticate user, get Bearer token</span>
+          </div>
+          <div class="endpoint-detail">
+            <p style="font-size:0.85rem;margin-bottom:10px">Returns a session token and user object. Use the token in the <code>Authorization</code> header for protected endpoints.</p>
+            <strong style="font-size:0.8rem">Request Body:</strong>
+            <div class="code-block mt-4">
+<span class="key">{</span>
+  <span class="key">"username"</span>: <span class="str">"admin"</span>,
+  <span class="key">"password"</span>: <span class="str">"admin"</span>
+<span class="key">}</span></div>
+            <strong style="font-size:0.8rem;display:block;margin-top:10px">Response 200:</strong>
+            <div class="code-block mt-4">
+<span class="key">{</span>
+  <span class="key">"token"</span>: <span class="str">"tk_abc123..."</span>,
+  <span class="key">"user"</span>: <span class="key">{</span>
+    <span class="key">"id"</span>: <span class="str">"USR-0000"</span>,
+    <span class="key">"username"</span>: <span class="str">"admin"</span>,
+    <span class="key">"firstName"</span>: <span class="str">"Admin"</span>,
+    <span class="key">"role"</span>: <span class="str">"admin"</span>
+  <span class="key">}</span>
+<span class="key">}</span></div>
+            <button class="try-btn" data-testid="try-login" onclick="tryLogin()">▶ Try it</button>
+            <div class="try-result" id="result-login"></div>
+          </div>
+        </div>
+
+        <!-- POST /auth/register -->
+        <div class="endpoint-card" data-testid="ep-register">
+          <div class="endpoint-summary" onclick="toggleEndpoint(this)">
+            <span class="method method-post">POST</span>
+            <span class="endpoint-path">/auth/register</span>
+            <span class="endpoint-desc">Register new user (max 100 stored)</span>
+          </div>
+          <div class="endpoint-detail">
+            <strong style="font-size:0.8rem">Required fields:</strong>
+            <div class="code-block mt-4">
+<span class="key">{</span>
+  <span class="key">"username"</span>: <span class="str">"jsmith"</span>,
+  <span class="key">"password"</span>: <span class="str">"securePass123"</span>,
+  <span class="key">"email"</span>: <span class="str">"j.smith@company.com"</span>,
+  <span class="key">"firstName"</span>: <span class="str">"John"</span>,
+  <span class="key">"lastName"</span>: <span class="str">"Smith"</span>
+<span class="key">}</span></div>
+            <strong style="font-size:0.8rem;display:block;margin-top:10px">Response 201:</strong>
+            <div class="code-block mt-4">
+<span class="key">{</span> <span class="key">"id"</span>: <span class="str">"USR-0002"</span>, <span class="key">"username"</span>: <span class="str">"jsmith"</span>, <span class="key">"role"</span>: <span class="str">"employee"</span> <span class="key">}</span></div>
+          </div>
+        </div>
+
+        <!-- GET /auth/me -->
+        <div class="endpoint-card" data-testid="ep-me">
+          <div class="endpoint-summary" onclick="toggleEndpoint(this)">
+            <span class="method method-get">GET</span>
+            <span class="endpoint-path">/auth/me</span>
+            <span class="endpoint-desc">Get current authenticated user</span>
+          </div>
+          <div class="endpoint-detail">
+            <p style="font-size:0.85rem">Requires <code>Authorization: Bearer &lt;token&gt;</code> header.</p>
+            <button class="try-btn" data-testid="try-me" onclick="tryMe()">▶ Try it</button>
+            <div class="try-result" id="result-me"></div>
+          </div>
+        </div>
+
+        <!-- POST /auth/logout -->
+        <div class="endpoint-card" data-testid="ep-logout">
+          <div class="endpoint-summary" onclick="toggleEndpoint(this)">
+            <span class="method method-post">POST</span>
+            <span class="endpoint-path">/auth/logout</span>
+            <span class="endpoint-desc">Invalidate current session token</span>
+          </div>
+          <div class="endpoint-detail">
+            <p style="font-size:0.85rem">Requires Bearer token. Returns <code>{"success":true}</code>.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Employee Endpoints -->
+      <div class="endpoint-group" data-testid="employee-endpoints">
+        <div class="endpoint-group-title">Employees</div>
+
+        <!-- GET /employees -->
+        <div class="endpoint-card" data-testid="ep-list-emp">
+          <div class="endpoint-summary" onclick="toggleEndpoint(this)">
+            <span class="method method-get">GET</span>
+            <span class="endpoint-path">/employees</span>
+            <span class="endpoint-desc">List employees with pagination &amp; filters</span>
+          </div>
+          <div class="endpoint-detail">
+            <strong style="font-size:0.8rem">Query Parameters:</strong>
+            <table style="width:100%;font-size:0.82rem;border-collapse:collapse;margin-top:8px">
+              <thead><tr style="background:var(--bg)">
+                <th style="padding:6px 10px;text-align:left;border:1px solid var(--border)">Param</th>
+                <th style="padding:6px 10px;text-align:left;border:1px solid var(--border)">Type</th>
+                <th style="padding:6px 10px;text-align:left;border:1px solid var(--border)">Default</th>
+                <th style="padding:6px 10px;text-align:left;border:1px solid var(--border)">Description</th>
+              </tr></thead>
+              <tbody id="param-table">
+                ${paramRow('page',       'number',  '1',         'Page number')}
+                ${paramRow('limit',      'number',  '20',        'Results per page (max 100)')}
+                ${paramRow('search',     'string',  '—',         'Full-text search: name, email, ID, title')}
+                ${paramRow('department', 'string',  '—',         'Filter by department')}
+                ${paramRow('status',     'string',  '—',         'Active | Inactive | On Leave')}
+                ${paramRow('sort',       'string',  'firstName', 'Sort field')}
+                ${paramRow('order',      'string',  'asc',       'asc | desc')}
+              </tbody>
+            </table>
+            <strong style="font-size:0.8rem;display:block;margin-top:10px">Response:</strong>
+            <div class="code-block mt-4">
+<span class="key">{</span>
+  <span class="key">"data"</span>: <span class="key">[</span> <span class="str">{ ...employee }</span> <span class="key">]</span>,
+  <span class="key">"pagination"</span>: <span class="key">{</span>
+    <span class="key">"page"</span>: <span class="num">1</span>, <span class="key">"limit"</span>: <span class="num">20</span>,
+    <span class="key">"total"</span>: <span class="num">400</span>, <span class="key">"pages"</span>: <span class="num">20</span>
+  <span class="key">}</span>
+<span class="key">}</span></div>
+            <button class="try-btn" data-testid="try-list-emp" onclick="tryListEmployees()">▶ Try it (first 5)</button>
+            <div class="try-result" id="result-list-emp"></div>
+          </div>
+        </div>
+
+        <!-- POST /employees -->
+        <div class="endpoint-card" data-testid="ep-create-emp">
+          <div class="endpoint-summary" onclick="toggleEndpoint(this)">
+            <span class="method method-post">POST</span>
+            <span class="endpoint-path">/employees</span>
+            <span class="endpoint-desc">Create new employee 🔒</span>
+          </div>
+          <div class="endpoint-detail">
+            <p style="font-size:0.85rem;margin-bottom:8px">🔒 Requires Bearer token.</p>
+            <strong style="font-size:0.8rem">Required fields:</strong>
+            <div class="code-block mt-4">
+<span class="key">{</span>
+  <span class="key">"firstName"</span>: <span class="str">"Jane"</span>,
+  <span class="key">"lastName"</span>: <span class="str">"Doe"</span>,
+  <span class="key">"email"</span>: <span class="str">"jane.doe@company.com"</span>,
+  <span class="key">"department"</span>: <span class="str">"Engineering"</span>,
+  <span class="key">"jobTitle"</span>: <span class="str">"Frontend Developer"</span>,
+  <span class="key">"salary"</span>: <span class="num">85000</span>,
+  <span class="key">"hireDate"</span>: <span class="str">"2024-01-15"</span>,
+  <span class="key">"status"</span>: <span class="str">"Active"</span>,
+  <span class="key">"employmentType"</span>: <span class="str">"Full-time"</span>
+<span class="key">}</span></div>
+            <button class="try-btn" data-testid="try-create-emp" onclick="tryCreateEmployee()">▶ Try it</button>
+            <div class="try-result" id="result-create-emp"></div>
+          </div>
+        </div>
+
+        <!-- GET /employees/:id -->
+        <div class="endpoint-card" data-testid="ep-get-emp">
+          <div class="endpoint-summary" onclick="toggleEndpoint(this)">
+            <span class="method method-get">GET</span>
+            <span class="endpoint-path">/employees/{id}</span>
+            <span class="endpoint-desc">Get single employee by ID</span>
+          </div>
+          <div class="endpoint-detail">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+              <input type="text" id="try-emp-id" class="form-control" placeholder="EMP-0001"
+                value="EMP-0001" style="max-width:160px" data-testid="try-emp-id">
+              <button class="try-btn" style="margin:0" data-testid="try-get-emp" onclick="tryGetEmployee()">▶ Try it</button>
+            </div>
+            <div class="try-result" id="result-get-emp"></div>
+          </div>
+        </div>
+
+        <!-- PUT /employees/:id -->
+        <div class="endpoint-card" data-testid="ep-update-emp">
+          <div class="endpoint-summary" onclick="toggleEndpoint(this)">
+            <span class="method method-put">PUT</span>
+            <span class="endpoint-path">/employees/{id}</span>
+            <span class="endpoint-desc">Update employee 🔒</span>
+          </div>
+          <div class="endpoint-detail">
+            <p style="font-size:0.85rem;margin-bottom:8px">🔒 Requires Bearer token. Send only the fields you want to update.</p>
+            <div class="code-block">
+<span class="key">{</span>
+  <span class="key">"status"</span>: <span class="str">"Inactive"</span>,
+  <span class="key">"salary"</span>: <span class="num">90000</span>
+<span class="key">}</span></div>
+            <button class="try-btn" data-testid="try-update-emp" onclick="tryUpdateEmployee()">▶ Try it (EMP-0001)</button>
+            <div class="try-result" id="result-update-emp"></div>
+          </div>
+        </div>
+
+        <!-- DELETE /employees/:id -->
+        <div class="endpoint-card" data-testid="ep-delete-emp">
+          <div class="endpoint-summary" onclick="toggleEndpoint(this)">
+            <span class="method method-delete">DELETE</span>
+            <span class="endpoint-path">/employees/{id}</span>
+            <span class="endpoint-desc">Delete employee 🔒</span>
+          </div>
+          <div class="endpoint-detail">
+            <p style="font-size:0.85rem;margin-bottom:8px">🔒 Requires Bearer token. Deletes the employee permanently from IndexedDB.</p>
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+              <input type="text" id="try-del-id" class="form-control" placeholder="EMP-0050"
+                value="EMP-0050" style="max-width:160px" data-testid="try-del-id">
+              <button class="try-btn" style="margin:0;background:var(--error)" data-testid="try-delete-emp" onclick="tryDeleteEmployee()">▶ Try it</button>
+            </div>
+            <div class="try-result" id="result-delete-emp"></div>
+          </div>
+        </div>
+
+        <!-- GET /employees/export -->
+        <div class="endpoint-card" data-testid="ep-export">
+          <div class="endpoint-summary" onclick="toggleEndpoint(this)">
+            <span class="method method-get">GET</span>
+            <span class="endpoint-path">/employees/export</span>
+            <span class="endpoint-desc">Download all employees as CSV</span>
+          </div>
+          <div class="endpoint-detail">
+            <p style="font-size:0.85rem;margin-bottom:8px">Returns a CSV file download with all employee records.</p>
+            <button class="try-btn" data-testid="try-export" onclick="tryExport()">⬇ Download CSV</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Meta Endpoints -->
+      <div class="endpoint-group" data-testid="meta-endpoints">
+        <div class="endpoint-group-title">Meta</div>
+
+        <div class="endpoint-card" data-testid="ep-stats">
+          <div class="endpoint-summary" onclick="toggleEndpoint(this)">
+            <span class="method method-get">GET</span>
+            <span class="endpoint-path">/stats</span>
+            <span class="endpoint-desc">Dashboard statistics</span>
+          </div>
+          <div class="endpoint-detail">
+            <button class="try-btn" data-testid="try-stats" onclick="tryStats()">▶ Try it</button>
+            <div class="try-result" id="result-stats"></div>
+          </div>
+        </div>
+
+        <div class="endpoint-card" data-testid="ep-depts">
+          <div class="endpoint-summary" onclick="toggleEndpoint(this)">
+            <span class="method method-get">GET</span>
+            <span class="endpoint-path">/departments</span>
+            <span class="endpoint-desc">List all departments</span>
+          </div>
+          <div class="endpoint-detail">
+            <button class="try-btn" data-testid="try-depts" onclick="tryDepts()">▶ Try it</button>
+            <div class="try-result" id="result-depts"></div>
+          </div>
+        </div>
+
+        <div class="endpoint-card" data-testid="ep-users">
+          <div class="endpoint-summary" onclick="toggleEndpoint(this)">
+            <span class="method method-get">GET</span>
+            <span class="endpoint-path">/users</span>
+            <span class="endpoint-desc">List registered users 🔒 Admin only</span>
+          </div>
+          <div class="endpoint-detail">
+            <p style="font-size:0.85rem;margin-bottom:8px">🔒 Requires admin Bearer token.</p>
+            <button class="try-btn" data-testid="try-users" onclick="tryUsers()">▶ Try it</button>
+            <div class="try-result" id="result-users"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Employee Schema -->
+      <div class="card mb-24" data-testid="schema-section">
+        <div class="card-header"><h2>📋 Employee Object Schema</h2></div>
+        <div class="card-body">
+          <div class="code-block">
+<span class="key">{</span>
+  <span class="key">"id"</span>: <span class="str">"EMP-0001"</span>,          <span style="color:#546e7a">// Auto-generated</span>
+  <span class="key">"firstName"</span>: <span class="str">"Emma"</span>,
+  <span class="key">"lastName"</span>: <span class="str">"Smith"</span>,
+  <span class="key">"email"</span>: <span class="str">"emma.smith1@hrms-practice.com"</span>,
+  <span class="key">"phone"</span>: <span class="str">"+1-555-123-4567"</span>,
+  <span class="key">"department"</span>: <span class="str">"Engineering"</span>,
+  <span class="key">"jobTitle"</span>: <span class="str">"Software Engineer"</span>,
+  <span class="key">"salary"</span>: <span class="num">95000</span>,
+  <span class="key">"hireDate"</span>: <span class="str">"2021-03-15"</span>,
+  <span class="key">"dateOfBirth"</span>: <span class="str">"1992-07-22"</span>,
+  <span class="key">"gender"</span>: <span class="str">"Female"</span>,
+  <span class="key">"employmentType"</span>: <span class="str">"Full-time"</span>,  <span style="color:#546e7a">// Full-time | Part-time | Contract | Intern</span>
+  <span class="key">"status"</span>: <span class="str">"Active"</span>,            <span style="color:#546e7a">// Active | Inactive | On Leave</span>
+  <span class="key">"address"</span>: <span class="str">"123 Main St"</span>,
+  <span class="key">"city"</span>: <span class="str">"San Francisco"</span>,
+  <span class="key">"country"</span>: <span class="str">"USA"</span>,
+  <span class="key">"skills"</span>: <span class="key">[</span><span class="str">"JavaScript"</span>, <span class="str">"React"</span><span class="key">]</span>,
+  <span class="key">"benefits"</span>: <span class="key">[</span><span class="str">"Health Insurance"</span>, <span class="str">"401(k)"</span><span class="key">]</span>,
+  <span class="key">"manager"</span>: <span class="str">"Alice Johnson"</span>,
+  <span class="key">"profileColor"</span>: <span class="str">"#1976d2"</span>,
+  <span class="key">"experience"</span>: <span class="num">5</span>,
+  <span class="key">"linkedinUrl"</span>: <span class="str">"https://linkedin.com/in/emma-smith"</span>,
+  <span class="key">"notes"</span>: <span class="str">""</span>,
+  <span class="key">"performanceRating"</span>: <span class="num">4</span>,   <span style="color:#546e7a">// 1-5</span>
+  <span class="key">"tags"</span>: <span class="key">[</span><span class="str">"Tech"</span><span class="key">]</span>,
+  <span class="key">"shiftStart"</span>: <span class="str">"09:00"</span>,
+  <span class="key">"startMonth"</span>: <span class="str">"2021-03"</span>,
+  <span class="key">"createdAt"</span>: <span class="str">"2021-03-15T08:00:00.000Z"</span>,
+  <span class="key">"updatedAt"</span>: <span class="str">"2024-01-10T14:30:00.000Z"</span>
+<span class="key">}</span></div>
+        </div>
+      </div>
+
+    </div><!-- /page-body -->
+  </div><!-- /main-content -->
+</div><!-- /app-layout -->
+
+<div id="toast-container" class="toast-container"></div>
+
+<script src="js/hrms-data.js"></script>
+<script src="js/hrms.js"></script>
+<script>
+function paramRow(name, type, def, desc) {
+  return `<tr><td style="padding:5px 10px;border:1px solid var(--border);font-family:Consolas,monospace;font-size:0.82rem">${name}</td><td style="padding:5px 10px;border:1px solid var(--border);color:#5c6bc0">${type}</td><td style="padding:5px 10px;border:1px solid var(--border);color:var(--text-muted)">${def}</td><td style="padding:5px 10px;border:1px solid var(--border)">${desc}</td></tr>`;
+}
+
+function toggleEndpoint(el) {
+  const detail = el.nextElementSibling;
+  detail.classList.toggle('open');
+}
+
+function showResult(id, data, isError = false) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  const json = JSON.stringify(data, null, 2);
+  el.innerHTML = `<div class="code-block" style="margin-top:8px;border-left:3px solid ${isError ? 'var(--error)' : 'var(--success)'}">${json.replace(/</g,'&lt;').replace(/>/g,'&gt;')}</div>`;
+}
+
+let _apiToken = null;
+
+async function ensureToken() {
+  if (HRMS.Auth.isLoggedIn()) return HRMS.Auth;
+  const u = document.getElementById('try-username').value || 'admin';
+  const p = document.getElementById('try-password').value || 'admin';
+  const data = await HRMS.Auth.login(u, p);
+  _apiToken = data.token;
+  return data;
+}
+
+async function tryLogin() {
+  try {
+    const u = document.getElementById('try-username').value || 'admin';
+    const p = document.getElementById('try-password').value || 'admin';
+    const data = await HRMS.Auth.login(u, p);
+    _apiToken = data.token;
+    document.getElementById('auth-status').textContent = '✅ Authenticated as ' + data.user.username;
+    document.getElementById('token-display').innerHTML =
+      `<div class="code-block" style="font-size:0.78rem">Token: <span style="color:#c3e88d">${data.token}</span></div>`;
+    showResult('result-login', data);
+    HRMS.toast('Token obtained', 'success');
+  } catch (e) { showResult('result-login', { error: e.message }, true); }
+}
+
+document.getElementById('btn-get-token').addEventListener('click', tryLogin);
+
+async function tryMe() {
+  try { showResult('result-me', await HRMS.Auth.me()); }
+  catch (e) { showResult('result-me', { error: e.message }, true); }
+}
+
+async function tryListEmployees() {
+  try { showResult('result-list-emp', await HRMS.Employees.list({ page: 1, limit: 5 })); }
+  catch (e) { showResult('result-list-emp', { error: e.message }, true); }
+}
+
+async function tryGetEmployee() {
+  const id = document.getElementById('try-emp-id').value || 'EMP-0001';
+  try { showResult('result-get-emp', await HRMS.Employees.get(id)); }
+  catch (e) { showResult('result-get-emp', { error: e.message }, true); }
+}
+
+async function tryCreateEmployee() {
+  try {
+    await ensureToken();
+    const result = await HRMS.Employees.create({
+      firstName: 'Test', lastName: 'Employee',
+      email: `test.emp.${Date.now()}@demo.com`,
+      department: 'Engineering', jobTitle: 'QA Engineer',
+      salary: 72000, status: 'Active', employmentType: 'Full-time'
+    });
+    showResult('result-create-emp', result);
+    HRMS.toast('Test employee created', 'success');
+  } catch (e) { showResult('result-create-emp', { error: e.message }, true); }
+}
+
+async function tryUpdateEmployee() {
+  try {
+    await ensureToken();
+    const result = await HRMS.Employees.update('EMP-0001', { notes: 'Updated via API Docs at ' + new Date().toISOString() });
+    showResult('result-update-emp', result);
+    HRMS.toast('EMP-0001 updated', 'success');
+  } catch (e) { showResult('result-update-emp', { error: e.message }, true); }
+}
+
+async function tryDeleteEmployee() {
+  const id = document.getElementById('try-del-id').value || 'EMP-0050';
+  try {
+    await ensureToken();
+    const result = await HRMS.Employees.delete(id);
+    showResult('result-delete-emp', result);
+    HRMS.toast(id + ' deleted', 'warn');
+  } catch (e) { showResult('result-delete-emp', { error: e.message }, true); }
+}
+
+async function tryExport() {
+  try { await HRMS.Employees.exportCSV(); HRMS.toast('CSV downloaded', 'success'); }
+  catch (e) { HRMS.toast('Export failed', 'error'); }
+}
+
+async function tryStats() {
+  try { showResult('result-stats', await HRMS.Meta.stats()); }
+  catch (e) { showResult('result-stats', { error: e.message }, true); }
+}
+
+async function tryDepts() {
+  try { showResult('result-depts', await HRMS.Meta.departments()); }
+  catch (e) { showResult('result-depts', { error: e.message }, true); }
+}
+
+async function tryUsers() {
+  try {
+    await ensureToken();
+    showResult('result-users', await HRMS.Users.list());
+  } catch (e) { showResult('result-users', { error: e.message }, true); }
+}
+
+(async () => {
+  await HRMS.init();
+  if (HRMS.Auth.isLoggedIn()) {
+    const u = HRMS.getUser();
+    if (u) document.getElementById('auth-status').textContent = '✅ Authenticated as ' + u.username;
+  }
+})();
+</script>
+</body>
+</html>
