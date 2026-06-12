@@ -52,7 +52,7 @@
       | Field     | Value              |
       | First name | Jane              |
       | Last name  | Doe               |
-      | Email      | jane@example.com  |
+      | Email      | jane@hrms.local   |
       | Password   | SecurePass1!      |
     Then the user account should be created</code></pre>
 
@@ -114,15 +114,15 @@ When('the shopping cart contains the following items:',
 
   Scenario Outline: Login with various credentials
     Given the user is on the login page
-    When the user enters email "&lt;email&gt;" and password "&lt;password&gt;"
+    When the user enters username "&lt;username&gt;" and password "&lt;password&gt;"
     Then the result should be "&lt;expected&gt;"
 
     Examples:
-      | email              | password     | expected              |
-      | admin@test.com     | correct123   | Dashboard             |
-      | admin@test.com     | wrongpass    | Invalid credentials   |
-      | notexist@test.com  | any123       | User not found        |
-      | admin@test.com     |              | Password is required  |</code></pre>
+      | username           | password     | expected              |
+      | admin          | admin        | Dashboard             |
+      | admin          | wrongpass    | Invalid credentials   |
+      | notexist       | any123       | User not found        |
+      | admin          |              | Password is required  |</code></pre>
 
         <p>
           Cucumber generates one scenario for each row in <code>Examples</code>. The run above produces
@@ -164,13 +164,13 @@ Then(
 
   Examples: Happy path
     @smoke
-    | email          | password   | expected  |
-    | admin@test.com | correct123 | Dashboard |
+    | username       | password   | expected  |
+    | admin          | admin      | Dashboard |
 
   Examples: Error cases
     @regression
-    | email          | password  | expected            |
-    | admin@test.com | wrongpass | Invalid credentials |</code></pre>
+    | username       | password  | expected            |
+    | admin          | wrongpass | Invalid credentials |</code></pre>
 
         <h2>6. When to Use Data Table vs Scenario Outline</h2>
         <table style="width:100%; border-collapse: collapse; font-size: 0.95rem; margin-top: 0.5rem;">

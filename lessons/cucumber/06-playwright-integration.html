@@ -71,7 +71,7 @@ class PlaywrightWorld extends World {
   browser!: Browser;
   context!: BrowserContext;
   page!: Page;
-  baseUrl: string = process.env.BASE_URL ?? 'https://example.com';
+  baseUrl: string = process.env.BASE_URL ?? 'https://manishxceedance.github.io/PlaywrightWithTypeScript/lessons/practice-app/';
 
   constructor(options: IWorldOptions) {
     super(options);
@@ -220,12 +220,12 @@ Feature: User Registration
       | Field      | Value               |
       | First Name | Alice               |
       | Last Name  | Smith               |
-      | Email      | alice@example.com   |
+      | Email      | alice@hrms.local    |
       | Password   | StrongPass1!        |
     And the user accepts the terms and conditions
     And the user clicks the Register button
-    Then the confirmation email message should appear
-    And the user should be redirected to the verify page</code></pre>
+    Then the registration success message should appear
+    And the user should be redirected to the login page</code></pre>
 
         <pre><code>// src/steps/registration.steps.ts
 import { Given, When, Then } from '@cucumber/cucumber';
@@ -234,7 +234,7 @@ import { expect } from '@playwright/test';
 import { CustomWorld } from '../support/world';
 
 Given('the user opens the registration page', async function (this: CustomWorld) {
-  await this.page.goto(this.baseUrl + '/register');
+  await this.page.goto(this.baseUrl + 'hrms/register.html');
 });
 
 When('the user fills in the registration form:',
@@ -256,19 +256,19 @@ When('the user fills in the registration form:',
 );
 
 When('the user accepts the terms and conditions', async function (this: CustomWorld) {
-  await this.page.check('[data-testid="terms-checkbox"]');
+  await this.page.check('[data-testid="agree-terms"]');
 });
 
 When('the user clicks the Register button', async function (this: CustomWorld) {
-  await this.page.click('[data-testid="register-btn"]');
+  await this.page.click('[data-testid="btn-submit"]');
 });
 
-Then('the confirmation email message should appear', async function (this: CustomWorld) {
-  await expect(this.page.locator('.email-confirmation')).toBeVisible();
+Then('the registration success message should appear', async function (this: CustomWorld) {
+  await expect(this.page.locator('.toast-success')).toBeVisible();
 });
 
-Then('the user should be redirected to the verify page', async function (this: CustomWorld) {
-  await expect(this.page).toHaveURL(/verify/);
+Then('the user should be redirected to the login page', async function (this: CustomWorld) {
+  await expect(this.page).toHaveURL(/login/);
 });</code></pre>
 
         <h2>8. Environment Variables for Configuration</h2>
@@ -276,9 +276,9 @@ Then('the user should be redirected to the verify page', async function (this: C
           Use environment variables to avoid hardcoding URLs and credentials in test files:
         </p>
         <pre><code>// .env (never commit to source control)
-BASE_URL=https://staging.example.com
-TEST_USER=admin@test.com
-TEST_PASS=StrongPass123!</code></pre>
+BASE_URL=https://manishxceedance.github.io/PlaywrightWithTypeScript/lessons/practice-app/
+TEST_USER=admin
+TEST_PASS=admin</code></pre>
         <pre><code>// Load .env in cucumber.json using dotenv
 {
   "default": {

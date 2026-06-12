@@ -67,7 +67,7 @@
 
       // 2) If same label appears many times, scope to a section
       const billingSection = page.getByRole('region', { name: 'Billing Address' });
-      await billingSection.getByLabel('Email').fill('billing@example.com');
+      await billingSection.getByLabel('Email').fill('billing@hrms.local');
 
       // 3) Use filter when multiple rows have similar text
       const userRow = page.getByRole('row').filter({ hasText: 'Asha Gupta' });

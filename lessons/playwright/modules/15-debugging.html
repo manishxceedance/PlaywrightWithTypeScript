@@ -71,7 +71,7 @@ npx playwright show-trace trace.zip</code></pre>
             <li><code>npx playwright test --debug</code> — Opens the Playwright Inspector, a visual debugging tool. Tests pause before each action, letting you step forward one action at a time, inspect the current page state, and try locator expressions interactively in the selector bar.</li>
             <li><code>npx playwright show-trace trace.zip</code> — Opens the Trace Viewer for a specific trace file. You see a full timeline showing: every action (click, fill, navigate), before-and-after screenshots for each step, console log output, and all network requests. The fastest way to understand exactly what happened in a failed test run.</li>
             <li><b>Debug a specific test:</b> <code>npx playwright test login.spec.ts --debug</code> — Only runs and debugs that one file.</li>
-            <li><b>Record actions as code:</b> <code>npx playwright codegen https://example.com</code> — Opens a browser where your clicks and typing are automatically recorded as Playwright code. Useful for quickly generating locator examples.</li>
+            <li><b>Record actions as code:</b> <code>npx playwright codegen https://manishxceedance.github.io/PlaywrightWithTypeScript/lessons/practice-app/</code> — Opens a browser where your clicks and typing are automatically recorded as Playwright code. Useful for quickly generating locator examples.</li>
             <li><b>Screenshot on failure:</b> In <code>playwright.config.ts</code>, set <code>screenshot: 'only-on-failure'</code> to automatically capture a screenshot whenever a test fails, even without the full trace.</li>
           </ol>
         </div>

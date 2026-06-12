@@ -52,7 +52,7 @@
 import { Given } from '@cucumber/cucumber';
 
 Given('the user is on the login page', async function () {
-  await this.page.goto('https://example.com/login');
+  await this.page.goto('https://manishxceedance.github.io/PlaywrightWithTypeScript/lessons/practice-app/hrms/login.html');
 });</code></pre>
 
         <h2>2. Importing Given, When, Then</h2>
@@ -133,7 +133,7 @@ import { expect } from '@playwright/test';
 import { CustomWorld } from '../support/world';
 
 Given('the user is on the login page', async function (this: CustomWorld) {
-  await this.page.goto('https://example.com/login');
+  await this.page.goto('https://manishxceedance.github.io/PlaywrightWithTypeScript/lessons/practice-app/hrms/login.html');
 });
 
 When(
@@ -151,14 +151,14 @@ When('the user clicks the Login button', async function (this: CustomWorld) {
 Then(
   'the user should be redirected to the dashboard',
   async function (this: CustomWorld) {
-    await expect(this.page).toHaveURL(/.*dashboard/);
+    await expect(this.page).toHaveURL(/hrms/);
   }
 );
 
 Then(
   'the welcome message should contain {string}',
   async function (this: CustomWorld, expectedText: string) {
-    const heading = this.page.locator('h1.welcome');
+    const heading = this.page.locator('#welcome-msg');
     await expect(heading).toContainText(expectedText);
   }
 );</code></pre>

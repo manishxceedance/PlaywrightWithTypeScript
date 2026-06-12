@@ -91,7 +91,7 @@ Before(async function (this: CustomWorld) {
   this.page = await this.context.newPage();
 
   this.apiContext = await request.newContext({
-    baseURL: process.env.API_URL ?? 'https://api.example.com',
+    baseURL: process.env.API_URL ?? 'https://manishxceedance.github.io/PlaywrightWithTypeScript/lessons/practice-app/hrms/',
     extraHTTPHeaders: {
       'Accept': 'application/json',
       'Authorization': `Bearer ${process.env.API_TOKEN}`
@@ -111,7 +111,7 @@ Feature: User API
   Scenario: Create a new user via API
     When a POST request is sent to "/users" with:
       | name  | Alice Test           |
-      | email | alice@example.com    |
+      | email | alice@hrms.local     |
       | role  | viewer               |
     Then the response status should be 201
     And the response body should contain "id"</code></pre>
@@ -171,10 +171,10 @@ Given('a new order exists in the system via API', async function (this: CustomWo
           Never hardcode credentials or URLs. Use a <code>.env</code> file locally and CI secrets in pipelines:
         </p>
         <pre><code># .env (not committed to git)
-BASE_URL=https://staging.myapp.com
-API_URL=https://api.myapp.com
-TEST_USER=qauser@myapp.com
-TEST_PASS=SecureTestPass1!
+BASE_URL=https://manishxceedance.github.io/PlaywrightWithTypeScript/lessons/practice-app/
+API_URL=https://manishxceedance.github.io/PlaywrightWithTypeScript/lessons/practice-app/hrms/
+TEST_USER=admin
+TEST_PASS=admin
 API_TOKEN=eyJhbGciOiJIUzI1NiJ9...
 HEADED=false
 SLOW_MO=0</code></pre>

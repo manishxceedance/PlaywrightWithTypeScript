@@ -260,13 +260,13 @@ class SecuredApiClient extends ApiClient {
   }
 }
 
-const api = new SecuredApiClient("https://api.example.com", "my-token");
-api.get("/users");
-// Output: GET https://api.example.com/users with token my-token
+const api = new SecuredApiClient("https://manishxceedance.github.io/PlaywrightWithTypeScript/lessons/practice-app/hrms/", "my-token");
+api.get("api/employees");
+// Output: GET https://manishxceedance.github.io/PlaywrightWithTypeScript/lessons/practice-app/hrms/api/employees with token my-token
 
-const api2 = new ApiClient("https://api.example.com");
-api2.get("/users");
-// Output: GET https://api.example.com/users</code></pre>
+const api2 = new ApiClient("https://manishxceedance.github.io/PlaywrightWithTypeScript/lessons/practice-app/hrms/");
+api2.get("api/employees");
+// Output: GET https://manishxceedance.github.io/PlaywrightWithTypeScript/lessons/practice-app/hrms/api/employees</code></pre>
 
           <div class="explanation">
             <b>Line-by-line explanation:</b>

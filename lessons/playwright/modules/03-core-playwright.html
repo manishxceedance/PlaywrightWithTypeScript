@@ -66,7 +66,7 @@
 
 test.describe('Login', () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto('https://example.com/login');
+    await page.goto('https://manishxceedance.github.io/PlaywrightWithTypeScript/lessons/practice-app/hrms/login.html');
   });
 
   test('valid login', async ({ page }) => {
@@ -79,7 +79,7 @@ test.describe('Login', () => {
           <ol>
             <li><code>test.describe('Login', () =&gt; {</code> — Groups related tests under a shared label. In reports, all tests inside appear nested under &quot;Login&quot;, making it easy to see feature-level coverage at a glance.</li>
             <li><code>test.beforeEach(async ({ page }) =&gt; {</code> — A hook that runs before every test inside this <code>describe</code> block. Use it to set up a known starting state (e.g., open the login page) so each test begins consistently.</li>
-            <li><code>await page.goto('https://example.com/login');</code> — Navigates to the login URL. Because this is in <code>beforeEach</code>, every test in this group automatically starts on the login page without repeating this line.</li>
+            <li><code>await page.goto('https://manishxceedance.github.io/PlaywrightWithTypeScript/lessons/practice-app/hrms/login.html');</code> — Navigates to the login URL. Because this is in <code>beforeEach</code>, every test in this group automatically starts on the login page without repeating this line.</li>
             <li><code>test('valid login', async ({ page }) =&gt; {</code> — One focused test scenario. It inherits the setup from <code>beforeEach</code> and only tests one specific behaviour.</li>
             <li><code>await expect(page).toHaveURL(/login/);</code> — Verifies the URL contains &quot;login&quot;. This confirms the setup step actually landed on the correct page before proceeding.</li>
           </ol>

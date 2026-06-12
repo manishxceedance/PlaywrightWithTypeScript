@@ -66,8 +66,8 @@
         <pre><code>import { test, expect } from '@playwright/test';
 
 test('homepage loads', async ({ page }) => {
-  await page.goto('https://example.com');
-  await expect(page).toHaveTitle(/Example/);
+  await page.goto('https://manishxceedance.github.io/PlaywrightWithTypeScript/lessons/practice-app/');
+  await expect(page).toHaveTitle(/Practice App/);
 });</code></pre>
 
         <div class="explanation">
@@ -75,7 +75,7 @@ test('homepage loads', async ({ page }) => {
           <ol>
             <li><code>import { test, expect } from '@playwright/test';</code> — Imports Playwright's test runner and assertion library. Every test file starts with this line.</li>
             <li><code>test('homepage loads', async ({ page }) =&gt; {</code> — Defines one test scenario. The text in quotes is the name shown in reports. <code>async ({ page })</code> gives you a <code>page</code> object that represents a browser tab.</li>
-            <li><code>await page.goto('https://example.com');</code> — Opens the URL in the browser. <code>await</code> pauses execution until the page finishes loading before moving to the next line.</li>
+            <li><code>await page.goto('https://manishxceedance.github.io/PlaywrightWithTypeScript/lessons/practice-app/');</code> — Opens the URL in the browser. <code>await</code> pauses execution until the page finishes loading before moving to the next line.</li>
             <li><code>await expect(page).toHaveTitle(/Example/);</code> — Checks that the browser tab title matches the pattern. Playwright auto-retries this assertion until it passes or the timeout is reached. If it never matches, the test fails with a descriptive error message.</li>
           </ol>
         </div>

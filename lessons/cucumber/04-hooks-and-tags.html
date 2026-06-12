@@ -113,11 +113,11 @@ import { CustomWorld } from './world';
 
 // Only runs for scenarios tagged @authenticated
 Before({ tags: '@authenticated' }, async function (this: CustomWorld) {
-  await this.page.goto('https://example.com/login');
-  await this.page.fill('#email', 'admin@test.com');
-  await this.page.fill('#password', 'password123');
+  await this.page.goto('https://manishxceedance.github.io/PlaywrightWithTypeScript/lessons/practice-app/hrms/login.html');
+  await this.page.fill('#username', 'admin');
+  await this.page.fill('#password', 'admin');
   await this.page.click('button[type="submit"]');
-  await this.page.waitForURL(/dashboard/);
+  await this.page.waitForURL(/hrms/);
 });
 
 // Only runs for scenarios tagged @api
@@ -226,11 +226,11 @@ Before(async function (this: CustomWorld) {
 });
 
 Before({ tags: '@authenticated' }, async function (this: CustomWorld) {
-  await this.page.goto(process.env.BASE_URL + '/login');
-  await this.page.fill('[data-testid="email"]', process.env.TEST_USER!);
-  await this.page.fill('[data-testid="password"]', process.env.TEST_PASS!);
-  await this.page.click('[data-testid="login-btn"]');
-  await this.page.waitForURL(/dashboard/);
+  await this.page.goto(process.env.BASE_URL + '/hrms/login.html');
+  await this.page.fill('[data-testid="login-username"]', process.env.TEST_USER!);
+  await this.page.fill('[data-testid="login-password"]', process.env.TEST_PASS!);
+  await this.page.click('[data-testid="login-submit"]');
+  await this.page.waitForURL(/hrms/);
 });
 
 After(async function (this: CustomWorld, scenario) {
