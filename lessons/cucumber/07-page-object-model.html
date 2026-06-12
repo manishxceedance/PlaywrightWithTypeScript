@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lesson 7 - Page Object Model with Cucumber</title>
+    <link rel="stylesheet" href="../../assets/styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <a class="brand" href="../../index.html">Playwright/TypeScript Training Hub</a>
+      <button class="menu-toggle" data-menu-toggle>Open Menu</button>
+    </header>
+
+    <div class="layout">
+      <aside class="sidebar" data-sidebar>
+        <h2>Cucumber BDD</h2>
+        <div class="menu-group">
+          <p class="menu-group-title">Cucumber Track</p>
+          <ul>
+            <li><a href="00-introduction.html">0. What Is BDD and Cucumber?</a></li>
+            <li><a href="01-setup.html">1. Project Setup</a></li>
+            <li><a href="02-gherkin-syntax.html">2. Gherkin Syntax</a></li>
+            <li><a href="03-step-definitions.html">3. Step Definitions</a></li>
+            <li><a href="04-hooks-and-tags.html">4. Hooks and Tags</a></li>
+            <li><a href="05-data-tables-and-outlines.html">5. Data Tables and Outlines</a></li>
+            <li><a href="06-playwright-integration.html">6. Playwright Integration</a></li>
+            <li><a class="active" href="07-page-object-model.html">7. Page Object Model</a></li>
+            <li><a href="08-reporting.html">8. Reporting</a></li>
+            <li><a href="09-advanced-topics.html">9. Advanced Topics</a></li>
+          </ul>
+        </div>
+      </aside>
+
+      <main class="content lesson">
+        <h1>Lesson 7: Page Object Model — Clean, Maintainable Automation</h1>
+        <p class="lesson-meta">
+          <span class="difficulty-badge">Level: Intermediate</span>
+          Organise your selectors and page actions into reusable classes to prevent duplication.
+        </p>
+
+        <h2>1. Why Page Object Model?</h2>
+        <p>
+          Without POM, selectors like <code>'[data-testid="email"]'</code> are scattered across dozens of step
+          definition files. When a developer renames an element, you must update every file. With POM:
+        </p>
+        <ul>
+          <li>Each page has one class that owns all its selectors and actions.</li>
+          <li>Step definitions call page object methods — no selectors in step files.</li>
+          <li>When the UI changes, you update one class, not 20 step definitions.</li>
+        </ul>
+
+        <h2>2. Structure of a Page Object Class</h2>
+        <pre><code>// src/pages/LoginPage.ts
+import { Page, expect } from '@playwright/test';
+
+export class LoginPage {
+  constructor(private page: Page) {}
+
+  // Locators — private, only the class uses them
+  private get emailInput()  { return this.page.locator('[data-testid="email"]'); }
+  private get passwordInput() { return this.page.locator('[data-testid="password"]'); }
+  private get submitButton()  { return this.page.locator('[data-testid="login-submit"]'); }
+  private get errorMessage()  { return this.page.locator('[data-testid="login-error"]'); }
+
+  // Actions — public, called by step definitions
+  async navigate(baseUrl: string) {
+    await this.page.goto(baseUrl + '/login');
+  }
+
+  async login(email: string, password: string) {
+    await this.emailInput.fill(email);
+    await this.passwordInput.fill(password);
+    await this.submitButton.click();
+  }
+
+  // Assertions — public
+  async assertErrorVisible(message: string) {
+    await expect(this.errorMessage).toContainText(message);
+  }
+}</code></pre>
+
+        <h2>3. Adding Page Objects to the World</h2>
+        <p>
+          Instantiate page objects in the Before hook and store them on the World so all steps can use them:
+        </p>
+        <pre><code>// src/support/world.ts
+import { setWorldConstructor, World, IWorldOptions } from '@cucumber/cucumber';
+import { Browser, BrowserContext, Page } from '@playwright/test';
+import { LoginPage } from '../pages/LoginPage';
+import { DashboardPage } from '../pages/DashboardPage';
+
+export interface CustomWorld extends World {
+  browser: Browser;
+  context: BrowserContext;
+  page: Page;
+  baseUrl: string;
+  loginPage: LoginPage;
+  dashboardPage: DashboardPage;
+}
+
+class PlaywrightWorld extends World {
+  browser!: Browser;
+  context!: BrowserContext;
+  page!: Page;
+  baseUrl: string = process.env.BASE_URL ?? 'https://example.com';
+  loginPage!: LoginPage;
+  dashboardPage!: DashboardPage;
+
+  constructor(options: IWorldOptions) {
+    super(options);
+  }
+}
+
+setWorldConstructor(PlaywrightWorld);</code></pre>
+
+        <pre><code>// src/support/hooks.ts  — add to the Before hook
+Before(async function (this: CustomWorld) {
+  this.context = await browser.newContext();
+  this.page = await this.context.newPage();
+
+  // Initialise page objects after page is created
+  this.loginPage = new LoginPage(this.page);
+  this.dashboardPage = new DashboardPage(this.page);
+});</code></pre>
+
+        <h2>4. Step Definitions with Page Objects</h2>
+        <p>
+          Step definitions become thin wrappers — they delegate all browser interaction to the page object:
+        </p>
+        <pre><code>// src/steps/login.steps.ts
+import { Given, When, Then } from '@cucumber/cucumber';
+import { CustomWorld } from '../support/world';
+
+Given('the user is on the login page', async function (this: CustomWorld) {
+  await this.loginPage.navigate(this.baseUrl);
+});
+
+When(
+  'the user enters email {string} and password {string}',
+  async function (this: CustomWorld, email: string, password: string) {
+    await this.loginPage.login(email, password);
+  }
+);
+
+Then(
+  'an error message {string} should be displayed',
+  async function (this: CustomWorld, message: string) {
+    await this.loginPage.assertErrorVisible(message);
+  }
+);</code></pre>
+
+        <h2>5. DashboardPage Example</h2>
+        <pre><code>// src/pages/DashboardPage.ts
+import { Page, expect } from '@playwright/test';
+
+export class DashboardPage {
+  constructor(private page: Page) {}
+
+  private get welcomeHeading() { return this.page.locator('h1.welcome'); }
+  private get userMenu()        { return this.page.locator('[data-testid="user-menu"]'); }
+  private get logoutBtn()       { return this.page.locator('[data-testid="logout"]'); }
+
+  async assertWelcomeContains(name: string) {
+    await expect(this.welcomeHeading).toContainText(name);
+  }
+
+  async logout() {
+    await this.userMenu.click();
+    await this.logoutBtn.click();
+    await this.page.waitForURL(/login/);
+  }
+
+  async isLoaded() {
+    await expect(this.page).toHaveURL(/dashboard/);
+    await expect(this.welcomeHeading).toBeVisible();
+  }
+}</code></pre>
+
+        <h2>6. Base Page Class (Optional but Useful)</h2>
+        <p>
+          For large projects, create a <code>BasePage</code> with shared behaviour like waiting for spinners
+          to disappear:
+        </p>
+        <pre><code>// src/pages/BasePage.ts
+import { Page } from '@playwright/test';
+
+export class BasePage {
+  constructor(protected page: Page) {}
+
+  async waitForLoadingToComplete() {
+    await this.page.locator('.loading-spinner').waitFor({ state: 'hidden', timeout: 10000 });
+  }
+
+  async scrollToBottom() {
+    await this.page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+  }
+}
+
+// src/pages/LoginPage.ts  — extends BasePage
+import { BasePage } from './BasePage';
+
+export class LoginPage extends BasePage {
+  constructor(page: Page) { super(page); }
+
+  async login(email: string, password: string) {
+    await this.page.fill('[data-testid="email"]', email);
+    await this.page.fill('[data-testid="password"]', password);
+    await this.page.click('[data-testid="login-submit"]');
+    await this.waitForLoadingToComplete();
+  }
+}</code></pre>
+
+        <h2>7. Recommended Folder Structure for POM</h2>
+        <pre><code>src/
+  pages/
+    BasePage.ts           ← Shared utility methods
+    LoginPage.ts          ← Login page actions and assertions
+    DashboardPage.ts      ← Dashboard page actions and assertions
+    CheckoutPage.ts       ← Checkout flow
+    SearchResultsPage.ts  ← Search results
+  steps/
+    login.steps.ts
+    dashboard.steps.ts
+    checkout.steps.ts
+  support/
+    world.ts              ← Holds page object references
+    hooks.ts              ← Initialises page objects in Before
+  features/
+    login.feature
+    checkout.feature</code></pre>
+
+        <h2>8. Anti-Patterns to Avoid</h2>
+        <ul>
+          <li>
+            <strong>Selectors in step definitions</strong> — selectors belong only in page objects.
+            If you have <code>this.page.click('[data-testid="submit"]')</code> in a step file, move it to a page object.
+          </li>
+          <li>
+            <strong>One massive page object</strong> — split by feature area: <code>LoginPage</code>,
+            <code>CheckoutPage</code>, not one <code>AllPagesEver.ts</code>.
+          </li>
+          <li>
+            <strong>Business logic in page objects</strong> — page objects should navigate, fill, click, assert.
+            Conditional logic and test data should stay in steps or test files.
+          </li>
+        </ul>
+
+        <section class="exercise">
+          <h2>Practice Exercise</h2>
+          <ol>
+            <li>Create a <code>LoginPage</code> class with <code>navigate</code>, <code>login</code>, and <code>assertError</code> methods.</li>
+            <li>Create a <code>DashboardPage</code> class with <code>isLoaded</code> and <code>getUserName</code> methods.</li>
+            <li>Add both page objects to the World and initialise them in the <code>Before</code> hook.</li>
+            <li>Refactor your login step definitions to use the page object methods instead of direct Playwright calls.</li>
+            <li>Confirm all tests still pass after the refactor.</li>
+          </ol>
+        </section>
+
+        <section class="quiz" data-quiz>
+          <h2>MCQ Self-Check</h2>
+
+          <div class="question" data-answer="b">
+            <p>1. What is the main benefit of the Page Object Model?</p>
+            <label><input type="radio" name="quiz-7-q0" value="a" /> It makes tests run faster</label>
+            <label><input type="radio" name="quiz-7-q0" value="b" /> It centralises selectors so UI changes require updates in one place</label>
+            <label><input type="radio" name="quiz-7-q0" value="c" /> It generates feature files automatically</label>
+          </div>
+
+          <div class="question" data-answer="c">
+            <p>2. Where should locator (selector) strings like <code>'[data-testid="submit"]'</code> be defined?</p>
+            <label><input type="radio" name="quiz-7-q1" value="a" /> In the feature file</label>
+            <label><input type="radio" name="quiz-7-q1" value="b" /> In the step definition file</label>
+            <label><input type="radio" name="quiz-7-q1" value="c" /> In the page object class</label>
+          </div>
+
+          <div class="question" data-answer="a">
+            <p>3. When should a page object be instantiated?</p>
+            <label><input type="radio" name="quiz-7-q2" value="a" /> In the Before hook, after the page is created</label>
+            <label><input type="radio" name="quiz-7-q2" value="b" /> At the top of each step definition file</label>
+            <label><input type="radio" name="quiz-7-q2" value="c" /> Inside each step definition function</label>
+          </div>
+
+          <div class="question" data-answer="b">
+            <p>4. What is the role of a BasePage class?</p>
+            <label><input type="radio" name="quiz-7-q3" value="a" /> To hold all page locators for every page</label>
+            <label><input type="radio" name="quiz-7-q3" value="b" /> To provide shared utility methods (e.g., wait for spinner) that all page objects can inherit</label>
+            <label><input type="radio" name="quiz-7-q3" value="c" /> To configure the Cucumber runner</label>
+          </div>
+
+          <button class="grade-btn" type="button" data-grade>Grade Me</button>
+          <p class="result" data-result aria-live="polite"></p>
+        </section>
+
+        <div class="footer-note">
+          <strong>Previous:</strong> <a href="06-playwright-integration.html">← Lesson 6 — Playwright Integration</a>
+          &nbsp;|&nbsp;
+          <strong>Next:</strong> <a href="08-reporting.html">Lesson 8 — Reporting →</a>
+        </div>
+      </main>
+    </div>
+
+    <script src="../../assets/app.js"></script>
+  </body>
+</html>

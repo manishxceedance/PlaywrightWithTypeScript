@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cucumber BDD Track</title>
+    <link rel="stylesheet" href="../assets/styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <a class="brand" href="../index.html">Playwright/TypeScript Training Hub</a>
+      <button class="menu-toggle" data-menu-toggle>Open Menu</button>
+    </header>
+
+    <div class="layout">
+      <aside class="sidebar" data-sidebar>
+        <h2>Cucumber BDD</h2>
+        <div class="menu-group">
+          <p class="menu-group-title">Cucumber Track</p>
+          <ul>
+            <li><a href="../lessons/cucumber/00-introduction.html">0. What Is BDD and Cucumber?</a></li>
+            <li><a href="../lessons/cucumber/01-setup.html">1. Project Setup</a></li>
+            <li><a href="../lessons/cucumber/02-gherkin-syntax.html">2. Gherkin Syntax</a></li>
+            <li><a href="../lessons/cucumber/03-step-definitions.html">3. Step Definitions</a></li>
+            <li><a href="../lessons/cucumber/04-hooks-and-tags.html">4. Hooks and Tags</a></li>
+            <li><a href="../lessons/cucumber/05-data-tables-and-outlines.html">5. Data Tables and Outlines</a></li>
+            <li><a href="../lessons/cucumber/06-playwright-integration.html">6. Playwright Integration</a></li>
+            <li><a href="../lessons/cucumber/07-page-object-model.html">7. Page Object Model</a></li>
+            <li><a href="../lessons/cucumber/08-reporting.html">8. Reporting</a></li>
+            <li><a href="../lessons/cucumber/09-advanced-topics.html">9. Advanced Topics</a></li>
+          </ul>
+        </div>
+        <div class="menu-group">
+          <p class="menu-group-title">Other Tracks</p>
+          <ul>
+            <li><a href="../lessons/typescript/00-javascript-basics.html">TypeScript Track</a></li>
+            <li><a href="../lessons/playwright/00-playwright-for-absolutely-beginners.html">Playwright Track</a></li>
+          </ul>
+        </div>
+      </aside>
+
+      <main class="content" style="padding: 0;">
+        <section class="hero" style="background: linear-gradient(90deg, #e8f5e9 0%, #fff 100%); padding: 3.5rem 2rem 2.5rem 2rem; text-align: center; box-shadow: 0 2px 16px rgba(26,35,48,0.04); margin-bottom: 2.5rem;">
+          <h1 style="font-size: 2.7rem; font-weight: 700; color: #2e7d32; margin-bottom: 1.2rem;">Cucumber BDD — From Zero to Production</h1>
+          <p style="font-size: 1.25rem; color: #2d3a4a; max-width: 700px; margin: 0 auto;">
+            Learn Behaviour Driven Development from first principles. Write plain-English test scenarios in Gherkin,
+            automate them with TypeScript and Playwright, and deliver living documentation your whole team can read.
+          </p>
+        </section>
+
+        <section style="display: grid; grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)); gap: 2.2rem; margin: 0 2rem 2.5rem 2rem;">
+
+          <article class="card" style="background: #fff; border-radius: 1.1rem; box-shadow: 0 2px 12px rgba(26,35,48,0.06); padding: 2.2rem 1.5rem 1.7rem 1.5rem; border: 1px solid var(--line); display: flex; flex-direction: column;">
+            <h3 style="color: #2e7d32; font-size: 1.25rem; margin-bottom: 0.7rem;">Step 0: BDD Concepts</h3>
+            <p style="flex: 1; color: #2d3a4a;">Understand what BDD is, why it exists, how Gherkin scenarios connect to code, and why Playwright is the ideal automation companion.</p>
+            <a href="../lessons/cucumber/00-introduction.html" style="margin-top: 1.1rem; background: #2e7d32; color: #fff; padding: 0.6rem 1.2rem; border-radius: 0.5rem; font-weight: 600; text-decoration: none;">Start with Lesson 0</a>
+          </article>
+
+          <article class="card" style="background: #fff; border-radius: 1.1rem; box-shadow: 0 2px 12px rgba(26,35,48,0.06); padding: 2.2rem 1.5rem 1.7rem 1.5rem; border: 1px solid var(--line); display: flex; flex-direction: column;">
+            <h3 style="color: #2e7d32; font-size: 1.25rem; margin-bottom: 0.7rem;">Step 1: Project Setup</h3>
+            <p style="flex: 1; color: #2d3a4a;">Install Cucumber-js, TypeScript, and Playwright. Create the folder structure, configure <code>cucumber.json</code>, and run your first green scenario.</p>
+            <a href="../lessons/cucumber/01-setup.html" style="margin-top: 1.1rem; background: #2e7d32; color: #fff; padding: 0.6rem 1.2rem; border-radius: 0.5rem; font-weight: 600; text-decoration: none;">Open Setup Lesson</a>
+          </article>
+
+          <article class="card" style="background: #fff; border-radius: 1.1rem; box-shadow: 0 2px 12px rgba(26,35,48,0.06); padding: 2.2rem 1.5rem 1.7rem 1.5rem; border: 1px solid var(--line); display: flex; flex-direction: column;">
+            <h3 style="color: #2e7d32; font-size: 1.25rem; margin-bottom: 0.7rem;">Step 2: Gherkin Mastery</h3>
+            <p style="flex: 1; color: #2d3a4a;">Learn every Gherkin keyword — Feature, Scenario, Background, Tags, Rule, Docstrings, and how to write steps that business and QA both understand.</p>
+            <a href="../lessons/cucumber/02-gherkin-syntax.html" style="margin-top: 1.1rem; background: #2e7d32; color: #fff; padding: 0.6rem 1.2rem; border-radius: 0.5rem; font-weight: 600; text-decoration: none;">Learn Gherkin</a>
+          </article>
+
+          <article class="card" style="background: #fff; border-radius: 1.1rem; box-shadow: 0 2px 12px rgba(26,35,48,0.06); padding: 2.2rem 1.5rem 1.7rem 1.5rem; border: 1px solid var(--line); display: flex; flex-direction: column;">
+            <h3 style="color: #2e7d32; font-size: 1.25rem; margin-bottom: 0.7rem;">Step 3: Step Definitions</h3>
+            <p style="flex: 1; color: #2d3a4a;">Link Gherkin steps to TypeScript functions. Use string parameters, regex, the World object, and async/await to build robust automation.</p>
+            <a href="../lessons/cucumber/03-step-definitions.html" style="margin-top: 1.1rem; background: #2e7d32; color: #fff; padding: 0.6rem 1.2rem; border-radius: 0.5rem; font-weight: 600; text-decoration: none;">Write Step Definitions</a>
+          </article>
+
+          <article class="card" style="background: #fff; border-radius: 1.1rem; box-shadow: 0 2px 12px rgba(26,35,48,0.06); padding: 2.2rem 1.5rem 1.7rem 1.5rem; border: 1px solid var(--line); display: flex; flex-direction: column;">
+            <h3 style="color: #2e7d32; font-size: 1.25rem; margin-bottom: 0.7rem;">Step 4: Hooks and Tags</h3>
+            <p style="flex: 1; color: #2d3a4a;">Control browser lifecycle with Before/After hooks, attach screenshots on failure, and filter test runs using tag expressions.</p>
+            <a href="../lessons/cucumber/04-hooks-and-tags.html" style="margin-top: 1.1rem; background: #2e7d32; color: #fff; padding: 0.6rem 1.2rem; border-radius: 0.5rem; font-weight: 600; text-decoration: none;">Learn Hooks and Tags</a>
+          </article>
+
+          <article class="card" style="background: #fff; border-radius: 1.1rem; box-shadow: 0 2px 12px rgba(26,35,48,0.06); padding: 2.2rem 1.5rem 1.7rem 1.5rem; border: 1px solid var(--line); display: flex; flex-direction: column;">
+            <h3 style="color: #2e7d32; font-size: 1.25rem; margin-bottom: 0.7rem;">Step 5: Data-Driven Tests</h3>
+            <p style="flex: 1; color: #2d3a4a;">Pass structured data with DataTables and run the same scenario with multiple inputs using Scenario Outlines and Examples tables.</p>
+            <a href="../lessons/cucumber/05-data-tables-and-outlines.html" style="margin-top: 1.1rem; background: #2e7d32; color: #fff; padding: 0.6rem 1.2rem; border-radius: 0.5rem; font-weight: 600; text-decoration: none;">Data-Driven Testing</a>
+          </article>
+
+          <article class="card" style="background: #fff; border-radius: 1.1rem; box-shadow: 0 2px 12px rgba(26,35,48,0.06); padding: 2.2rem 1.5rem 1.7rem 1.5rem; border: 1px solid var(--line); display: flex; flex-direction: column;">
+            <h3 style="color: #2e7d32; font-size: 1.25rem; margin-bottom: 0.7rem;">Step 6: Playwright Integration</h3>
+            <p style="flex: 1; color: #2d3a4a;">Wire a full browser lifecycle into your Cucumber suite. Navigate, fill forms, click buttons, and assert outcomes with Playwright's auto-wait API.</p>
+            <a href="../lessons/cucumber/06-playwright-integration.html" style="margin-top: 1.1rem; background: #2e7d32; color: #fff; padding: 0.6rem 1.2rem; border-radius: 0.5rem; font-weight: 600; text-decoration: none;">Playwright in BDD</a>
+          </article>
+
+          <article class="card" style="background: #fff; border-radius: 1.1rem; box-shadow: 0 2px 12px rgba(26,35,48,0.06); padding: 2.2rem 1.5rem 1.7rem 1.5rem; border: 1px solid var(--line); display: flex; flex-direction: column;">
+            <h3 style="color: #2e7d32; font-size: 1.25rem; margin-bottom: 0.7rem;">Step 7: Page Object Model</h3>
+            <p style="flex: 1; color: #2d3a4a;">Build maintainable suites by centralising selectors in page classes. Step definitions become thin, readable wrappers around page actions.</p>
+            <a href="../lessons/cucumber/07-page-object-model.html" style="margin-top: 1.1rem; background: #2e7d32; color: #fff; padding: 0.6rem 1.2rem; border-radius: 0.5rem; font-weight: 600; text-decoration: none;">Apply POM Pattern</a>
+          </article>
+
+          <article class="card" style="background: #fff; border-radius: 1.1rem; box-shadow: 0 2px 12px rgba(26,35,48,0.06); padding: 2.2rem 1.5rem 1.7rem 1.5rem; border: 1px solid var(--line); display: flex; flex-direction: column;">
+            <h3 style="color: #2e7d32; font-size: 1.25rem; margin-bottom: 0.7rem;">Step 8: Reporting</h3>
+            <p style="flex: 1; color: #2d3a4a;">Generate built-in HTML reports, JSON for CI tools, JUnit XML for Jenkins, and rich Allure dashboards with screenshots and drill-down views.</p>
+            <a href="../lessons/cucumber/08-reporting.html" style="margin-top: 1.1rem; background: #2e7d32; color: #fff; padding: 0.6rem 1.2rem; border-radius: 0.5rem; font-weight: 600; text-decoration: none;">Configure Reporting</a>
+          </article>
+
+          <article class="card" style="background: #fff; border-radius: 1.1rem; box-shadow: 0 2px 12px rgba(26,35,48,0.06); padding: 2.2rem 1.5rem 1.7rem 1.5rem; border: 1px solid var(--line); display: flex; flex-direction: column;">
+            <h3 style="color: #2e7d32; font-size: 1.25rem; margin-bottom: 0.7rem;">Step 9: Advanced Topics</h3>
+            <p style="flex: 1; color: #2d3a4a;">Parallel execution, API testing with Playwright's request context, GitHub Actions CI/CD pipeline, retry logic, and the capstone project.</p>
+            <a href="../lessons/cucumber/09-advanced-topics.html" style="margin-top: 1.1rem; background: #2e7d32; color: #fff; padding: 0.6rem 1.2rem; border-radius: 0.5rem; font-weight: 600; text-decoration: none;">Advanced Techniques</a>
+          </article>
+
+        </section>
+
+        <section style="background: #f1f8e9; border: 1px solid #c8e6c9; border-radius: 1.1rem; margin: 0 2rem 2.5rem 2rem; padding: 2rem;">
+          <h2 style="color: #2e7d32; margin-top: 0;">Suggested Learning Path</h2>
+          <ol style="line-height: 2; color: #2d3a4a;">
+            <li>Complete the <strong>TypeScript Track</strong> first if you are new to TypeScript.</li>
+            <li>Read Lesson 0 — understand WHY BDD before writing any code.</li>
+            <li>Follow Lessons 1–3 to get a working scenario end-to-end.</li>
+            <li>Add hooks (Lesson 4) before adding more feature files.</li>
+            <li>Apply POM (Lesson 7) as soon as you have more than 2–3 feature files.</li>
+            <li>Set up reporting (Lesson 8) before going to CI/CD.</li>
+            <li>Complete the capstone in Lesson 9 to validate full-track mastery.</li>
+          </ol>
+        </section>
+
+        <section style="margin: 0 2rem 2.5rem 2rem;">
+          <h2 style="color: #2e7d32;">What You Will Be Able to Do After This Track</h2>
+          <ul style="line-height: 1.9; color: #2d3a4a;">
+            <li>Write Gherkin scenarios that business stakeholders can read and approve.</li>
+            <li>Set up a Cucumber + Playwright + TypeScript project from zero.</li>
+            <li>Implement step definitions with proper async patterns and World state sharing.</li>
+            <li>Use tags, hooks, and profiles to organise and filter test execution.</li>
+            <li>Apply the Page Object Model to keep your automation maintainable.</li>
+            <li>Generate professional HTML and Allure reports with failure screenshots.</li>
+            <li>Run tests in parallel and integrate the suite into a GitHub Actions pipeline.</li>
+            <li>Write API tests alongside UI tests in the same BDD framework.</li>
+          </ul>
+        </section>
+
+      </main>
+    </div>
+
+    <script src="../assets/app.js"></script>
+  </body>
+</html>

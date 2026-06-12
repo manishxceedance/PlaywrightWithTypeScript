@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lesson 8 - Reporting</title>
+    <link rel="stylesheet" href="../../assets/styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <a class="brand" href="../../index.html">Playwright/TypeScript Training Hub</a>
+      <button class="menu-toggle" data-menu-toggle>Open Menu</button>
+    </header>
+
+    <div class="layout">
+      <aside class="sidebar" data-sidebar>
+        <h2>Cucumber BDD</h2>
+        <div class="menu-group">
+          <p class="menu-group-title">Cucumber Track</p>
+          <ul>
+            <li><a href="00-introduction.html">0. What Is BDD and Cucumber?</a></li>
+            <li><a href="01-setup.html">1. Project Setup</a></li>
+            <li><a href="02-gherkin-syntax.html">2. Gherkin Syntax</a></li>
+            <li><a href="03-step-definitions.html">3. Step Definitions</a></li>
+            <li><a href="04-hooks-and-tags.html">4. Hooks and Tags</a></li>
+            <li><a href="05-data-tables-and-outlines.html">5. Data Tables and Outlines</a></li>
+            <li><a href="06-playwright-integration.html">6. Playwright Integration</a></li>
+            <li><a href="07-page-object-model.html">7. Page Object Model</a></li>
+            <li><a class="active" href="08-reporting.html">8. Reporting</a></li>
+            <li><a href="09-advanced-topics.html">9. Advanced Topics</a></li>
+          </ul>
+        </div>
+      </aside>
+
+      <main class="content lesson">
+        <h1>Lesson 8: Reporting — HTML, JSON, and Allure Reports</h1>
+        <p class="lesson-meta">
+          <span class="difficulty-badge">Level: Intermediate</span>
+          Generate professional test reports that communicate results to the whole team.
+        </p>
+
+        <h2>1. Built-in Cucumber Formatters</h2>
+        <p>
+          Cucumber ships with several formatters. Configure them in the <code>format</code> array inside
+          <code>cucumber.json</code>:
+        </p>
+        <pre><code>{
+  "default": {
+    "format": [
+      "progress-bar",
+      "html:reports/cucumber-report.html",
+      "json:reports/cucumber-report.json",
+      "junit:reports/cucumber-report.xml"
+    ]
+  }
+}</code></pre>
+
+        <table style="width:100%; border-collapse: collapse; font-size: 0.95rem; margin-top: 0.5rem;">
+          <thead>
+            <tr style="background: var(--accent-soft); text-align: left;">
+              <th style="padding: 0.6rem; border: 1px solid var(--line);">Formatter</th>
+              <th style="padding: 0.6rem; border: 1px solid var(--line);">Output</th>
+              <th style="padding: 0.6rem; border: 1px solid var(--line);">Best for</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style="padding: 0.6rem; border: 1px solid var(--line);"><code>progress-bar</code></td>
+              <td style="padding: 0.6rem; border: 1px solid var(--line);">Terminal progress dots</td>
+              <td style="padding: 0.6rem; border: 1px solid var(--line);">Local development runs</td>
+            </tr>
+            <tr>
+              <td style="padding: 0.6rem; border: 1px solid var(--line);"><code>pretty</code></td>
+              <td style="padding: 0.6rem; border: 1px solid var(--line);">Full step output in terminal</td>
+              <td style="padding: 0.6rem; border: 1px solid var(--line);">Debugging individual failures</td>
+            </tr>
+            <tr>
+              <td style="padding: 0.6rem; border: 1px solid var(--line);"><code>html:path</code></td>
+              <td style="padding: 0.6rem; border: 1px solid var(--line);">Standalone HTML page</td>
+              <td style="padding: 0.6rem; border: 1px solid var(--line);">Sharing results with stakeholders</td>
+            </tr>
+            <tr>
+              <td style="padding: 0.6rem; border: 1px solid var(--line);"><code>json:path</code></td>
+              <td style="padding: 0.6rem; border: 1px solid var(--line);">JSON file</td>
+              <td style="padding: 0.6rem; border: 1px solid var(--line);">Input for Allure or custom dashboards</td>
+            </tr>
+            <tr>
+              <td style="padding: 0.6rem; border: 1px solid var(--line);"><code>junit:path</code></td>
+              <td style="padding: 0.6rem; border: 1px solid var(--line);">JUnit XML file</td>
+              <td style="padding: 0.6rem; border: 1px solid var(--line);">Jenkins, GitHub Actions test results</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h2>2. Viewing the Built-in HTML Report</h2>
+        <p>After a test run, open the report file in your browser:</p>
+        <pre><code># Windows
+start reports/cucumber-report.html
+
+# Mac
+open reports/cucumber-report.html
+
+# Linux
+xdg-open reports/cucumber-report.html</code></pre>
+        <p>
+          The HTML report shows passed/failed/pending scenarios, step-level results, error messages,
+          and any attachments (screenshots) you added with <code>this.attach()</code>.
+        </p>
+
+        <h2>3. Multiple Profiles in cucumber.json</h2>
+        <p>
+          Define different profiles for local vs CI runs:
+        </p>
+        <pre><code>{
+  "default": {
+    "requireModule": ["ts-node/register"],
+    "require": ["src/steps/**/*.ts", "src/support/**/*.ts"],
+    "paths": ["src/features/**/*.feature"],
+    "format": ["progress-bar", "html:reports/report.html", "json:reports/report.json"]
+  },
+  "ci": {
+    "requireModule": ["ts-node/register"],
+    "require": ["src/steps/**/*.ts", "src/support/**/*.ts"],
+    "paths": ["src/features/**/*.feature"],
+    "format": ["progress-bar", "junit:reports/junit.xml", "json:reports/report.json"],
+    "parallel": 4
+  },
+  "smoke": {
+    "requireModule": ["ts-node/register"],
+    "require": ["src/steps/**/*.ts", "src/support/**/*.ts"],
+    "paths": ["src/features/**/*.feature"],
+    "tags": "@smoke",
+    "format": ["progress-bar", "html:reports/smoke-report.html"]
+  }
+}</code></pre>
+        <p>Run a specific profile:</p>
+        <pre><code>npx cucumber-js --profile ci
+npx cucumber-js --profile smoke</code></pre>
+
+        <h2>4. Allure Report (Enhanced Visual Reports)</h2>
+        <p>
+          Allure generates rich, interactive HTML dashboards with charts, categories, and drill-down views.
+          It is the most popular option for professional teams.
+        </p>
+
+        <h3>Install Allure packages:</h3>
+        <pre><code>npm install --save-dev allure-cucumberjs allure-commandline</code></pre>
+
+        <h3>Update cucumber.json:</h3>
+        <pre><code>{
+  "default": {
+    "format": [
+      "allure-cucumberjs/reporter"
+    ],
+    "formatOptions": {
+      "resultsDir": "allure-results"
+    }
+  }
+}</code></pre>
+
+        <h3>Add npm scripts to package.json:</h3>
+        <pre><code>"scripts": {
+  "test": "cucumber-js",
+  "allure:generate": "allure generate allure-results --clean -o allure-report",
+  "allure:open": "allure open allure-report",
+  "allure:report": "npm run test && npm run allure:generate && npm run allure:open"
+}</code></pre>
+
+        <h3>Install Allure CLI (one-time):</h3>
+        <pre><code># Using npm
+npm install -g allure-commandline
+
+# Or using scoop on Windows
+scoop install allure</code></pre>
+
+        <h3>Generate and view:</h3>
+        <pre><code>npm test
+npx allure generate allure-results --clean -o allure-report
+npx allure open allure-report</code></pre>
+
+        <h2>5. Attaching Screenshots to Reports</h2>
+        <p>
+          Any attachments added with <code>this.attach()</code> appear inline in both the built-in HTML
+          report and in Allure. Always attach on failure at minimum:
+        </p>
+        <pre><code>After(async function (this: CustomWorld, scenario) {
+  if (scenario.result?.status === Status.FAILED) {
+    // Full-page screenshot
+    const screenshot = await this.page.screenshot({ fullPage: true });
+    this.attach(screenshot, 'image/png');
+
+    // Current URL for debugging
+    this.attach(`Failed URL: ${this.page.url()}`, 'text/plain');
+
+    // Console errors (if any)
+    const errors = this.consoleLogs.filter(l => l.type() === 'error');
+    if (errors.length) {
+      this.attach(errors.map(e => e.text()).join('\n'), 'text/plain');
+    }
+  }
+  await this.context.close();
+});</code></pre>
+
+        <h2>6. Adding Custom Allure Labels</h2>
+        <p>
+          You can add metadata to Allure reports using the <code>allure</code> instance in hooks or steps:
+        </p>
+        <pre><code>import { allure } from 'allure-cucumberjs';
+
+Before(async function (this: CustomWorld, scenario) {
+  allure.label('feature', scenario.pickle.uri.split('/').pop() ?? '');
+  allure.label('severity', scenario.pickle.tags.includes('@critical') ? 'critical' : 'normal');
+});</code></pre>
+
+        <h2>7. Interpreting Report Results</h2>
+        <p>A Cucumber HTML report shows five possible step states:</p>
+        <ul>
+          <li><span style="color: #2e7d32; font-weight: 700;">Passed</span> — step ran and assertions succeeded.</li>
+          <li><span style="color: #c62828; font-weight: 700;">Failed</span> — an assertion failed or an error was thrown.</li>
+          <li><span style="color: #f57c00; font-weight: 700;">Pending</span> — step returned <code>'pending'</code>.</li>
+          <li><span style="color: #7b1fa2; font-weight: 700;">Undefined</span> — no step definition matched the step text.</li>
+          <li><span style="color: #757575; font-weight: 700;">Skipped</span> — step was not executed because a previous step failed.</li>
+        </ul>
+        <p><strong>Undefined steps are different from failed steps.</strong> An undefined step means the step definition is missing or the pattern does not match — fix the pattern first before debugging the automation logic.</p>
+
+        <section class="exercise">
+          <h2>Practice Exercise</h2>
+          <ol>
+            <li>Configure your <code>cucumber.json</code> to output both HTML and JSON reports.</li>
+            <li>Run your test suite, open the HTML report, and identify one passed and one failed (or pending) scenario.</li>
+            <li>Add a screenshot-on-failure attachment in your After hook. Deliberately break one test and confirm the screenshot appears in the report.</li>
+            <li>Install Allure, generate a report, and compare it to the built-in HTML report.</li>
+            <li>Create a <code>smoke</code> profile in <code>cucumber.json</code> and run it with <code>--profile smoke</code>.</li>
+          </ol>
+        </section>
+
+        <section class="quiz" data-quiz>
+          <h2>MCQ Self-Check</h2>
+
+          <div class="question" data-answer="c">
+            <p>1. Which formatter produces a JUnit XML file for CI tools like Jenkins?</p>
+            <label><input type="radio" name="quiz-8-q0" value="a" /> html</label>
+            <label><input type="radio" name="quiz-8-q0" value="b" /> json</label>
+            <label><input type="radio" name="quiz-8-q0" value="c" /> junit</label>
+          </div>
+
+          <div class="question" data-answer="b">
+            <p>2. What does a "Undefined" step mean in a Cucumber report?</p>
+            <label><input type="radio" name="quiz-8-q1" value="a" /> The step threw an exception</label>
+            <label><input type="radio" name="quiz-8-q1" value="b" /> No step definition matched the Gherkin step text</label>
+            <label><input type="radio" name="quiz-8-q1" value="c" /> The step was skipped due to a previous failure</label>
+          </div>
+
+          <div class="question" data-answer="a">
+            <p>3. How do you embed a screenshot into a Cucumber report?</p>
+            <label><input type="radio" name="quiz-8-q2" value="a" /> <code>this.attach(screenshot, 'image/png')</code></label>
+            <label><input type="radio" name="quiz-8-q2" value="b" /> <code>fs.writeFileSync('reports/screenshot.png', screenshot)</code></label>
+            <label><input type="radio" name="quiz-8-q2" value="c" /> <code>this.page.screenshot({ path: 'reports/screenshot.png' })</code></label>
+          </div>
+
+          <div class="question" data-answer="b">
+            <p>4. Which command runs the "ci" profile defined in cucumber.json?</p>
+            <label><input type="radio" name="quiz-8-q3" value="a" /> <code>npx cucumber-js ci</code></label>
+            <label><input type="radio" name="quiz-8-q3" value="b" /> <code>npx cucumber-js --profile ci</code></label>
+            <label><input type="radio" name="quiz-8-q3" value="c" /> <code>npx cucumber-js --env ci</code></label>
+          </div>
+
+          <button class="grade-btn" type="button" data-grade>Grade Me</button>
+          <p class="result" data-result aria-live="polite"></p>
+        </section>
+
+        <div class="footer-note">
+          <strong>Previous:</strong> <a href="07-page-object-model.html">← Lesson 7 — Page Object Model</a>
+          &nbsp;|&nbsp;
+          <strong>Next:</strong> <a href="09-advanced-topics.html">Lesson 9 — Advanced Topics →</a>
+        </div>
+      </main>
+    </div>
+
+    <script src="../../assets/app.js"></script>
+  </body>
+</html>

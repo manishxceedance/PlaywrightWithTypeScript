@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lesson 2 - Gherkin Syntax Deep Dive</title>
+    <link rel="stylesheet" href="../../assets/styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <a class="brand" href="../../index.html">Playwright/TypeScript Training Hub</a>
+      <button class="menu-toggle" data-menu-toggle>Open Menu</button>
+    </header>
+
+    <div class="layout">
+      <aside class="sidebar" data-sidebar>
+        <h2>Cucumber BDD</h2>
+        <div class="menu-group">
+          <p class="menu-group-title">Cucumber Track</p>
+          <ul>
+            <li><a href="00-introduction.html">0. What Is BDD and Cucumber?</a></li>
+            <li><a href="01-setup.html">1. Project Setup</a></li>
+            <li><a class="active" href="02-gherkin-syntax.html">2. Gherkin Syntax</a></li>
+            <li><a href="03-step-definitions.html">3. Step Definitions</a></li>
+            <li><a href="04-hooks-and-tags.html">4. Hooks and Tags</a></li>
+            <li><a href="05-data-tables-and-outlines.html">5. Data Tables and Outlines</a></li>
+            <li><a href="06-playwright-integration.html">6. Playwright Integration</a></li>
+            <li><a href="07-page-object-model.html">7. Page Object Model</a></li>
+            <li><a href="08-reporting.html">8. Reporting</a></li>
+            <li><a href="09-advanced-topics.html">9. Advanced Topics</a></li>
+          </ul>
+        </div>
+      </aside>
+
+      <main class="content lesson">
+        <h1>Lesson 2: Gherkin Syntax — Writing Feature Files</h1>
+        <p class="lesson-meta">
+          <span class="difficulty-badge">Level: Beginner</span>
+          Learn every Gherkin keyword with annotated examples.
+        </p>
+
+        <h2>1. The Anatomy of a Feature File</h2>
+        <p>
+          A feature file uses the <code>.feature</code> extension and contains one <strong>Feature</strong> block
+          with one or more <strong>Scenarios</strong>.
+        </p>
+        <pre><code># login.feature
+
+Feature: User Authentication
+  As a registered user
+  I want to log in to the application
+  So that I can access my account
+
+  Background:
+    Given the application is running at "https://example.com"
+
+  Scenario: Successful login
+    Given the user is on the login page
+    When the user enters email "user@test.com" and password "Pass123"
+    And the user clicks the Login button
+    Then the user should be redirected to the dashboard
+    And the welcome message should contain "Welcome, User"
+
+  Scenario: Failed login with wrong password
+    Given the user is on the login page
+    When the user enters email "user@test.com" and password "wrong"
+    And the user clicks the Login button
+    Then an error message "Invalid credentials" should be displayed</code></pre>
+
+        <h2>2. Feature</h2>
+        <p>
+          The <code>Feature</code> keyword starts the file and names the feature being tested. Everything below it
+          belongs to this feature. The optional three lines below it (As a / I want / So that) are called a
+          <strong>user story</strong> and provide context — Cucumber ignores them during execution.
+        </p>
+        <pre><code>Feature: Shopping Cart Management
+  As a logged-in customer
+  I want to add and remove items from my cart
+  So that I can control what I purchase</code></pre>
+
+        <h2>3. Scenario</h2>
+        <p>
+          A <code>Scenario</code> is one concrete test case. Each scenario is independent — it should not depend
+          on the state left by a previous scenario. Always use present tense.
+        </p>
+        <pre><code>Scenario: Adding an item to an empty cart
+  Given the cart is empty
+  When the user adds "Wireless Mouse" to the cart
+  Then the cart should show 1 item
+  And the total should be "$29.99"</code></pre>
+
+        <h2>4. Given / When / Then / And / But</h2>
+        <table style="width:100%; border-collapse: collapse; font-size: 0.95rem; margin-top: 0.5rem;">
+          <thead>
+            <tr style="background: var(--accent-soft); text-align: left;">
+              <th style="padding: 0.6rem; border: 1px solid var(--line);">Keyword</th>
+              <th style="padding: 0.6rem; border: 1px solid var(--line);">Purpose</th>
+              <th style="padding: 0.6rem; border: 1px solid var(--line);">Example</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style="padding: 0.6rem; border: 1px solid var(--line);"><code>Given</code></td>
+              <td style="padding: 0.6rem; border: 1px solid var(--line);">Precondition / initial context</td>
+              <td style="padding: 0.6rem; border: 1px solid var(--line);">Given the user is logged in</td>
+            </tr>
+            <tr>
+              <td style="padding: 0.6rem; border: 1px solid var(--line);"><code>When</code></td>
+              <td style="padding: 0.6rem; border: 1px solid var(--line);">The action or event</td>
+              <td style="padding: 0.6rem; border: 1px solid var(--line);">When the user clicks "Submit"</td>
+            </tr>
+            <tr>
+              <td style="padding: 0.6rem; border: 1px solid var(--line);"><code>Then</code></td>
+              <td style="padding: 0.6rem; border: 1px solid var(--line);">Expected outcome / assertion</td>
+              <td style="padding: 0.6rem; border: 1px solid var(--line);">Then a success toast should appear</td>
+            </tr>
+            <tr>
+              <td style="padding: 0.6rem; border: 1px solid var(--line);"><code>And</code></td>
+              <td style="padding: 0.6rem; border: 1px solid var(--line);">Continues the previous step type</td>
+              <td style="padding: 0.6rem; border: 1px solid var(--line);">And the form should be cleared</td>
+            </tr>
+            <tr>
+              <td style="padding: 0.6rem; border: 1px solid var(--line);"><code>But</code></td>
+              <td style="padding: 0.6rem; border: 1px solid var(--line);">Negative continuation</td>
+              <td style="padding: 0.6rem; border: 1px solid var(--line);">But the error panel should not appear</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h2>5. Background</h2>
+        <p>
+          <code>Background</code> runs the same steps before every scenario in the feature file. Use it for
+          setup that all scenarios share (e.g., navigating to a URL, logging in).
+        </p>
+        <pre><code>Feature: Account Settings
+
+  Background:
+    Given the user is logged in as "admin@test.com"
+    And the user is on the Account Settings page
+
+  Scenario: Change display name
+    When the user updates the name to "New Name"
+    Then the profile header should show "New Name"
+
+  Scenario: Change password
+    When the user enters a new password
+    Then the password should be updated successfully</code></pre>
+        <p><strong>Rule:</strong> Keep Background minimal. If only some scenarios need the same setup, use tags and hooks instead (covered in Lesson 4).</p>
+
+        <h2>6. Inline Parameters (String and Number Values)</h2>
+        <p>
+          You can embed values directly in step text using double quotes. Cucumber passes these as parameters to step definitions automatically.
+        </p>
+        <pre><code>When the user searches for "laptop"
+And the user selects page "2"
+Then "24" results should be displayed</code></pre>
+        <p>The quoted text becomes a string parameter. Numbers can be passed unquoted and mapped to integers:</p>
+        <pre><code>Then 24 results should be displayed</code></pre>
+
+        <h2>7. Docstrings (Multi-line Text)</h2>
+        <p>
+          Use triple quotes <code>"""</code> to pass a multi-line block of text to a step — useful for JSON payloads
+          or long messages.
+        </p>
+        <pre><code>When the user submits the following JSON body:
+  """
+  {
+    "username": "admin",
+    "role": "superuser"
+  }
+  """</code></pre>
+
+        <h2>8. Tags</h2>
+        <p>
+          Tags let you label and filter scenarios. They start with <code>@</code> and sit above
+          <code>Feature</code>, <code>Scenario</code>, or <code>Scenario Outline</code>.
+        </p>
+        <pre><code>@smoke @login
+Feature: User Authentication
+
+  @regression
+  Scenario: Successful login
+    Given the user is on the login page
+    ...
+
+  @wip
+  Scenario: SSO login
+    Given the SSO provider is configured
+    ...</code></pre>
+        <p>Run only scenarios tagged <code>@smoke</code>:</p>
+        <pre><code>npx cucumber-js --tags "@smoke"</code></pre>
+        <p>Run smoke but not wip:</p>
+        <pre><code>npx cucumber-js --tags "@smoke and not @wip"</code></pre>
+
+        <h2>9. Rule (Grouping Scenarios)</h2>
+        <p>
+          The <code>Rule</code> keyword groups related scenarios under one business rule inside a feature. It is
+          optional but improves readability of large feature files.
+        </p>
+        <pre><code>Feature: Password Policy
+
+  Rule: Password must be at least 8 characters
+
+    Scenario: Reject 7-character password
+      Given the password field contains "abc1234"
+      When the user submits the form
+      Then an error "Password too short" should appear
+
+    Scenario: Accept 8-character password
+      Given the password field contains "abc12345"
+      When the user submits the form
+      Then no password errors should appear
+
+  Rule: Password must contain at least one digit
+
+    Scenario: Reject letters-only password
+      Given the password field contains "abcdefgh"
+      When the user submits the form
+      Then an error "Must contain a number" should appear</code></pre>
+
+        <h2>10. Best Practices for Writing Gherkin</h2>
+        <ul>
+          <li><strong>Write from the user's perspective</strong> — avoid UI details like "click the blue button at top right".</li>
+          <li><strong>One scenario = one behaviour</strong> — do not test two different things in one scenario.</li>
+          <li><strong>Keep steps short</strong> — a step should fit on one line.</li>
+          <li><strong>Use present tense</strong> — "the user clicks" not "the user clicked".</li>
+          <li><strong>Avoid logic in Gherkin</strong> — no if/else, no loops — that belongs in step definitions.</li>
+          <li><strong>Use Background sparingly</strong> — if only 2 of 10 scenarios need the same setup, use hooks instead.</li>
+        </ul>
+
+        <section class="exercise">
+          <h2>Practice Exercise</h2>
+          <ol>
+            <li>Create a new file <code>src/features/search.feature</code>.</li>
+            <li>Write a <code>Feature</code> block for "Product Search" with a user story.</li>
+            <li>
+              Write three scenarios:
+              <ul>
+                <li>Successful search with results found.</li>
+                <li>Search with no results.</li>
+                <li>Search with a special-character keyword.</li>
+              </ul>
+            </li>
+            <li>Add a <code>Background</code> step that navigates to the homepage.</li>
+            <li>Tag the first scenario <code>@smoke</code> and the second <code>@regression</code>.</li>
+          </ol>
+        </section>
+
+        <section class="quiz" data-quiz>
+          <h2>MCQ Self-Check</h2>
+
+          <div class="question" data-answer="b">
+            <p>1. Which keyword describes the expected outcome of a test step?</p>
+            <label><input type="radio" name="quiz-2-q0" value="a" /> When</label>
+            <label><input type="radio" name="quiz-2-q0" value="b" /> Then</label>
+            <label><input type="radio" name="quiz-2-q0" value="c" /> Given</label>
+          </div>
+
+          <div class="question" data-answer="c">
+            <p>2. What does a <code>Background</code> block do?</p>
+            <label><input type="radio" name="quiz-2-q1" value="a" /> Runs once before the entire test suite</label>
+            <label><input type="radio" name="quiz-2-q1" value="b" /> Defines reusable step definitions</label>
+            <label><input type="radio" name="quiz-2-q1" value="c" /> Runs the same steps before every scenario in the feature file</label>
+          </div>
+
+          <div class="question" data-answer="a">
+            <p>3. Which tag syntax is correct for filtering tests in Cucumber?</p>
+            <label><input type="radio" name="quiz-2-q2" value="a" /> @smoke</label>
+            <label><input type="radio" name="quiz-2-q2" value="b" /> #smoke</label>
+            <label><input type="radio" name="quiz-2-q2" value="c" /> [smoke]</label>
+          </div>
+
+          <div class="question" data-answer="b">
+            <p>4. Which keyword continues from the same step type to avoid repetition?</p>
+            <label><input type="radio" name="quiz-2-q3" value="a" /> Feature</label>
+            <label><input type="radio" name="quiz-2-q3" value="b" /> And</label>
+            <label><input type="radio" name="quiz-2-q3" value="c" /> Scenario</label>
+          </div>
+
+          <div class="question" data-answer="c">
+            <p>5. What is wrong with this step: <code>When the user clicks the blue button in the top-right of the modal</code>?</p>
+            <label><input type="radio" name="quiz-2-q4" value="a" /> It uses the word "button"</label>
+            <label><input type="radio" name="quiz-2-q4" value="b" /> It starts with When</label>
+            <label><input type="radio" name="quiz-2-q4" value="c" /> It describes UI implementation details instead of user intent</label>
+          </div>
+
+          <button class="grade-btn" type="button" data-grade>Grade Me</button>
+          <p class="result" data-result aria-live="polite"></p>
+        </section>
+
+        <div class="footer-note">
+          <strong>Previous:</strong> <a href="01-setup.html">← Lesson 1 — Project Setup</a>
+          &nbsp;|&nbsp;
+          <strong>Next:</strong> <a href="03-step-definitions.html">Lesson 3 — Step Definitions →</a>
+        </div>
+      </main>
+    </div>
+
+    <script src="../../assets/app.js"></script>
+  </body>
+</html>

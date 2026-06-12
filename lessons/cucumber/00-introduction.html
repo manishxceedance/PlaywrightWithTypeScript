@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lesson 0 - What Is BDD and Cucumber?</title>
+    <link rel="stylesheet" href="../../assets/styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <a class="brand" href="../../index.html">Playwright/TypeScript Training Hub</a>
+      <button class="menu-toggle" data-menu-toggle>Open Menu</button>
+    </header>
+
+    <div class="layout">
+      <aside class="sidebar" data-sidebar>
+        <h2>Cucumber BDD</h2>
+        <div class="menu-group">
+          <p class="menu-group-title">Cucumber Track</p>
+          <ul>
+            <li><a class="active" href="00-introduction.html">0. What Is BDD and Cucumber?</a></li>
+            <li><a href="01-setup.html">1. Project Setup</a></li>
+            <li><a href="02-gherkin-syntax.html">2. Gherkin Syntax</a></li>
+            <li><a href="03-step-definitions.html">3. Step Definitions</a></li>
+            <li><a href="04-hooks-and-tags.html">4. Hooks and Tags</a></li>
+            <li><a href="05-data-tables-and-outlines.html">5. Data Tables and Outlines</a></li>
+            <li><a href="06-playwright-integration.html">6. Playwright Integration</a></li>
+            <li><a href="07-page-object-model.html">7. Page Object Model</a></li>
+            <li><a href="08-reporting.html">8. Reporting</a></li>
+            <li><a href="09-advanced-topics.html">9. Advanced Topics</a></li>
+          </ul>
+        </div>
+      </aside>
+
+      <main class="content lesson">
+        <h1>Lesson 0: What Is BDD and Cucumber?</h1>
+        <p class="lesson-meta">
+          <span class="difficulty-badge">Level: Beginner</span>
+          No prior experience required. Start here if you are completely new to BDD.
+        </p>
+
+        <h2>1. The Problem BDD Solves</h2>
+        <p>
+          In traditional testing, developers write code, testers write scripts separately, and the business team writes requirements in documents.
+          These three groups rarely speak the same language — the result is tests that do not match requirements and bugs that slip through.
+        </p>
+        <p>
+          <strong>Behaviour Driven Development (BDD)</strong> closes this gap by using a shared, plain-English language that all three groups
+          can read and agree on before a single line of code is written.
+        </p>
+
+        <h2>2. What Is BDD?</h2>
+        <p>
+          BDD is a software development practice where teams define the expected behaviour of a feature in structured English sentences
+          called <strong>scenarios</strong>. These scenarios become automated tests.
+        </p>
+        <p>Three pillars of BDD:</p>
+        <ul>
+          <li><strong>Discovery</strong> — Business, dev, and QA discuss features together.</li>
+          <li><strong>Formulation</strong> — Scenarios are written in Gherkin before coding starts.</li>
+          <li><strong>Automation</strong> — Gherkin scenarios are linked to automated test code.</li>
+        </ul>
+
+        <h2>3. What Is Cucumber?</h2>
+        <p>
+          Cucumber is the most popular tool for BDD automation. It reads plain-text feature files written in <strong>Gherkin</strong> syntax
+          and executes the corresponding automation code called <strong>step definitions</strong>.
+        </p>
+        <p>Cucumber is available for many languages. In this track you will use <strong>Cucumber-js</strong> with TypeScript.</p>
+
+        <h2>4. What Is Gherkin?</h2>
+        <p>
+          Gherkin is a structured plain-English format that describes how a feature should behave. A simple Gherkin scenario looks like this:
+        </p>
+        <pre><code>Feature: User Login
+
+  Scenario: Successful login with valid credentials
+    Given the user is on the login page
+    When the user enters username "admin" and password "secret"
+    Then the user should see the dashboard</code></pre>
+        <p>The key keywords are:</p>
+        <ul>
+          <li><code>Feature</code> — Groups related scenarios under one topic.</li>
+          <li><code>Scenario</code> — One specific test case described in plain English.</li>
+          <li><code>Given</code> — Describes the starting context (preconditions).</li>
+          <li><code>When</code> — Describes the action the user takes.</li>
+          <li><code>Then</code> — Describes the expected outcome (assertion).</li>
+          <li><code>And</code> / <code>But</code> — Continues the previous step type to avoid repetition.</li>
+        </ul>
+
+        <h2>5. How the Pieces Fit Together</h2>
+        <pre><code>┌──────────────────────────────────┐
+│        Feature File (.feature)   │  ← Written by QA + Business
+│  Gherkin scenarios in plain text │
+└─────────────┬────────────────────┘
+              │ matched by step text
+┌─────────────▼────────────────────┐
+│     Step Definitions (.ts)       │  ← Written by automation engineer
+│  TypeScript functions with       │
+│  Given/When/Then decorators      │
+└─────────────┬────────────────────┘
+              │ calls
+┌─────────────▼────────────────────┐
+│     Playwright / Browser API     │  ← Interacts with real browser
+└──────────────────────────────────┘</code></pre>
+
+        <h2>6. BDD vs TDD vs Traditional Testing</h2>
+        <table style="width:100%; border-collapse: collapse; font-size: 0.95rem; margin-top: 0.5rem;">
+          <thead>
+            <tr style="background: var(--accent-soft); text-align: left;">
+              <th style="padding: 0.6rem; border: 1px solid var(--line);">Aspect</th>
+              <th style="padding: 0.6rem; border: 1px solid var(--line);">Traditional</th>
+              <th style="padding: 0.6rem; border: 1px solid var(--line);">TDD</th>
+              <th style="padding: 0.6rem; border: 1px solid var(--line);">BDD</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style="padding: 0.6rem; border: 1px solid var(--line);">Who writes tests?</td>
+              <td style="padding: 0.6rem; border: 1px solid var(--line);">QA engineers</td>
+              <td style="padding: 0.6rem; border: 1px solid var(--line);">Developers</td>
+              <td style="padding: 0.6rem; border: 1px solid var(--line);">Everyone together</td>
+            </tr>
+            <tr>
+              <td style="padding: 0.6rem; border: 1px solid var(--line);">Language</td>
+              <td style="padding: 0.6rem; border: 1px solid var(--line);">Code only</td>
+              <td style="padding: 0.6rem; border: 1px solid var(--line);">Code only</td>
+              <td style="padding: 0.6rem; border: 1px solid var(--line);">Plain English + Code</td>
+            </tr>
+            <tr>
+              <td style="padding: 0.6rem; border: 1px solid var(--line);">Business readable?</td>
+              <td style="padding: 0.6rem; border: 1px solid var(--line);">No</td>
+              <td style="padding: 0.6rem; border: 1px solid var(--line);">No</td>
+              <td style="padding: 0.6rem; border: 1px solid var(--line);">Yes</td>
+            </tr>
+            <tr>
+              <td style="padding: 0.6rem; border: 1px solid var(--line);">When tests are defined</td>
+              <td style="padding: 0.6rem; border: 1px solid var(--line);">After development</td>
+              <td style="padding: 0.6rem; border: 1px solid var(--line);">Before code</td>
+              <td style="padding: 0.6rem; border: 1px solid var(--line);">Before code (as scenarios)</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h2>7. Why Combine Cucumber with Playwright?</h2>
+        <p>
+          Playwright gives you full control over a real browser. Cucumber gives you readable, business-aligned test scenarios.
+          Together they produce tests that:
+        </p>
+        <ul>
+          <li>Can be reviewed by non-technical stakeholders.</li>
+          <li>Run real browser interactions (clicks, form fills, navigation).</li>
+          <li>Generate living documentation of what your application does.</li>
+          <li>Integrate into CI/CD pipelines with structured JSON/HTML reports.</li>
+        </ul>
+
+        <h2>8. Real-World Use Case</h2>
+        <p>Imagine you are testing an e-commerce checkout feature:</p>
+        <pre><code>Feature: Checkout process
+
+  Scenario: Guest user completes a purchase
+    Given a guest user has added "Laptop" to the cart
+    When the user proceeds to checkout
+    And enters valid shipping and payment details
+    Then the order confirmation page should display order number
+    And a confirmation email should be sent</code></pre>
+        <p>
+          This scenario is readable by the product owner, the developer, and the QA engineer.
+          When it passes, everyone has proof the feature works as agreed.
+        </p>
+
+        <section class="exercise">
+          <h2>Practice Exercise</h2>
+          <ol>
+            <li>Think of a feature in any website you use (e.g., login, search, shopping cart).</li>
+            <li>Write one Gherkin scenario for that feature using Given/When/Then on paper or in a text file.</li>
+            <li>Identify one <code>Given</code>, one <code>When</code>, and one <code>Then</code> step — no code needed yet.</li>
+            <li>Consider: which parts would a business owner need to change? Which parts stay the same?</li>
+          </ol>
+        </section>
+
+        <section class="quiz" data-quiz>
+          <h2>MCQ Self-Check</h2>
+
+          <div class="question" data-answer="b">
+            <p>1. What does BDD stand for?</p>
+            <label><input type="radio" name="quiz-0-q0" value="a" /> Browser Driven Development</label>
+            <label><input type="radio" name="quiz-0-q0" value="b" /> Behaviour Driven Development</label>
+            <label><input type="radio" name="quiz-0-q0" value="c" /> Build Driven Design</label>
+          </div>
+
+          <div class="question" data-answer="c">
+            <p>2. Which keyword describes what the user DOES in a Gherkin scenario?</p>
+            <label><input type="radio" name="quiz-0-q1" value="a" /> Given</label>
+            <label><input type="radio" name="quiz-0-q1" value="b" /> Then</label>
+            <label><input type="radio" name="quiz-0-q1" value="c" /> When</label>
+          </div>
+
+          <div class="question" data-answer="a">
+            <p>3. What is the purpose of a Feature file in Cucumber?</p>
+            <label><input type="radio" name="quiz-0-q2" value="a" /> To describe application behaviour in plain English that everyone can read</label>
+            <label><input type="radio" name="quiz-0-q2" value="b" /> To store TypeScript automation code</label>
+            <label><input type="radio" name="quiz-0-q2" value="c" /> To configure the test runner</label>
+          </div>
+
+          <div class="question" data-answer="b">
+            <p>4. What is Gherkin?</p>
+            <label><input type="radio" name="quiz-0-q3" value="a" /> A JavaScript testing library</label>
+            <label><input type="radio" name="quiz-0-q3" value="b" /> A structured plain-English format for writing test scenarios</label>
+            <label><input type="radio" name="quiz-0-q3" value="c" /> A browser automation tool</label>
+          </div>
+
+          <div class="question" data-answer="c">
+            <p>5. Which file type contains Gherkin scenarios?</p>
+            <label><input type="radio" name="quiz-0-q4" value="a" /> .ts</label>
+            <label><input type="radio" name="quiz-0-q4" value="b" /> .json</label>
+            <label><input type="radio" name="quiz-0-q4" value="c" /> .feature</label>
+          </div>
+
+          <button class="grade-btn" type="button" data-grade>Grade Me</button>
+          <p class="result" data-result aria-live="polite"></p>
+        </section>
+
+        <div class="footer-note">
+          <strong>Next:</strong> <a href="01-setup.html">Lesson 1 — Project Setup →</a>
+        </div>
+      </main>
+    </div>
+
+    <script src="../../assets/app.js"></script>
+  </body>
+</html>

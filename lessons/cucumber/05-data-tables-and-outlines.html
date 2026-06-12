@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lesson 5 - Data Tables and Scenario Outlines</title>
+    <link rel="stylesheet" href="../../assets/styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <a class="brand" href="../../index.html">Playwright/TypeScript Training Hub</a>
+      <button class="menu-toggle" data-menu-toggle>Open Menu</button>
+    </header>
+
+    <div class="layout">
+      <aside class="sidebar" data-sidebar>
+        <h2>Cucumber BDD</h2>
+        <div class="menu-group">
+          <p class="menu-group-title">Cucumber Track</p>
+          <ul>
+            <li><a href="00-introduction.html">0. What Is BDD and Cucumber?</a></li>
+            <li><a href="01-setup.html">1. Project Setup</a></li>
+            <li><a href="02-gherkin-syntax.html">2. Gherkin Syntax</a></li>
+            <li><a href="03-step-definitions.html">3. Step Definitions</a></li>
+            <li><a href="04-hooks-and-tags.html">4. Hooks and Tags</a></li>
+            <li><a class="active" href="05-data-tables-and-outlines.html">5. Data Tables and Outlines</a></li>
+            <li><a href="06-playwright-integration.html">6. Playwright Integration</a></li>
+            <li><a href="07-page-object-model.html">7. Page Object Model</a></li>
+            <li><a href="08-reporting.html">8. Reporting</a></li>
+            <li><a href="09-advanced-topics.html">9. Advanced Topics</a></li>
+          </ul>
+        </div>
+      </aside>
+
+      <main class="content lesson">
+        <h1>Lesson 5: Data Tables and Scenario Outlines</h1>
+        <p class="lesson-meta">
+          <span class="difficulty-badge">Level: Intermediate</span>
+          Run the same test with multiple data sets and pass structured data to steps.
+        </p>
+
+        <h2>1. Data Tables</h2>
+        <p>
+          A <strong>Data Table</strong> lets you pass structured tabular data directly inside a Gherkin step.
+          It is attached to the step immediately below it.
+        </p>
+        <pre><code>Feature: User Registration
+
+  Scenario: Register a new user with full details
+    Given the registration form is displayed
+    When the user fills in the following details:
+      | Field     | Value              |
+      | First name | Jane              |
+      | Last name  | Doe               |
+      | Email      | jane@example.com  |
+      | Password   | SecurePass1!      |
+    Then the user account should be created</code></pre>
+
+        <h2>2. Reading a Data Table in Step Definitions</h2>
+        <p>
+          Cucumber passes the data table as a <code>DataTable</code> object. You can convert it to a
+          map, a list of rows, or a list of objects depending on its shape.
+        </p>
+
+        <h3>A. Key-Value Table (rowsHash)</h3>
+        <p>For a two-column table where column 1 is keys and column 2 is values:</p>
+        <pre><code>import { When } from '@cucumber/cucumber';
+import { DataTable } from '@cucumber/cucumber';
+import { CustomWorld } from '../support/world';
+
+When('the user fills in the following details:',
+  async function (this: CustomWorld, dataTable: DataTable) {
+    const data = dataTable.rowsHash(); // { 'First name': 'Jane', 'Email': '...', ... }
+
+    await this.page.fill('[name="firstName"]', data['First name']);
+    await this.page.fill('[name="lastName"]', data['Last name']);
+    await this.page.fill('[name="email"]', data['Email']);
+    await this.page.fill('[name="password"]', data['Password']);
+  }
+);</code></pre>
+
+        <h3>B. List of Maps (hashes) — table with headers</h3>
+        <p>For multi-row tables where the first row is a header:</p>
+        <pre><code># Feature file
+When the shopping cart contains the following items:
+  | Product        | Quantity | Price  |
+  | Wireless Mouse | 2        | $29.99 |
+  | USB-C Hub      | 1        | $49.99 |
+  | Keyboard       | 1        | $79.99 |</code></pre>
+        <pre><code>// Step definition
+When('the shopping cart contains the following items:',
+  async function (this: CustomWorld, dataTable: DataTable) {
+    const rows = dataTable.hashes();
+    // [{ Product: 'Wireless Mouse', Quantity: '2', Price: '$29.99' }, ...]
+
+    for (const row of rows) {
+      console.log(`${row.Product}: ${row.Quantity} x ${row.Price}`);
+    }
+  }
+);</code></pre>
+
+        <h3>C. Raw Rows Array</h3>
+        <p>Use <code>.raw()</code> to get the table as a plain 2D array of strings:</p>
+        <pre><code>const rows = dataTable.raw();
+// [['Product', 'Quantity', 'Price'], ['Wireless Mouse', '2', '$29.99'], ...]</code></pre>
+
+        <h2>3. Scenario Outline</h2>
+        <p>
+          A <strong>Scenario Outline</strong> is a template that runs the same scenario multiple times
+          with different data sets. Use <code>&lt;placeholder&gt;</code> tokens in the scenario and supply
+          the values in an <code>Examples</code> table.
+        </p>
+        <pre><code>Feature: Login Validation
+
+  Scenario Outline: Login with various credentials
+    Given the user is on the login page
+    When the user enters email "&lt;email&gt;" and password "&lt;password&gt;"
+    Then the result should be "&lt;expected&gt;"
+
+    Examples:
+      | email              | password     | expected              |
+      | admin@test.com     | correct123   | Dashboard             |
+      | admin@test.com     | wrongpass    | Invalid credentials   |
+      | notexist@test.com  | any123       | User not found        |
+      | admin@test.com     |              | Password is required  |</code></pre>
+
+        <p>
+          Cucumber generates one scenario for each row in <code>Examples</code>. The run above produces
+          <strong>4 separate scenarios</strong>.
+        </p>
+
+        <h2>4. Step Definitions for Scenario Outlines</h2>
+        <p>
+          The step definitions for Scenario Outlines are identical to normal scenarios — you just use
+          <code>{string}</code> parameters to receive the values:
+        </p>
+        <pre><code>import { When, Then } from '@cucumber/cucumber';
+import { expect } from '@playwright/test';
+import { CustomWorld } from '../support/world';
+
+When(
+  'the user enters email {string} and password {string}',
+  async function (this: CustomWorld, email: string, password: string) {
+    await this.page.fill('[data-testid="email"]', email);
+    await this.page.fill('[data-testid="password"]', password);
+    await this.page.click('[data-testid="login-btn"]');
+  }
+);
+
+Then(
+  'the result should be {string}',
+  async function (this: CustomWorld, expected: string) {
+    if (expected === 'Dashboard') {
+      await expect(this.page).toHaveURL(/dashboard/);
+    } else {
+      await expect(this.page.locator('.error-message')).toContainText(expected);
+    }
+  }
+);</code></pre>
+
+        <h2>5. Tagging Examples Tables</h2>
+        <p>You can tag individual <code>Examples</code> blocks to run specific data sets:</p>
+        <pre><code>Scenario Outline: Login validation
+
+  Examples: Happy path
+    @smoke
+    | email          | password   | expected  |
+    | admin@test.com | correct123 | Dashboard |
+
+  Examples: Error cases
+    @regression
+    | email          | password  | expected            |
+    | admin@test.com | wrongpass | Invalid credentials |</code></pre>
+
+        <h2>6. When to Use Data Table vs Scenario Outline</h2>
+        <table style="width:100%; border-collapse: collapse; font-size: 0.95rem; margin-top: 0.5rem;">
+          <thead>
+            <tr style="background: var(--accent-soft); text-align: left;">
+              <th style="padding: 0.6rem; border: 1px solid var(--line);">Situation</th>
+              <th style="padding: 0.6rem; border: 1px solid var(--line);">Use</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style="padding: 0.6rem; border: 1px solid var(--line);">Passing structured input to one step (form fields, items)</td>
+              <td style="padding: 0.6rem; border: 1px solid var(--line);">Data Table</td>
+            </tr>
+            <tr>
+              <td style="padding: 0.6rem; border: 1px solid var(--line);">Running the whole scenario multiple times with different input/output</td>
+              <td style="padding: 0.6rem; border: 1px solid var(--line);">Scenario Outline + Examples</td>
+            </tr>
+            <tr>
+              <td style="padding: 0.6rem; border: 1px solid var(--line);">Verifying a list of things exist on screen</td>
+              <td style="padding: 0.6rem; border: 1px solid var(--line);">Data Table</td>
+            </tr>
+            <tr>
+              <td style="padding: 0.6rem; border: 1px solid var(--line);">Boundary value testing (min, max, invalid)</td>
+              <td style="padding: 0.6rem; border: 1px solid var(--line);">Scenario Outline + Examples</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h2>7. Complete Worked Example: Product Search</h2>
+        <pre><code># src/features/product-search.feature
+Feature: Product Search
+
+  Scenario Outline: Search returns correct results
+    Given the user is on the product catalogue page
+    When the user searches for "&lt;query&gt;"
+    Then the result count should be "&lt;count&gt;" items
+    And the first result name should contain "&lt;first_result&gt;"
+
+    Examples:
+      | query    | count | first_result |
+      | laptop   | 12    | ProBook      |
+      | mouse    | 8     | Wireless     |
+      | monitor  | 5     | UltraWide    |</code></pre>
+
+        <pre><code>// src/steps/search.steps.ts
+import { Given, When, Then } from '@cucumber/cucumber';
+import { expect } from '@playwright/test';
+import { CustomWorld } from '../support/world';
+
+Given('the user is on the product catalogue page', async function (this: CustomWorld) {
+  await this.page.goto(process.env.BASE_URL + '/products');
+});
+
+When('the user searches for {string}', async function (this: CustomWorld, query: string) {
+  await this.page.fill('[data-testid="search"]', query);
+  await this.page.press('[data-testid="search"]', 'Enter');
+});
+
+Then('the result count should be {string} items', async function (this: CustomWorld, count: string) {
+  const items = this.page.locator('.product-card');
+  await expect(items).toHaveCount(parseInt(count));
+});
+
+Then('the first result name should contain {string}', async function (this: CustomWorld, name: string) {
+  const first = this.page.locator('.product-card').first().locator('.product-name');
+  await expect(first).toContainText(name);
+});</code></pre>
+
+        <section class="exercise">
+          <h2>Practice Exercise</h2>
+          <ol>
+            <li>
+              Create a Scenario Outline for a password validation feature with at least four rows in the Examples table
+              covering valid, too short, no uppercase, and no number passwords.
+            </li>
+            <li>
+              Create a Scenario that uses a Data Table to fill a registration form with 5 fields.
+              In the step definition, use <code>dataTable.rowsHash()</code> to fill each form field.
+            </li>
+            <li>
+              Add two <code>Examples</code> blocks to a Scenario Outline — one tagged <code>@smoke</code>
+              and one tagged <code>@regression</code>. Run only <code>@smoke</code>.
+            </li>
+          </ol>
+        </section>
+
+        <section class="quiz" data-quiz>
+          <h2>MCQ Self-Check</h2>
+
+          <div class="question" data-answer="b">
+            <p>1. Which Cucumber method converts a two-column key-value data table to a JavaScript object?</p>
+            <label><input type="radio" name="quiz-5-q0" value="a" /> dataTable.hashes()</label>
+            <label><input type="radio" name="quiz-5-q0" value="b" /> dataTable.rowsHash()</label>
+            <label><input type="radio" name="quiz-5-q0" value="c" /> dataTable.raw()</label>
+          </div>
+
+          <div class="question" data-answer="c">
+            <p>2. How many scenarios does a Scenario Outline with 5 rows in Examples generate?</p>
+            <label><input type="radio" name="quiz-5-q1" value="a" /> 1</label>
+            <label><input type="radio" name="quiz-5-q1" value="b" /> 2</label>
+            <label><input type="radio" name="quiz-5-q1" value="c" /> 5</label>
+          </div>
+
+          <div class="question" data-answer="a">
+            <p>3. In a Scenario Outline, how do you reference a column from the Examples table?</p>
+            <label><input type="radio" name="quiz-5-q2" value="a" /> &lt;column_name&gt;</label>
+            <label><input type="radio" name="quiz-5-q2" value="b" /> {column_name}</label>
+            <label><input type="radio" name="quiz-5-q2" value="c" /> $column_name</label>
+          </div>
+
+          <div class="question" data-answer="b">
+            <p>4. You need to fill a form with 6 fields inside ONE step. Which Gherkin feature should you use?</p>
+            <label><input type="radio" name="quiz-5-q3" value="a" /> Scenario Outline</label>
+            <label><input type="radio" name="quiz-5-q3" value="b" /> Data Table</label>
+            <label><input type="radio" name="quiz-5-q3" value="c" /> Docstring</label>
+          </div>
+
+          <button class="grade-btn" type="button" data-grade>Grade Me</button>
+          <p class="result" data-result aria-live="polite"></p>
+        </section>
+
+        <div class="footer-note">
+          <strong>Previous:</strong> <a href="04-hooks-and-tags.html">← Lesson 4 — Hooks and Tags</a>
+          &nbsp;|&nbsp;
+          <strong>Next:</strong> <a href="06-playwright-integration.html">Lesson 6 — Playwright Integration →</a>
+        </div>
+      </main>
+    </div>
+
+    <script src="../../assets/app.js"></script>
+  </body>
+</html>

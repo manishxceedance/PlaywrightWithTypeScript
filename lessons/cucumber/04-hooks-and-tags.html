@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lesson 4 - Hooks and Tags</title>
+    <link rel="stylesheet" href="../../assets/styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <a class="brand" href="../../index.html">Playwright/TypeScript Training Hub</a>
+      <button class="menu-toggle" data-menu-toggle>Open Menu</button>
+    </header>
+
+    <div class="layout">
+      <aside class="sidebar" data-sidebar>
+        <h2>Cucumber BDD</h2>
+        <div class="menu-group">
+          <p class="menu-group-title">Cucumber Track</p>
+          <ul>
+            <li><a href="00-introduction.html">0. What Is BDD and Cucumber?</a></li>
+            <li><a href="01-setup.html">1. Project Setup</a></li>
+            <li><a href="02-gherkin-syntax.html">2. Gherkin Syntax</a></li>
+            <li><a href="03-step-definitions.html">3. Step Definitions</a></li>
+            <li><a class="active" href="04-hooks-and-tags.html">4. Hooks and Tags</a></li>
+            <li><a href="05-data-tables-and-outlines.html">5. Data Tables and Outlines</a></li>
+            <li><a href="06-playwright-integration.html">6. Playwright Integration</a></li>
+            <li><a href="07-page-object-model.html">7. Page Object Model</a></li>
+            <li><a href="08-reporting.html">8. Reporting</a></li>
+            <li><a href="09-advanced-topics.html">9. Advanced Topics</a></li>
+          </ul>
+        </div>
+      </aside>
+
+      <main class="content lesson">
+        <h1>Lesson 4: Hooks and Tags — Setup, Teardown, and Filtering</h1>
+        <p class="lesson-meta">
+          <span class="difficulty-badge">Level: Intermediate</span>
+          Control what runs before and after scenarios, and filter tests with tags.
+        </p>
+
+        <h2>1. What Are Hooks?</h2>
+        <p>
+          Hooks are functions that run automatically at specific points in the test lifecycle.
+          They are defined in TypeScript files (usually inside <code>src/support/</code>) and are
+          picked up by Cucumber through the <code>require</code> paths in <code>cucumber.json</code>.
+        </p>
+        <p>The four hook types are:</p>
+        <ul>
+          <li><code>Before</code> — runs before each scenario.</li>
+          <li><code>After</code> — runs after each scenario.</li>
+          <li><code>BeforeAll</code> — runs once before the entire test suite.</li>
+          <li><code>AfterAll</code> — runs once after the entire test suite.</li>
+        </ul>
+
+        <h2>2. The Essential Browser Lifecycle Hook</h2>
+        <p>
+          The most important hook in a Playwright + Cucumber project launches and closes the browser.
+          This goes in <code>src/support/hooks.ts</code>:
+        </p>
+        <pre><code>// src/support/hooks.ts
+import { Before, After, BeforeAll, AfterAll, Status } from '@cucumber/cucumber';
+import { chromium, Browser } from '@playwright/test';
+import { CustomWorld } from './world';
+
+let sharedBrowser: Browser;
+
+BeforeAll(async function () {
+  sharedBrowser = await chromium.launch({ headless: true });
+});
+
+Before(async function (this: CustomWorld) {
+  this.context = await sharedBrowser.newContext();
+  this.page = await this.context.newPage();
+});
+
+After(async function (this: CustomWorld, scenario) {
+  // Take screenshot on failure
+  if (scenario.result?.status === Status.FAILED) {
+    const screenshotName = scenario.pickle.name.replace(/\s+/g, '-');
+    const screenshot = await this.page.screenshot({ fullPage: true });
+    this.attach(screenshot, 'image/png');
+  }
+  await this.context.close();
+});
+
+AfterAll(async function () {
+  await sharedBrowser.close();
+});</code></pre>
+
+        <h2>3. The <code>this.attach()</code> Method</h2>
+        <p>
+          Inside hooks and step definitions, <code>this.attach()</code> embeds data into the Cucumber report.
+          You can attach screenshots, text, or JSON:
+        </p>
+        <pre><code>// Attach a screenshot (Buffer)
+const screenshot = await this.page.screenshot();
+this.attach(screenshot, 'image/png');
+
+// Attach a text message
+this.attach('User was redirected to dashboard', 'text/plain');
+
+// Attach JSON data
+this.attach(JSON.stringify({ userId: 42 }), 'application/json');</code></pre>
+
+        <h2>4. Tagged Hooks</h2>
+        <p>
+          You can run a hook only when a scenario has a specific tag. This is useful for scenarios
+          that need a logged-in user without making all tests go through login.
+        </p>
+        <pre><code>import { Before } from '@cucumber/cucumber';
+import { CustomWorld } from './world';
+
+// Only runs for scenarios tagged @authenticated
+Before({ tags: '@authenticated' }, async function (this: CustomWorld) {
+  await this.page.goto('https://example.com/login');
+  await this.page.fill('#email', 'admin@test.com');
+  await this.page.fill('#password', 'password123');
+  await this.page.click('button[type="submit"]');
+  await this.page.waitForURL(/dashboard/);
+});
+
+// Only runs for scenarios tagged @api
+Before({ tags: '@api' }, async function (this: CustomWorld) {
+  // Set up API request context
+});</code></pre>
+
+        <h2>5. Hook Order and Priority</h2>
+        <p>
+          When multiple Before hooks match a scenario, they run in the order they are registered.
+          You can control the order with <code>order</code>:
+        </p>
+        <pre><code>// Runs first (lower number = earlier)
+Before({ order: 1 }, async function (this: CustomWorld) {
+  this.context = await sharedBrowser.newContext();
+  this.page = await this.context.newPage();
+});
+
+// Runs second
+Before({ order: 2, tags: '@authenticated' }, async function (this: CustomWorld) {
+  await loginAsAdmin(this.page);
+});</code></pre>
+
+        <h2>6. Tags in Depth</h2>
+        <p>Tags can be applied at Feature level, Scenario level, or Scenario Outline level:</p>
+        <pre><code>@smoke
+Feature: Login
+
+  @regression @critical
+  Scenario: Valid login
+    ...
+
+  @wip
+  Scenario: SSO login
+    ...</code></pre>
+
+        <p>
+          A scenario inherits all tags from its Feature. So the "Valid login" scenario above has the tags
+          <code>@smoke</code>, <code>@regression</code>, and <code>@critical</code>.
+        </p>
+
+        <h2>7. Running Tests by Tag</h2>
+        <pre><code># Run all smoke tests
+npx cucumber-js --tags "@smoke"
+
+# Run smoke AND regression tests
+npx cucumber-js --tags "@smoke and @regression"
+
+# Run smoke OR regression tests
+npx cucumber-js --tags "@smoke or @regression"
+
+# Run all tests except WIP
+npx cucumber-js --tags "not @wip"
+
+# Run smoke but not critical
+npx cucumber-js --tags "@smoke and not @critical"</code></pre>
+        <p>
+          In PowerShell, always wrap the tag expression in quotes to prevent PowerShell from interpreting
+          <code>@</code> as an array operator:
+        </p>
+        <pre><code>npx cucumber-js --tags "@smoke"</code></pre>
+
+        <h2>8. Scenario Status in the After Hook</h2>
+        <p>
+          The <code>After</code> hook receives a <code>scenario</code> object with the result. Use it to
+          clean up differently based on pass or fail:
+        </p>
+        <pre><code>import { After, Status } from '@cucumber/cucumber';
+import { CustomWorld } from './world';
+
+After(async function (this: CustomWorld, scenario) {
+  const status = scenario.result?.status;
+
+  if (status === Status.FAILED) {
+    console.log(`FAILED: ${scenario.pickle.name}`);
+    const screenshot = await this.page.screenshot({ fullPage: true });
+    this.attach(screenshot, 'image/png');
+  }
+
+  if (status === Status.PASSED) {
+    console.log(`PASSED: ${scenario.pickle.name}`);
+  }
+
+  await this.context.close();
+});</code></pre>
+
+        <h2>9. Complete hooks.ts Template</h2>
+        <pre><code>// src/support/hooks.ts
+import { Before, After, BeforeAll, AfterAll, Status } from '@cucumber/cucumber';
+import { chromium, Browser } from '@playwright/test';
+import { CustomWorld } from './world';
+
+let browser: Browser;
+
+BeforeAll(async function () {
+  browser = await chromium.launch({
+    headless: process.env.HEADED !== 'true'
+  });
+});
+
+Before(async function (this: CustomWorld) {
+  this.context = await browser.newContext({
+    viewport: { width: 1280, height: 720 }
+  });
+  this.page = await this.context.newPage();
+});
+
+Before({ tags: '@authenticated' }, async function (this: CustomWorld) {
+  await this.page.goto(process.env.BASE_URL + '/login');
+  await this.page.fill('[data-testid="email"]', process.env.TEST_USER!);
+  await this.page.fill('[data-testid="password"]', process.env.TEST_PASS!);
+  await this.page.click('[data-testid="login-btn"]');
+  await this.page.waitForURL(/dashboard/);
+});
+
+After(async function (this: CustomWorld, scenario) {
+  if (scenario.result?.status === Status.FAILED) {
+    const screenshot = await this.page.screenshot({ fullPage: true });
+    this.attach(screenshot, 'image/png');
+  }
+  await this.context.close();
+});
+
+AfterAll(async function () {
+  await browser.close();
+});</code></pre>
+
+        <section class="exercise">
+          <h2>Practice Exercise</h2>
+          <ol>
+            <li>
+              Create <code>src/support/hooks.ts</code> with <code>Before</code> and <code>After</code> hooks
+              that open and close a browser context and page.
+            </li>
+            <li>
+              Add screenshot-on-failure logic in the <code>After</code> hook using <code>this.attach()</code>.
+            </li>
+            <li>
+              Create a feature file with two scenarios: one tagged <code>@smoke</code> and one tagged
+              <code>@regression</code>. Run only <code>@smoke</code> using the tags flag.
+            </li>
+            <li>
+              Create a tagged hook that only runs for scenarios tagged <code>@authenticated</code>
+              — it should navigate to a login page and fill in credentials.
+            </li>
+          </ol>
+        </section>
+
+        <section class="quiz" data-quiz>
+          <h2>MCQ Self-Check</h2>
+
+          <div class="question" data-answer="b">
+            <p>1. Which hook runs once before ALL scenarios in the entire suite?</p>
+            <label><input type="radio" name="quiz-4-q0" value="a" /> Before</label>
+            <label><input type="radio" name="quiz-4-q0" value="b" /> BeforeAll</label>
+            <label><input type="radio" name="quiz-4-q0" value="c" /> Background</label>
+          </div>
+
+          <div class="question" data-answer="c">
+            <p>2. How do you run only scenarios tagged <code>@smoke</code> using the CLI?</p>
+            <label><input type="radio" name="quiz-4-q1" value="a" /> <code>npx cucumber-js smoke</code></label>
+            <label><input type="radio" name="quiz-4-q1" value="b" /> <code>npx cucumber-js --filter smoke</code></label>
+            <label><input type="radio" name="quiz-4-q1" value="c" /> <code>npx cucumber-js --tags "@smoke"</code></label>
+          </div>
+
+          <div class="question" data-answer="a">
+            <p>3. What does <code>this.attach(screenshot, 'image/png')</code> do?</p>
+            <label><input type="radio" name="quiz-4-q2" value="a" /> Embeds the screenshot into the Cucumber HTML report</label>
+            <label><input type="radio" name="quiz-4-q2" value="b" /> Saves the screenshot to the local disk</label>
+            <label><input type="radio" name="quiz-4-q2" value="c" /> Uploads the screenshot to a test dashboard</label>
+          </div>
+
+          <div class="question" data-answer="b">
+            <p>4. A feature has tag <code>@smoke</code> and a scenario inside it has tag <code>@regression</code>. What tags does the scenario have?</p>
+            <label><input type="radio" name="quiz-4-q3" value="a" /> Only @regression</label>
+            <label><input type="radio" name="quiz-4-q3" value="b" /> Both @smoke and @regression</label>
+            <label><input type="radio" name="quiz-4-q3" value="c" /> Neither — feature tags are not inherited</label>
+          </div>
+
+          <button class="grade-btn" type="button" data-grade>Grade Me</button>
+          <p class="result" data-result aria-live="polite"></p>
+        </section>
+
+        <div class="footer-note">
+          <strong>Previous:</strong> <a href="03-step-definitions.html">← Lesson 3 — Step Definitions</a>
+          &nbsp;|&nbsp;
+          <strong>Next:</strong> <a href="05-data-tables-and-outlines.html">Lesson 5 — Data Tables and Outlines →</a>
+        </div>
+      </main>
+    </div>
+
+    <script src="../../assets/app.js"></script>
+  </body>
+</html>

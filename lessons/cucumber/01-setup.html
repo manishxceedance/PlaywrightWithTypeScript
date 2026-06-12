@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lesson 1 - Cucumber + Playwright Project Setup</title>
+    <link rel="stylesheet" href="../../assets/styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <a class="brand" href="../../index.html">Playwright/TypeScript Training Hub</a>
+      <button class="menu-toggle" data-menu-toggle>Open Menu</button>
+    </header>
+
+    <div class="layout">
+      <aside class="sidebar" data-sidebar>
+        <h2>Cucumber BDD</h2>
+        <div class="menu-group">
+          <p class="menu-group-title">Cucumber Track</p>
+          <ul>
+            <li><a href="00-introduction.html">0. What Is BDD and Cucumber?</a></li>
+            <li><a class="active" href="01-setup.html">1. Project Setup</a></li>
+            <li><a href="02-gherkin-syntax.html">2. Gherkin Syntax</a></li>
+            <li><a href="03-step-definitions.html">3. Step Definitions</a></li>
+            <li><a href="04-hooks-and-tags.html">4. Hooks and Tags</a></li>
+            <li><a href="05-data-tables-and-outlines.html">5. Data Tables and Outlines</a></li>
+            <li><a href="06-playwright-integration.html">6. Playwright Integration</a></li>
+            <li><a href="07-page-object-model.html">7. Page Object Model</a></li>
+            <li><a href="08-reporting.html">8. Reporting</a></li>
+            <li><a href="09-advanced-topics.html">9. Advanced Topics</a></li>
+          </ul>
+        </div>
+      </aside>
+
+      <main class="content lesson">
+        <h1>Lesson 1: Project Setup — Cucumber + Playwright + TypeScript</h1>
+        <p class="lesson-meta">
+          <span class="difficulty-badge">Level: Beginner</span>
+          Follow every step in order. Each command must succeed before continuing.
+        </p>
+
+        <h2>1. Prerequisites</h2>
+        <p>Before you begin, make sure these are installed:</p>
+        <ul>
+          <li><strong>Node.js 18+</strong> — run <code>node -v</code> to verify.</li>
+          <li><strong>npm 9+</strong> — run <code>npm -v</code> to verify.</li>
+          <li><strong>VS Code</strong> — recommended editor.</li>
+          <li><strong>Cucumber (Gherkin) Full Support</strong> VS Code extension — for syntax highlighting in <code>.feature</code> files.</li>
+        </ul>
+
+        <h2>2. Create Project Folder</h2>
+        <pre><code>mkdir cucumber-playwright-bdd
+cd cucumber-playwright-bdd
+npm init -y</code></pre>
+
+        <h2>3. Install Dependencies</h2>
+        <p>Install all required packages in one command:</p>
+        <pre><code>npm install --save-dev \
+  @cucumber/cucumber \
+  @playwright/test \
+  playwright \
+  typescript \
+  ts-node \
+  @types/node</code></pre>
+
+        <p>Then install Playwright browser binaries:</p>
+        <pre><code>npx playwright install chromium</code></pre>
+
+        <p><strong>What each package does:</strong></p>
+        <ul>
+          <li><code>@cucumber/cucumber</code> — the core Cucumber runner that reads <code>.feature</code> files.</li>
+          <li><code>@playwright/test</code> — Playwright browser automation library.</li>
+          <li><code>playwright</code> — the browser binaries installer.</li>
+          <li><code>typescript</code> — compiles TypeScript to JavaScript.</li>
+          <li><code>ts-node</code> — runs TypeScript files directly without a separate compile step.</li>
+          <li><code>@types/node</code> — TypeScript type definitions for Node.js APIs.</li>
+        </ul>
+
+        <h2>4. TypeScript Configuration</h2>
+        <p>Create <code>tsconfig.json</code> in the project root:</p>
+        <pre><code>{
+  "compilerOptions": {
+    "target": "ES2020",
+    "module": "commonjs",
+    "lib": ["ES2020"],
+    "strict": true,
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "outDir": "dist",
+    "rootDir": "src",
+    "baseUrl": ".",
+    "paths": {
+      "@pages/*": ["src/pages/*"],
+      "@support/*": ["src/support/*"]
+    }
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist"]
+}</code></pre>
+
+        <h2>5. Cucumber Configuration</h2>
+        <p>Create <code>cucumber.json</code> in the project root. This tells Cucumber where to find feature files and step definitions:</p>
+        <pre><code>{
+  "default": {
+    "require": ["src/steps/**/*.ts", "src/support/**/*.ts"],
+    "requireModule": ["ts-node/register"],
+    "format": [
+      "progress-bar",
+      "html:reports/cucumber-report.html",
+      "json:reports/cucumber-report.json"
+    ],
+    "paths": ["src/features/**/*.feature"],
+    "parallel": 1
+  }
+}</code></pre>
+
+        <h2>6. Recommended Folder Structure</h2>
+        <pre><code>cucumber-playwright-bdd/
+  src/
+    features/          ← .feature files (Gherkin scenarios)
+      login.feature
+      checkout.feature
+    steps/             ← Step definition TypeScript files
+      login.steps.ts
+      checkout.steps.ts
+    support/           ← Hooks, world, shared setup
+      hooks.ts
+      world.ts
+    pages/             ← Page Object Model classes
+      LoginPage.ts
+      CheckoutPage.ts
+  reports/             ← Generated HTML/JSON reports (auto-created)
+  cucumber.json        ← Cucumber runner configuration
+  tsconfig.json        ← TypeScript configuration
+  package.json</code></pre>
+
+        <p>Create the folder structure with these commands (PowerShell on Windows):</p>
+        <pre><code>New-Item -ItemType Directory src/features, src/steps, src/support, src/pages, reports</code></pre>
+
+        <h2>7. Add npm Scripts to package.json</h2>
+        <p>Open <code>package.json</code> and replace the scripts section:</p>
+        <pre><code>"scripts": {
+  "test": "cucumber-js",
+  "test:headed": "HEADED=true cucumber-js",
+  "test:tags": "cucumber-js --tags",
+  "report": "open reports/cucumber-report.html"
+}</code></pre>
+        <p>On Windows use <code>start</code> instead of <code>open</code> for the report script.</p>
+
+        <h2>8. Verify the Setup With a Smoke Test</h2>
+        <p>Create your first (empty) feature file at <code>src/features/smoke.feature</code>:</p>
+        <pre><code>Feature: Smoke test
+
+  Scenario: Setup verification
+    Given the project is configured correctly
+    When I run the test suite
+    Then no configuration errors should appear</code></pre>
+
+        <p>Create the matching step definition at <code>src/steps/smoke.steps.ts</code>:</p>
+        <pre><code>import { Given, When, Then } from '@cucumber/cucumber';
+
+Given('the project is configured correctly', function () {
+  // intentionally empty — verifies wiring only
+});
+
+When('I run the test suite', function () {
+  // intentionally empty
+});
+
+Then('no configuration errors should appear', function () {
+  // intentionally empty
+});</code></pre>
+
+        <p>Run the smoke test:</p>
+        <pre><code>npm test</code></pre>
+
+        <p>Expected output:</p>
+        <pre><code>1 scenario (1 passed)
+3 steps (3 passed)
+0m00.012s</code></pre>
+
+        <h2>9. Common Setup Problems and Fixes</h2>
+        <ul>
+          <li>
+            <strong><code>Cannot find module 'ts-node/register'</code></strong> — run
+            <code>npm install --save-dev ts-node</code> again.
+          </li>
+          <li>
+            <strong>Feature file not found</strong> — check that the <code>paths</code> value in
+            <code>cucumber.json</code> matches your actual folder name.
+          </li>
+          <li>
+            <strong>Step definition not matched</strong> — check that the <code>require</code> glob in
+            <code>cucumber.json</code> points to where your <code>.steps.ts</code> files live.
+          </li>
+          <li>
+            <strong>Playwright browsers not installed</strong> — run
+            <code>npx playwright install</code>.
+          </li>
+          <li>
+            <strong><code>SyntaxError: Cannot use import statement</code></strong> — your
+            <code>tsconfig.json</code> must have <code>"module": "commonjs"</code>.
+          </li>
+        </ul>
+
+        <section class="exercise">
+          <h2>Practice Exercise</h2>
+          <ol>
+            <li>Follow every step above and create the project from scratch.</li>
+            <li>Run <code>npm test</code> and confirm <strong>1 scenario (1 passed)</strong>.</li>
+            <li>
+              Add a second scenario to <code>smoke.feature</code> with a different <code>Given/When/Then</code> and
+              create matching empty step definitions. Run again.
+            </li>
+            <li>
+              Deliberately break the path in <code>cucumber.json</code> (e.g., change
+              <code>src/features</code> to <code>src/feat</code>), run the suite, and read the error message.
+              Then fix it.
+            </li>
+          </ol>
+        </section>
+
+        <section class="quiz" data-quiz>
+          <h2>MCQ Self-Check</h2>
+
+          <div class="question" data-answer="a">
+            <p>1. Which file configures where Cucumber looks for feature files and step definitions?</p>
+            <label><input type="radio" name="quiz-1-q0" value="a" /> cucumber.json</label>
+            <label><input type="radio" name="quiz-1-q0" value="b" /> tsconfig.json</label>
+            <label><input type="radio" name="quiz-1-q0" value="c" /> package.json</label>
+          </div>
+
+          <div class="question" data-answer="c">
+            <p>2. Why do we install <code>ts-node</code>?</p>
+            <label><input type="radio" name="quiz-1-q1" value="a" /> To install Playwright browsers</label>
+            <label><input type="radio" name="quiz-1-q1" value="b" /> To format test reports</label>
+            <label><input type="radio" name="quiz-1-q1" value="c" /> To run TypeScript files without a separate compile step</label>
+          </div>
+
+          <div class="question" data-answer="b">
+            <p>3. What extension do Gherkin feature files use?</p>
+            <label><input type="radio" name="quiz-1-q2" value="a" /> .spec.ts</label>
+            <label><input type="radio" name="quiz-1-q2" value="b" /> .feature</label>
+            <label><input type="radio" name="quiz-1-q2" value="c" /> .test.js</label>
+          </div>
+
+          <div class="question" data-answer="a">
+            <p>4. What does the <code>require</code> key in <code>cucumber.json</code> specify?</p>
+            <label><input type="radio" name="quiz-1-q3" value="a" /> Where Cucumber finds step definition files</label>
+            <label><input type="radio" name="quiz-1-q3" value="b" /> Which browsers to launch</label>
+            <label><input type="radio" name="quiz-1-q3" value="c" /> The test timeout value</label>
+          </div>
+
+          <button class="grade-btn" type="button" data-grade>Grade Me</button>
+          <p class="result" data-result aria-live="polite"></p>
+        </section>
+
+        <div class="footer-note">
+          <strong>Previous:</strong> <a href="00-introduction.html">← Lesson 0 — Introduction</a>
+          &nbsp;|&nbsp;
+          <strong>Next:</strong> <a href="02-gherkin-syntax.html">Lesson 2 — Gherkin Syntax →</a>
+        </div>
+      </main>
+    </div>
+
+    <script src="../../assets/app.js"></script>
+  </body>
+</html>

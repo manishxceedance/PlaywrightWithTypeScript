@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lesson 3 - Step Definitions in TypeScript</title>
+    <link rel="stylesheet" href="../../assets/styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <a class="brand" href="../../index.html">Playwright/TypeScript Training Hub</a>
+      <button class="menu-toggle" data-menu-toggle>Open Menu</button>
+    </header>
+
+    <div class="layout">
+      <aside class="sidebar" data-sidebar>
+        <h2>Cucumber BDD</h2>
+        <div class="menu-group">
+          <p class="menu-group-title">Cucumber Track</p>
+          <ul>
+            <li><a href="00-introduction.html">0. What Is BDD and Cucumber?</a></li>
+            <li><a href="01-setup.html">1. Project Setup</a></li>
+            <li><a href="02-gherkin-syntax.html">2. Gherkin Syntax</a></li>
+            <li><a class="active" href="03-step-definitions.html">3. Step Definitions</a></li>
+            <li><a href="04-hooks-and-tags.html">4. Hooks and Tags</a></li>
+            <li><a href="05-data-tables-and-outlines.html">5. Data Tables and Outlines</a></li>
+            <li><a href="06-playwright-integration.html">6. Playwright Integration</a></li>
+            <li><a href="07-page-object-model.html">7. Page Object Model</a></li>
+            <li><a href="08-reporting.html">8. Reporting</a></li>
+            <li><a href="09-advanced-topics.html">9. Advanced Topics</a></li>
+          </ul>
+        </div>
+      </aside>
+
+      <main class="content lesson">
+        <h1>Lesson 3: Step Definitions — Linking Gherkin to TypeScript</h1>
+        <p class="lesson-meta">
+          <span class="difficulty-badge">Level: Beginner → Intermediate</span>
+          This is the glue between plain-English scenarios and runnable automation code.
+        </p>
+
+        <h2>1. What Is a Step Definition?</h2>
+        <p>
+          A step definition is a TypeScript function decorated with <code>Given</code>, <code>When</code>, or
+          <code>Then</code>. When Cucumber reads a step in a feature file, it looks for a matching step definition
+          to execute.
+        </p>
+        <pre><code>// Gherkin step:
+// Given the user is on the login page
+
+// Matching step definition:
+import { Given } from '@cucumber/cucumber';
+
+Given('the user is on the login page', async function () {
+  await this.page.goto('https://example.com/login');
+});</code></pre>
+
+        <h2>2. Importing Given, When, Then</h2>
+        <p>All step decorators come from <code>@cucumber/cucumber</code>:</p>
+        <pre><code>import { Given, When, Then, And, But } from '@cucumber/cucumber';</code></pre>
+        <p>
+          <code>And</code> and <code>But</code> are aliases for the previous keyword — you can use
+          <code>Given/When/Then</code> for all steps if you prefer, Cucumber does not differentiate.
+        </p>
+
+        <h2>3. String Parameters</h2>
+        <p>
+          Text in double quotes in Gherkin is passed as a string parameter. Use curly-brace expressions in the step pattern to capture them:
+        </p>
+        <pre><code># Feature file
+When the user enters username "admin" and password "secret"</code></pre>
+        <pre><code>// Step definition
+import { When } from '@cucumber/cucumber';
+
+When('the user enters username {string} and password {string}',
+  async function (username: string, password: string) {
+    await this.page.fill('#username', username);
+    await this.page.fill('#password', password);
+  }
+);</code></pre>
+        <p><strong>Built-in Cucumber expression types:</strong></p>
+        <ul>
+          <li><code>{string}</code> — captures quoted text (removes the quotes).</li>
+          <li><code>{int}</code> — captures a whole number.</li>
+          <li><code>{float}</code> — captures a decimal number.</li>
+          <li><code>{word}</code> — captures a single unquoted word.</li>
+        </ul>
+
+        <h2>4. Using Regular Expressions</h2>
+        <p>
+          You can also use a <code>RegExp</code> instead of a Cucumber expression string. This gives more
+          flexibility for complex patterns:
+        </p>
+        <pre><code>When(/^the user enters "([^"]*)" in the search box$/, async function (query: string) {
+  await this.page.fill('[data-testid="search-input"]', query);
+});</code></pre>
+
+        <h2>5. The World Object (<code>this</code>)</h2>
+        <p>
+          Inside a step definition, <code>this</code> refers to the <strong>World</strong> — a shared context
+          object that lives for the duration of one scenario. You use it to share state between steps (like a browser
+          page object or test data).
+        </p>
+        <pre><code>// src/support/world.ts
+import { setWorldConstructor, World, IWorldOptions } from '@cucumber/cucumber';
+import { Browser, BrowserContext, Page, chromium } from '@playwright/test';
+
+export interface CustomWorld extends World {
+  browser: Browser;
+  context: BrowserContext;
+  page: Page;
+}
+
+class PlaywrightWorld extends World implements CustomWorld {
+  browser!: Browser;
+  context!: BrowserContext;
+  page!: Page;
+
+  constructor(options: IWorldOptions) {
+    super(options);
+  }
+}
+
+setWorldConstructor(PlaywrightWorld);</code></pre>
+        <p>
+          Now every step in a scenario can read and write <code>this.page</code>, <code>this.browser</code>, etc.
+        </p>
+
+        <h2>6. Full Step Definition Example</h2>
+        <pre><code>// src/steps/login.steps.ts
+import { Given, When, Then } from '@cucumber/cucumber';
+import { expect } from '@playwright/test';
+import { CustomWorld } from '../support/world';
+
+Given('the user is on the login page', async function (this: CustomWorld) {
+  await this.page.goto('https://example.com/login');
+});
+
+When(
+  'the user enters username {string} and password {string}',
+  async function (this: CustomWorld, username: string, password: string) {
+    await this.page.fill('#username', username);
+    await this.page.fill('#password', password);
+  }
+);
+
+When('the user clicks the Login button', async function (this: CustomWorld) {
+  await this.page.click('button[type="submit"]');
+});
+
+Then(
+  'the user should be redirected to the dashboard',
+  async function (this: CustomWorld) {
+    await expect(this.page).toHaveURL(/.*dashboard/);
+  }
+);
+
+Then(
+  'the welcome message should contain {string}',
+  async function (this: CustomWorld, expectedText: string) {
+    const heading = this.page.locator('h1.welcome');
+    await expect(heading).toContainText(expectedText);
+  }
+);</code></pre>
+
+        <h2>7. Pending Steps</h2>
+        <p>
+          When you create a scenario but haven't written the code yet, return
+          <code>'pending'</code> from the step. Cucumber reports it as <strong>pending</strong> (not a failure)
+          which is useful during development:
+        </p>
+        <pre><code>Then('the user sees the order confirmation page', function () {
+  return 'pending';
+});</code></pre>
+
+        <h2>8. Async vs Sync Steps</h2>
+        <p>
+          All Playwright operations are asynchronous. Always use <code>async function</code> and <code>await</code>
+          for any step that touches the browser:
+        </p>
+        <pre><code>// Correct — async with await
+When('the user clicks Submit', async function (this: CustomWorld) {
+  await this.page.click('button[type="submit"]');
+});
+
+// Wrong — missing await causes flaky tests
+When('the user clicks Submit', function (this: CustomWorld) {
+  this.page.click('button[type="submit"]'); // no await!
+});</code></pre>
+
+        <h2>9. Sharing Data Between Steps</h2>
+        <p>
+          Use the World object to pass data between steps within the same scenario:
+        </p>
+        <pre><code>// src/support/world.ts (extend the class)
+class PlaywrightWorld extends World {
+  browser!: Browser;
+  context!: BrowserContext;
+  page!: Page;
+  orderId?: string;  // ← custom shared data
+}</code></pre>
+        <pre><code>// In step definitions
+When('the user places an order', async function (this: CustomWorld) {
+  await this.page.click('#place-order');
+  this.orderId = await this.page.locator('#order-id').textContent() ?? '';
+});
+
+Then('the order history should show the new order', async function (this: CustomWorld) {
+  const row = this.page.locator(`tr:has-text("${this.orderId}")`);
+  await expect(row).toBeVisible();
+});</code></pre>
+
+        <h2>10. Step Definition Anti-Patterns to Avoid</h2>
+        <ul>
+          <li>
+            <strong>Hard-coded waits</strong> — never use <code>await new Promise(r => setTimeout(r, 3000))</code>.
+            Use Playwright's built-in auto-wait.
+          </li>
+          <li>
+            <strong>Duplicate step patterns</strong> — two steps with the same text cause an <em>ambiguous step</em>
+            error. Keep patterns unique.
+          </li>
+          <li>
+            <strong>UI logic in feature files</strong> — selectors and DOM details belong in step definitions
+            (or page objects), not in Gherkin text.
+          </li>
+          <li>
+            <strong>Not using <code>await</code></strong> — every Playwright call returns a Promise; skipping
+            <code>await</code> gives misleading passing tests.
+          </li>
+        </ul>
+
+        <section class="exercise">
+          <h2>Practice Exercise</h2>
+          <ol>
+            <li>
+              Create <code>src/features/search.feature</code> with a scenario:
+              <pre><code>Scenario: User searches for a product
+  Given the user is on the homepage
+  When the user searches for "headphones"
+  Then the search results page should be displayed
+  And results should contain "headphones"</code></pre>
+            </li>
+            <li>
+              Create <code>src/steps/search.steps.ts</code> with all four step definitions using
+              <code>this.page</code> (leave steps empty with <code>return 'pending'</code> for now).
+            </li>
+            <li>
+              Run <code>npm test</code> and confirm all steps are pending, not failed.
+            </li>
+            <li>
+              Add a <code>searchQuery</code> property to your World and store the search term in the
+              <code>When</code> step so the <code>Then</code> step can use it.
+            </li>
+          </ol>
+        </section>
+
+        <section class="quiz" data-quiz>
+          <h2>MCQ Self-Check</h2>
+
+          <div class="question" data-answer="b">
+            <p>1. What does <code>{string}</code> capture in a Cucumber expression?</p>
+            <label><input type="radio" name="quiz-3-q0" value="a" /> Any single word</label>
+            <label><input type="radio" name="quiz-3-q0" value="b" /> A double-quoted string from the Gherkin step (quotes removed)</label>
+            <label><input type="radio" name="quiz-3-q0" value="c" /> A number value</label>
+          </div>
+
+          <div class="question" data-answer="c">
+            <p>2. What is the purpose of the World object in Cucumber?</p>
+            <label><input type="radio" name="quiz-3-q1" value="a" /> To configure the Playwright browser</label>
+            <label><input type="radio" name="quiz-3-q1" value="b" /> To define Gherkin keywords</label>
+            <label><input type="radio" name="quiz-3-q1" value="c" /> To share state between step definitions in the same scenario</label>
+          </div>
+
+          <div class="question" data-answer="a">
+            <p>3. What happens if you return <code>'pending'</code> from a step definition?</p>
+            <label><input type="radio" name="quiz-3-q2" value="a" /> Cucumber marks the step as pending, not failed</label>
+            <label><input type="radio" name="quiz-3-q2" value="b" /> Cucumber skips the entire feature file</label>
+            <label><input type="radio" name="quiz-3-q2" value="c" /> The step throws an exception</label>
+          </div>
+
+          <div class="question" data-answer="b">
+            <p>4. Which is the correct way to write an async step definition?</p>
+            <label><input type="radio" name="quiz-3-q3" value="a" /> <code>Given('step', function() { this.page.click('button'); })</code></label>
+            <label><input type="radio" name="quiz-3-q3" value="b" /> <code>Given('step', async function() { await this.page.click('button'); })</code></label>
+            <label><input type="radio" name="quiz-3-q3" value="c" /> <code>Given('step', () =&gt; { this.page.click('button'); })</code></label>
+          </div>
+
+          <div class="question" data-answer="c">
+            <p>5. Why should you avoid arrow functions (<code>() =&gt; {}</code>) in step definitions?</p>
+            <label><input type="radio" name="quiz-3-q4" value="a" /> Arrow functions are slower</label>
+            <label><input type="radio" name="quiz-3-q4" value="b" /> Arrow functions cannot be async</label>
+            <label><input type="radio" name="quiz-3-q4" value="c" /> Arrow functions do not have their own <code>this</code>, so the World object is inaccessible</label>
+          </div>
+
+          <button class="grade-btn" type="button" data-grade>Grade Me</button>
+          <p class="result" data-result aria-live="polite"></p>
+        </section>
+
+        <div class="footer-note">
+          <strong>Previous:</strong> <a href="02-gherkin-syntax.html">← Lesson 2 — Gherkin Syntax</a>
+          &nbsp;|&nbsp;
+          <strong>Next:</strong> <a href="04-hooks-and-tags.html">Lesson 4 — Hooks and Tags →</a>
+        </div>
+      </main>
+    </div>
+
+    <script src="../../assets/app.js"></script>
+  </body>
+</html>

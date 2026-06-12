@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lesson 9 - Advanced Topics</title>
+    <link rel="stylesheet" href="../../assets/styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <a class="brand" href="../../index.html">Playwright/TypeScript Training Hub</a>
+      <button class="menu-toggle" data-menu-toggle>Open Menu</button>
+    </header>
+
+    <div class="layout">
+      <aside class="sidebar" data-sidebar>
+        <h2>Cucumber BDD</h2>
+        <div class="menu-group">
+          <p class="menu-group-title">Cucumber Track</p>
+          <ul>
+            <li><a href="00-introduction.html">0. What Is BDD and Cucumber?</a></li>
+            <li><a href="01-setup.html">1. Project Setup</a></li>
+            <li><a href="02-gherkin-syntax.html">2. Gherkin Syntax</a></li>
+            <li><a href="03-step-definitions.html">3. Step Definitions</a></li>
+            <li><a href="04-hooks-and-tags.html">4. Hooks and Tags</a></li>
+            <li><a href="05-data-tables-and-outlines.html">5. Data Tables and Outlines</a></li>
+            <li><a href="06-playwright-integration.html">6. Playwright Integration</a></li>
+            <li><a href="07-page-object-model.html">7. Page Object Model</a></li>
+            <li><a href="08-reporting.html">8. Reporting</a></li>
+            <li><a class="active" href="09-advanced-topics.html">9. Advanced Topics</a></li>
+          </ul>
+        </div>
+      </aside>
+
+      <main class="content lesson">
+        <h1>Lesson 9: Advanced Topics — Parallel Execution, API Testing, and CI/CD</h1>
+        <p class="lesson-meta">
+          <span class="difficulty-badge">Level: Advanced</span>
+          Scale your suite, test APIs, and integrate into a CI pipeline.
+        </p>
+
+        <h2>1. Parallel Execution</h2>
+        <p>
+          Cucumber-js supports parallel execution across multiple workers. Each worker runs independent
+          scenarios simultaneously, drastically reducing total run time.
+        </p>
+        <pre><code>// cucumber.json
+{
+  "default": {
+    "parallel": 4
+  }
+}</code></pre>
+        <p>
+          <strong>Important rules for parallel execution:</strong>
+        </p>
+        <ul>
+          <li>Each worker gets its own World instance — no shared state between scenarios.</li>
+          <li>Each worker must launch its own browser (handled by BeforeAll/AfterAll at worker level).</li>
+          <li>Do not write to the same file from multiple workers simultaneously.</li>
+          <li>Database state can cause flakiness — use unique test data per scenario.</li>
+        </ul>
+
+        <h3>Safe BeforeAll with Parallel Workers</h3>
+        <pre><code>// This BeforeAll runs once per WORKER (not once globally in parallel mode)
+BeforeAll(async function () {
+  browser = await chromium.launch({ headless: true });
+});
+
+AfterAll(async function () {
+  await browser.close();
+});</code></pre>
+
+        <h2>2. API Testing with Playwright's Request Context</h2>
+        <p>
+          Playwright includes a built-in HTTP client (<code>APIRequestContext</code>) that you can use for
+          API testing directly inside Cucumber steps — no need for separate libraries like Axios.
+        </p>
+        <pre><code>// src/support/world.ts — add APIRequestContext
+import { APIRequestContext, request } from '@playwright/test';
+
+export interface CustomWorld extends World {
+  browser: Browser;
+  context: BrowserContext;
+  page: Page;
+  apiContext: APIRequestContext;
+}</code></pre>
+
+        <pre><code>// src/support/hooks.ts — initialise API context
+Before(async function (this: CustomWorld) {
+  this.context = await browser.newContext();
+  this.page = await this.context.newPage();
+
+  this.apiContext = await request.newContext({
+    baseURL: process.env.API_URL ?? 'https://api.example.com',
+    extraHTTPHeaders: {
+      'Accept': 'application/json',
+      'Authorization': `Bearer ${process.env.API_TOKEN}`
+    }
+  });
+});
+
+After(async function (this: CustomWorld, scenario) {
+  await this.apiContext.dispose();
+  await this.context.close();
+});</code></pre>
+
+        <pre><code># src/features/api-users.feature
+@api
+Feature: User API
+
+  Scenario: Create a new user via API
+    When a POST request is sent to "/users" with:
+      | name  | Alice Test           |
+      | email | alice@example.com    |
+      | role  | viewer               |
+    Then the response status should be 201
+    And the response body should contain "id"</code></pre>
+
+        <pre><code>// src/steps/api.steps.ts
+import { When, Then } from '@cucumber/cucumber';
+import { DataTable } from '@cucumber/cucumber';
+import { expect } from '@playwright/test';
+import { CustomWorld } from '../support/world';
+
+let lastResponse: any;
+
+When(
+  'a POST request is sent to {string} with:',
+  async function (this: CustomWorld, path: string, table: DataTable) {
+    const body = table.rowsHash();
+    const response = await this.apiContext.post(path, { data: body });
+    lastResponse = {
+      status: response.status(),
+      body: await response.json()
+    };
+  }
+);
+
+Then('the response status should be {int}', function (expectedStatus: number) {
+  expect(lastResponse.status).toBe(expectedStatus);
+});
+
+Then('the response body should contain {string}', function (key: string) {
+  expect(lastResponse.body).toHaveProperty(key);
+});</code></pre>
+
+        <h2>3. Combining UI and API in One Scenario</h2>
+        <p>
+          A common pattern is to use the API to set up test data quickly, then verify through the UI:
+        </p>
+        <pre><code>@authenticated
+Feature: Order Management
+
+  Scenario: Admin can view a newly created order
+    Given a new order exists in the system via API
+    When the admin navigates to the Orders page
+    And the admin searches for the order by ID
+    Then the order row should be visible in the table</code></pre>
+
+        <pre><code>// Step: create order via API, store ID in World
+Given('a new order exists in the system via API', async function (this: CustomWorld) {
+  const response = await this.apiContext.post('/orders', {
+    data: { product: 'Laptop', quantity: 1, customerId: 'C001' }
+  });
+  const body = await response.json();
+  this.orderId = body.id;
+});</code></pre>
+
+        <h2>4. Environment Variables and .env Files</h2>
+        <p>
+          Never hardcode credentials or URLs. Use a <code>.env</code> file locally and CI secrets in pipelines:
+        </p>
+        <pre><code># .env (not committed to git)
+BASE_URL=https://staging.myapp.com
+API_URL=https://api.myapp.com
+TEST_USER=qauser@myapp.com
+TEST_PASS=SecureTestPass1!
+API_TOKEN=eyJhbGciOiJIUzI1NiJ9...
+HEADED=false
+SLOW_MO=0</code></pre>
+
+        <pre><code># .gitignore — always include this
+.env
+node_modules/
+reports/
+allure-results/
+allure-report/</code></pre>
+
+        <h2>5. GitHub Actions CI/CD Integration</h2>
+        <pre><code># .github/workflows/cucumber-tests.yml
+name: Cucumber BDD Tests
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
+
+      - name: Run tests
+        run: npm test
+        env:
+          BASE_URL: ${{ secrets.BASE_URL }}
+          TEST_USER: ${{ secrets.TEST_USER }}
+          TEST_PASS: ${{ secrets.TEST_PASS }}
+
+      - name: Upload test report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cucumber-report
+          path: reports/</code></pre>
+
+        <h2>6. Retry Failed Tests</h2>
+        <p>
+          For flaky tests in CI, configure retry in <code>cucumber.json</code>:
+        </p>
+        <pre><code>{
+  "ci": {
+    "retry": 2
+  }
+}</code></pre>
+        <p>
+          This retries a failed scenario up to 2 more times before marking it as definitively failed.
+          Use sparingly — retries hide real flakiness.
+        </p>
+
+        <h2>7. Custom Step Timeout</h2>
+        <p>
+          The default step timeout is 5000ms. For slow environments, increase it globally or per step:
+        </p>
+        <pre><code>// cucumber.json
+{
+  "default": {
+    "timeout": 30000
+  }
+}
+
+// Or per step definition
+import { setDefaultTimeout } from '@cucumber/cucumber';
+setDefaultTimeout(30 * 1000); // 30 seconds</code></pre>
+
+        <h2>8. Debugging Failed Tests</h2>
+        <p>Useful techniques when a test fails unexpectedly:</p>
+        <ul>
+          <li>
+            <strong>Run headed</strong>: set <code>HEADED=true</code> to watch the browser:
+            <pre><code>HEADED=true npx cucumber-js</code></pre>
+          </li>
+          <li>
+            <strong>Slow motion</strong>: add <code>SLOW_MO=500</code> to pause 500ms between actions.
+          </li>
+          <li>
+            <strong>Playwright Inspector</strong>: add <code>await this.page.pause()</code> in a step
+            to freeze execution and open the inspector.
+          </li>
+          <li>
+            <strong>Screenshot attachment</strong>: always attach screenshots on failure in the After hook.
+          </li>
+          <li>
+            <strong>Page content attachment</strong>: attach <code>this.page.content()</code> to see the HTML at failure time.
+          </li>
+          <li>
+            <strong>Run one scenario</strong>: use <code>--tags "@specific-tag"</code> to isolate a single failing scenario.
+          </li>
+        </ul>
+
+        <h2>9. Accessibility Testing with Playwright + Cucumber</h2>
+        <p>
+          You can integrate axe-core accessibility checks into your BDD scenarios:
+        </p>
+        <pre><code>npm install --save-dev axe-playwright</code></pre>
+        <pre><code># Feature
+Scenario: Login page must pass accessibility checks
+  Given the user is on the login page
+  Then the page should have no accessibility violations</code></pre>
+        <pre><code>// Step definition
+import { checkA11y, injectAxe } from 'axe-playwright';
+
+Then('the page should have no accessibility violations', async function (this: CustomWorld) {
+  await injectAxe(this.page);
+  await checkA11y(this.page);
+});</code></pre>
+
+        <h2>10. Project Structure for a Production-Ready Suite</h2>
+        <pre><code>cucumber-playwright-bdd/
+  src/
+    features/
+      auth/
+        login.feature
+        logout.feature
+      checkout/
+        cart.feature
+        payment.feature
+      api/
+        users.feature
+        orders.feature
+    steps/
+      auth.steps.ts
+      checkout.steps.ts
+      api.steps.ts
+      shared.steps.ts      ← Reusable steps used across features
+    support/
+      world.ts             ← Playwright + custom properties
+      hooks.ts             ← Browser lifecycle + screenshots
+    pages/
+      BasePage.ts
+      LoginPage.ts
+      CheckoutPage.ts
+    data/
+      testUsers.ts         ← Test data constants
+      testProducts.ts
+  reports/                 ← Auto-generated (gitignored)
+  .env                     ← Local secrets (gitignored)
+  .env.example             ← Template committed to git
+  cucumber.json
+  tsconfig.json
+  package.json
+  .gitignore
+  .github/
+    workflows/
+      cucumber-tests.yml</code></pre>
+
+        <section class="exercise">
+          <h2>Capstone Practice Exercise</h2>
+          <p>Build a complete mini BDD project from scratch that covers all track topics:</p>
+          <ol>
+            <li>Create a project with the full folder structure above.</li>
+            <li>Write a feature file with at least 3 scenarios: login success, login failure, and one Scenario Outline with 3 rows.</li>
+            <li>Create page objects for at least 2 pages (Login and Dashboard).</li>
+            <li>Configure hooks with browser lifecycle management and screenshot-on-failure.</li>
+            <li>Add <code>@smoke</code> and <code>@regression</code> tags. Run each subset independently.</li>
+            <li>Generate an HTML report and verify screenshots appear for failed scenarios.</li>
+            <li>Configure parallel execution with 2 workers and confirm faster run time.</li>
+            <li>Write one API test using Playwright's request context.</li>
+          </ol>
+        </section>
+
+        <section class="quiz" data-quiz>
+          <h2>MCQ Self-Check</h2>
+
+          <div class="question" data-answer="b">
+            <p>1. In Cucumber's parallel mode, the BeforeAll hook runs:</p>
+            <label><input type="radio" name="quiz-9-q0" value="a" /> Once globally for the entire suite</label>
+            <label><input type="radio" name="quiz-9-q0" value="b" /> Once per worker process</label>
+            <label><input type="radio" name="quiz-9-q0" value="c" /> Before every scenario</label>
+          </div>
+
+          <div class="question" data-answer="c">
+            <p>2. Which Playwright class is used for making HTTP API requests in tests?</p>
+            <label><input type="radio" name="quiz-9-q1" value="a" /> BrowserContext</label>
+            <label><input type="radio" name="quiz-9-q1" value="b" /> Page</label>
+            <label><input type="radio" name="quiz-9-q1" value="c" /> APIRequestContext</label>
+          </div>
+
+          <div class="question" data-answer="a">
+            <p>3. What is the purpose of <code>await this.page.pause()</code>?</p>
+            <label><input type="radio" name="quiz-9-q2" value="a" /> Freezes execution and opens Playwright Inspector for interactive debugging</label>
+            <label><input type="radio" name="quiz-9-q2" value="b" /> Pauses for 1000ms then resumes</label>
+            <label><input type="radio" name="quiz-9-q2" value="c" /> Saves a screenshot to disk</label>
+          </div>
+
+          <div class="question" data-answer="b">
+            <p>4. Where should secrets like test passwords and API tokens be stored when running tests locally?</p>
+            <label><input type="radio" name="quiz-9-q3" value="a" /> Directly in step definition files</label>
+            <label><input type="radio" name="quiz-9-q3" value="b" /> In a <code>.env</code> file excluded from git</label>
+            <label><input type="radio" name="quiz-9-q3" value="c" /> In <code>cucumber.json</code></label>
+          </div>
+
+          <div class="question" data-answer="c">
+            <p>5. What does the <code>retry: 2</code> option in cucumber.json do?</p>
+            <label><input type="radio" name="quiz-9-q4" value="a" /> Runs the entire test suite 2 extra times</label>
+            <label><input type="radio" name="quiz-9-q4" value="b" /> Retries all scenarios twice regardless of outcome</label>
+            <label><input type="radio" name="quiz-9-q4" value="c" /> Retries a failed scenario up to 2 more times before marking it as failed</label>
+          </div>
+
+          <button class="grade-btn" type="button" data-grade>Grade Me</button>
+          <p class="result" data-result aria-live="polite"></p>
+        </section>
+
+        <div class="footer-note">
+          <strong>Previous:</strong> <a href="08-reporting.html">← Lesson 8 — Reporting</a>
+          &nbsp;|&nbsp;
+          <strong>Track complete!</strong> Return to <a href="../../index.html">Training Hub Home →</a>
+        </div>
+      </main>
+    </div>
+
+    <script src="../../assets/app.js"></script>
+  </body>
+</html>

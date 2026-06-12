@@ -96,6 +96,187 @@ npx playwright show-trace trace.zip</code></pre>
           </ol>
         </section>
 
+        <!-- ═══════════════════════════════════════════════════════════ -->
+        <section class="exercise">
+          <h2>Hands-On Lab: Record, UI Mode, Debug Mode &amp; Locator Inspection</h2>
+          <p>
+            This lab walks you through the three most powerful Playwright developer tools — <strong>Codegen</strong> (script recorder),
+            <strong>UI Mode</strong>, and <strong>Debug Mode</strong> — using the Practice App that ships with this training hub.
+            You will also observe how locators change as you interact with different element types.
+          </p>
+
+          <h3>Step 1 — Record a Script with Codegen</h3>
+          <p>
+            <code>npx playwright codegen</code> opens a live browser alongside a code panel that writes test code as you click.
+            Open a terminal in your project root and run:
+          </p>
+          <pre><code># Record against the local Practice App (serve the folder first, or use the file path)
+npx playwright codegen https://manishxceedance.github.io/PlaywrightWithTypeScript/lessons/practice-app/index.html
+
+# Or record against any public site
+npx playwright codegen https://playwright.dev</code></pre>
+          <div class="explanation">
+            <b>What to do inside the recorder:</b>
+            <ol>
+              <li>
+                <strong>Click a button</strong> — e.g., click the <em>Submit</em> button in the mini form.
+                Watch the code panel generate <code>page.getByRole('button', { name: 'Submit' }).click();</code>.
+              </li>
+              <li>
+                <strong>Fill a text box</strong> — type in the Name field.
+                Codegen writes <code>page.getByLabel('Name').fill('Alice');</code> (or <code>getByPlaceholder</code> if no label exists).
+              </li>
+              <li>
+                <strong>Select a dropdown option</strong> — choose a value.
+                Codegen writes <code>page.getByRole('combobox').selectOption('option-value');</code>.
+              </li>
+              <li>
+                <strong>Check a checkbox</strong> — tick a checkbox.
+                Codegen writes <code>page.getByRole('checkbox', { name: 'Remember me' }).check();</code>.
+              </li>
+              <li>
+                <strong>Hover over an element</strong> — move your cursor over a tooltip trigger.
+                Codegen writes <code>page.getByRole('button', { name: 'Info' }).hover();</code>.
+              </li>
+              <li>
+                <strong>Press a keyboard key</strong> — press Tab or Enter.
+                Codegen writes <code>page.keyboard.press('Tab');</code>.
+              </li>
+              <li>
+                <strong>Assert text</strong> — click the &quot;Assert&quot; toolbar button in the Codegen window then click any element.
+                Codegen inserts <code>await expect(page.getByRole('heading')).toHaveText('...');</code>.
+              </li>
+            </ol>
+            <p>
+              <strong>Locator change observation:</strong> Notice how Codegen always prefers role/label/placeholder locators over XPath or CSS.
+              When you interact with a plain <code>&lt;div&gt;</code> that has no semantic role, Codegen falls back to
+              <code>page.locator('div.my-class')</code>. This is your signal that the element lacks accessibility attributes — a good opportunity
+              to ask developers to add <code>data-testid</code> or ARIA roles.
+            </p>
+          </div>
+
+          <h3>Step 2 — Run Tests in UI Mode</h3>
+          <p>
+            UI Mode provides a visual test runner with a watch mode, timeline, and locator picker — all in one browser window.
+          </p>
+          <pre><code># Open UI Mode for all tests
+npx playwright test --ui
+
+# Open UI Mode for a specific spec file
+npx playwright test tests/login.spec.ts --ui</code></pre>
+          <div class="explanation">
+            <b>What to explore in UI Mode:</b>
+            <ol>
+              <li>
+                <strong>Run a single test</strong> — Click the green play button next to any test name in the left panel.
+                The right panel shows the browser live as the test executes.
+              </li>
+              <li>
+                <strong>Watch mode</strong> — Toggle the eye icon. Every time you save a spec file, the affected tests re-run automatically.
+                This is the fastest inner-loop workflow while writing tests.
+              </li>
+              <li>
+                <strong>Timeline &amp; actions panel</strong> — After a test finishes, click any action in the timeline to see the
+                before/after DOM snapshot for that exact step.
+              </li>
+              <li>
+                <strong>Pick locator</strong> — Click the crosshair icon in the toolbar, then hover over any element in the live browser.
+                UI Mode shows you the best locator for that element in real time, and you can copy it directly into your code.
+              </li>
+              <li>
+                <strong>Filter tests</strong> — Use the search box to filter by test title, tag, or file name.
+                This is useful in large suites.
+              </li>
+              <li>
+                <strong>Observe locator changes</strong> — Use the Pick Locator tool on:
+                a semantic element (e.g., a labelled input) → you get <code>getByLabel</code>;
+                a custom control without ARIA → you get a CSS selector.
+                This contrast shows why semantic HTML matters for test stability.
+              </li>
+            </ol>
+          </div>
+
+          <h3>Step 3 — Run Tests in Debug Mode</h3>
+          <p>
+            Debug Mode opens the Playwright Inspector alongside the browser so you can step through each action manually.
+          </p>
+          <pre><code># Debug all tests (pauses before first action)
+npx playwright test --debug
+
+# Debug only one spec file
+npx playwright test tests/login.spec.ts --debug
+
+# Debug and keep browser open after test ends
+npx playwright test --debug --headed</code></pre>
+          <div class="explanation">
+            <b>What to do in the Inspector:</b>
+            <ol>
+              <li>
+                <strong>Step over actions</strong> — Click the <em>Step over</em> button (or press F10) to execute one Playwright action at a time.
+                After each step, examine the browser to confirm the element state changed as expected.
+              </li>
+              <li>
+                <strong>Live locator evaluation</strong> — In the <em>Locator</em> input at the bottom of the Inspector, type any locator string
+                (e.g., <code>getByRole('button', { name: 'Login' })</code>).
+                Playwright immediately highlights the matching element(s) in the browser — no test re-run needed.
+                This is the fastest way to experiment with locators.
+              </li>
+              <li>
+                <strong>All operation types to try in debug mode:</strong>
+                <ul>
+                  <li><strong>Navigation</strong> — <code>page.goto('url')</code> — watch the address bar update step by step.</li>
+                  <li><strong>Click</strong> — <code>page.getByRole('button').click()</code> — see the click highlight flash on screen.</li>
+                  <li><strong>Fill</strong> — <code>page.getByLabel('Email').fill('test@test.com')</code> — text appears character by character.</li>
+                  <li><strong>Select</strong> — <code>page.getByRole('combobox').selectOption('value')</code> — dropdown selection visual.</li>
+                  <li><strong>Check / Uncheck</strong> — <code>page.getByRole('checkbox').check()</code> — checkbox toggles visually.</li>
+                  <li><strong>Hover</strong> — <code>page.getByText('Hover me').hover()</code> — tooltip or CSS hover state appears.</li>
+                  <li><strong>Keyboard</strong> — <code>page.keyboard.press('Enter')</code> — form submission or dialog confirm.</li>
+                  <li><strong>Wait for element</strong> — <code>page.getByRole('dialog').waitFor()</code> — Inspector pauses until element appears.</li>
+                  <li><strong>Assertion</strong> — <code>await expect(page.getByRole('heading')).toContainText('Welcome')</code> — passes or fails visually.</li>
+                  <li><strong>Screenshot</strong> — <code>await page.screenshot({ path: 'step.png' })</code> — file is written to disk during the step.</li>
+                </ul>
+              </li>
+              <li>
+                <strong>Observe locator changes across element types:</strong>
+                <table style="width:100%; border-collapse:collapse; font-size:0.9em; margin-top:0.5em;">
+                  <thead>
+                    <tr style="background:#f0f4ff;">
+                      <th style="border:1px solid #ccc; padding:6px 10px; text-align:left;">Element</th>
+                      <th style="border:1px solid #ccc; padding:6px 10px; text-align:left;">Recommended Locator</th>
+                      <th style="border:1px solid #ccc; padding:6px 10px; text-align:left;">Fallback Locator</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr><td style="border:1px solid #ccc; padding:6px 10px;">Button with visible label</td><td style="border:1px solid #ccc; padding:6px 10px;"><code>getByRole('button', { name: 'Submit' })</code></td><td style="border:1px solid #ccc; padding:6px 10px;"><code>locator('button.submit-btn')</code></td></tr>
+                    <tr><td style="border:1px solid #ccc; padding:6px 10px;">Text input with &lt;label&gt;</td><td style="border:1px solid #ccc; padding:6px 10px;"><code>getByLabel('Email')</code></td><td style="border:1px solid #ccc; padding:6px 10px;"><code>locator('#email-input')</code></td></tr>
+                    <tr><td style="border:1px solid #ccc; padding:6px 10px;">Text input with placeholder only</td><td style="border:1px solid #ccc; padding:6px 10px;"><code>getByPlaceholder('Enter email')</code></td><td style="border:1px solid #ccc; padding:6px 10px;"><code>locator('input[placeholder]')</code></td></tr>
+                    <tr><td style="border:1px solid #ccc; padding:6px 10px;">Link with text</td><td style="border:1px solid #ccc; padding:6px 10px;"><code>getByRole('link', { name: 'Sign in' })</code></td><td style="border:1px solid #ccc; padding:6px 10px;"><code>locator('a:has-text("Sign in")')</code></td></tr>
+                    <tr><td style="border:1px solid #ccc; padding:6px 10px;">Checkbox</td><td style="border:1px solid #ccc; padding:6px 10px;"><code>getByRole('checkbox', { name: 'Remember me' })</code></td><td style="border:1px solid #ccc; padding:6px 10px;"><code>locator('input[type="checkbox"]')</code></td></tr>
+                    <tr><td style="border:1px solid #ccc; padding:6px 10px;">Dropdown (select)</td><td style="border:1px solid #ccc; padding:6px 10px;"><code>getByRole('combobox', { name: 'Country' })</code></td><td style="border:1px solid #ccc; padding:6px 10px;"><code>locator('select#country')</code></td></tr>
+                    <tr><td style="border:1px solid #ccc; padding:6px 10px;">Table row</td><td style="border:1px solid #ccc; padding:6px 10px;"><code>getByRole('row').filter({ hasText: 'Alice' })</code></td><td style="border:1px solid #ccc; padding:6px 10px;"><code>locator('tr:nth-child(2)')</code></td></tr>
+                    <tr><td style="border:1px solid #ccc; padding:6px 10px;">Element with data-testid</td><td style="border:1px solid #ccc; padding:6px 10px;"><code>getByTestId('submit-btn')</code></td><td style="border:1px solid #ccc; padding:6px 10px;"><code>locator('[data-testid="submit-btn"]')</code></td></tr>
+                    <tr><td style="border:1px solid #ccc; padding:6px 10px;">Custom component (no ARIA)</td><td style="border:1px solid #ccc; padding:6px 10px;"><code>getByTestId('custom-picker')</code></td><td style="border:1px solid #ccc; padding:6px 10px;"><code>locator('div.custom-picker')</code></td></tr>
+                  </tbody>
+                </table>
+                <p style="margin-top:0.5em;">
+                  <strong>Key insight:</strong> Elements with semantic roles and labels always yield shorter, more resilient locators.
+                  When you see a long CSS or XPath selector in the Inspector, it is a sign that the element needs better HTML semantics.
+                </p>
+              </li>
+            </ol>
+          </div>
+
+          <h3>Lab Checklist</h3>
+          <ul>
+            <li>&#9745; Ran <code>npx playwright codegen</code> and recorded click, fill, select, check, hover, keyboard, and assert operations.</li>
+            <li>&#9745; Observed how the generated locator changes between a labelled input and a custom div with no ARIA.</li>
+            <li>&#9745; Opened <code>npx playwright test --ui</code>, ran a test, used the locator picker on at least 3 element types.</li>
+            <li>&#9745; Opened <code>npx playwright test --debug</code>, stepped through each action type, and evaluated a locator live in the Inspector.</li>
+            <li>&#9745; Recorded observations: which element types produced the most stable locators?</li>
+          </ul>
+        </section>
+        <!-- ═══════════════════════════════════════════════════════════ -->
+
                 <section class="exercise">
           <h2>Expert Readiness Rubric (This Module)</h2>
           <ul>
