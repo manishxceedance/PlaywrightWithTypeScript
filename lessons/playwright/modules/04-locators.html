@@ -100,6 +100,280 @@
           </ol>
         </section>
 
+        <section class="exercise">
+          <h2>Complete Locator Exercise: HRMS Register + Employees Lab</h2>
+          <p>
+            Use this exercise when you want one realistic place to practice nearly every locator style a beginner should know.
+            Start on the HRMS Register page, then log in with <code>admin</code>/<code>admin</code> and continue on the Employees page.
+          </p>
+          <p>
+            Practice pages:
+            <a href="../../practice-app/hrms/register.html" target="_blank">HRMS Register</a>,
+            <a href="../../practice-app/hrms/login.html" target="_blank">HRMS Login</a>, and
+            <a href="../../practice-app/hrms/employees.html" target="_blank">HRMS Employees</a>.
+          </p>
+
+          <h3>Locator Types and Best Use</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Locator Type</th>
+                <th>When to Use It</th>
+                <th>HRMS Example</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>getByRole()</code></td>
+                <td>Best default for buttons, links, headings, dialogs, tables, rows, and form controls with accessible names.</td>
+                <td><code>page.getByRole('button', { name: 'Sign In' })</code></td>
+              </tr>
+              <tr>
+                <td><code>getByLabel()</code></td>
+                <td>Best for inputs, selects, date fields, sliders, and textareas connected to a visible label.</td>
+                <td><code>page.getByLabel('First Name')</code></td>
+              </tr>
+              <tr>
+                <td><code>getByPlaceholder()</code></td>
+                <td>Useful when placeholder text is stable and meaningful, but still weaker than label-based lookup.</td>
+                <td><code>page.getByPlaceholder('Enter your username')</code></td>
+              </tr>
+              <tr>
+                <td><code>getByText()</code></td>
+                <td>Good for static text, helper text, badges, and verifying that visible content is present.</td>
+                <td><code>page.getByText('Account Information')</code></td>
+              </tr>
+              <tr>
+                <td><code>getByTestId()</code></td>
+                <td>Best when the app already provides stable test IDs for automation.</td>
+                <td><code>page.getByTestId('login-submit')</code></td>
+              </tr>
+              <tr>
+                <td><code>getByTitle()</code></td>
+                <td>Use when an element has a meaningful <code>title</code> attribute.</td>
+                <td><code>page.getByTitle('Show/hide password')</code></td>
+              </tr>
+              <tr>
+                <td><code>getByAltText()</code></td>
+                <td>Use for images when the app exposes meaningful <code>alt</code> text.</td>
+                <td><code>page.getByAltText('HRMS practice logo')</code></td>
+              </tr>
+              <tr>
+                <td><code>locator('css')</code></td>
+                <td>Use for structural hooks that are not easily expressed through accessibility locators.</td>
+                <td><code>page.locator('#step-indicator')</code></td>
+              </tr>
+              <tr>
+                <td><code>locator('xpath=...')</code></td>
+                <td>Use only when there is no cleaner role, label, text, or CSS path.</td>
+                <td><code>page.locator("xpath=//div[@id='step-indicator']")</code></td>
+              </tr>
+              <tr>
+                <td><code>filter({ hasText })</code></td>
+                <td>Use to narrow repeated rows, cards, or list items to the exact record you need.</td>
+                <td><code>page.getByRole('row').filter({ hasText: 'Emma' })</code></td>
+              </tr>
+              <tr>
+                <td><code>filter({ has })</code></td>
+                <td>Use when a parent element must contain another specific child locator.</td>
+                <td><code>page.getByRole('row').filter({ has: page.getByText('Engineering') })</code></td>
+              </tr>
+              <tr>
+                <td><code>first()</code>, <code>last()</code>, <code>nth()</code></td>
+                <td>Use only after you confirm multiple matches are expected and order is meaningful.</td>
+                <td><code>page.getByRole('row').nth(1)</code></td>
+              </tr>
+              <tr>
+                <td><code>frameLocator()</code></td>
+                <td>Use only for elements inside an iframe.</td>
+                <td><code>page.frameLocator('#date-picker-frame').getByTitle('Next month')</code></td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3>Advanced Locator Operators You Should Also Know</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Operator / Pattern</th>
+                <th>When to Use It</th>
+                <th>Practice Example</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>locator().locator()</code></td>
+                <td>Chain from a parent container to search only inside that area.</td>
+                <td><code>page.getByTestId('filter-bar').locator('[data-testid="search-input"]')</code></td>
+              </tr>
+              <tr>
+                <td><code>and()</code></td>
+                <td>Match the same element through two locator conditions at once.</td>
+                <td><code>page.getByRole('button').and(page.getByTitle('Show/hide password'))</code></td>
+              </tr>
+              <tr>
+                <td><code>or()</code></td>
+                <td>Handle alternate UI entry points or states without branching too early.</td>
+                <td><code>page.getByTestId('nav-employees').or(page.getByTestId('btn-view-employees')).first()</code></td>
+              </tr>
+              <tr>
+                <td><code>filter({ hasNotText })</code></td>
+                <td>Exclude rows or cards containing text you do not want.</td>
+                <td><code>page.locator('[data-testid^="emp-row-"]').filter({ hasNotText: 'Inactive' }).first()</code></td>
+              </tr>
+              <tr>
+                <td><code>filter({ hasNot })</code></td>
+                <td>Exclude parents that contain a child locator you do not want.</td>
+                <td><code>page.locator('.form-group').filter({ hasNot: page.getByTestId('forgot-password') }).first()</code></td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3>Why These Pages Are Good for Practice</h3>
+          <ul>
+            <li>The Register page contains labels, placeholders, test IDs, visible section text, radio buttons, selects, range input, and step indicators.</li>
+            <li>The Login page contains role, label, placeholder, test ID, checkbox, link, title-based, and alt-text locator opportunities.</li>
+            <li>The Employees page contains repeated table rows, filters, buttons, navigation links, modal dialogs, and dynamic data, which is ideal for row-scoped locators.</li>
+          </ul>
+
+          <h3>Guided Practice Flow</h3>
+          <pre><code>import { test, expect } from '@playwright/test';
+
+test('learn locator types on the HRMS practice app', async ({ page }) =&gt; {
+  // Part 1: Register page locator practice
+  await page.goto('https://manishxceedance.github.io/PlaywrightWithTypeScript/lessons/practice-app/hrms/register.html');
+
+  // getByText() for visible section heading
+  await expect(page.getByText('Account Information')).toBeVisible();
+
+  // getByLabel() for form fields with labels
+  await page.getByLabel('First Name').fill('Asha');
+  await page.getByLabel('Last Name').fill('Gupta');
+  await page.getByLabel('Email Address').fill('asha.gupta@example.com');
+
+  // getByPlaceholder() when placeholder is stable and descriptive
+  await page.getByPlaceholder('jsmith').fill('asha_gupta');
+
+  // getByTestId() when the app exposes a stable automation hook
+  await page.getByTestId('password').fill('Password@123');
+  await page.getByTestId('confirmPassword').fill('Password@123');
+
+  // locator('css') for structural widgets such as the step progress container
+  await expect(page.locator('#step-indicator')).toBeVisible();
+
+  // getByRole() for a group of radios, then pick one option by label text
+  await page.getByTestId('gender-group').getByLabel('Female').check();
+
+  // getByLabel() also works for select, textarea, date, and range inputs
+  await page.getByLabel('Country').selectOption('India');
+  await page.getByLabel('City').fill('Mumbai');
+  await page.getByLabel('Address').fill('Powai, Mumbai');
+  await page.getByLabel('Date of Birth').fill('1998-04-10');
+          await expect(page.getByLabel(/Years of Experience:/)).toBeVisible();
+
+  // getByTestId() is often simplest for custom or dynamic values
+  await page.getByTestId('profileColor').fill('#ff6f00');
+
+          // frameLocator() is required for iframe content on the register page
+          const interviewDateFrame = page.frameLocator('#date-picker-frame');
+          await interviewDateFrame.getByTitle('Next month').click();
+          await expect(interviewDateFrame.getByTestId('selected-date')).toBeVisible();
+
+  // Part 2: Login page locator practice
+  await page.goto('https://manishxceedance.github.io/PlaywrightWithTypeScript/lessons/practice-app/hrms/login.html');
+    await expect(page.getByAltText('HRMS practice logo')).toBeVisible();
+  await page.getByLabel('Username').fill('admin');
+  await page.getByPlaceholder('Enter your password').fill('admin');
+    const passwordToggle = page.getByRole('button').and(page.getByTitle('Show/hide password'));
+    await passwordToggle.click();
+    const groupsWithoutForgotLink = page.locator('.form-group').filter({ hasNot: page.getByTestId('forgot-password') });
+    await expect(groupsWithoutForgotLink.first()).toBeVisible();
+  await page.getByRole('checkbox', { name: 'Remember me' }).check();
+  await page.getByRole('button', { name: 'Sign In' }).click();
+
+  // Part 3: Employees page locator practice after login
+          await page.waitForURL('**/index.html');
+      const employeesEntry = page.getByTestId('nav-employees').or(page.getByTestId('btn-view-employees')).first();
+      await employeesEntry.click();
+          await page.waitForURL('**/employees.html');
+          await expect(page.getByText('Employee Management')).toBeVisible();
+
+    // locator().locator() scopes a child lookup to the filter bar container
+  await expect(page.getByTestId('employee-table')).toBeVisible();
+    await page.getByTestId('filter-bar').locator('[data-testid="search-input"]').fill('Emma');
+
+  // filter({ hasText }) narrows repeated rows to one employee record
+  const emmaRow = page.getByRole('row').filter({ hasText: 'Emma' }).first();
+  await expect(emmaRow).toBeVisible();
+
+    // filter({ hasNotText }) excludes rows with unwanted content
+    const nonInactiveRow = page.locator('[data-testid^="emp-row-"]').filter({ hasNotText: 'Inactive' }).first();
+    await expect(nonInactiveRow).toBeVisible();
+
+  // filter({ has }) is useful when you want a row containing a child cell or badge
+  const engineeringRow = page
+    .getByRole('row')
+    .filter({ has: page.getByText('Engineering') })
+    .first();
+  await expect(engineeringRow).toBeVisible();
+
+  // getByRole() for buttons and links around the page
+  await expect(page.getByRole('button', { name: /Add Employee/i })).toBeVisible();
+  await expect(page.getByRole('link', { name: /Employees/i })).toBeVisible();
+          await expect(emmaRow.getByTitle('View')).toBeVisible();
+
+  // nth() is a last resort when multiple table rows exist and order matters
+  const firstDataRow = page.getByRole('row').nth(1);
+  await expect(firstDataRow).toBeVisible();
+  const lastDataRow = page.locator('[data-testid^="emp-row-"]').last();
+  await expect(lastDataRow).toBeVisible();
+
+  // XPath works, but keep it as a fallback only
+  await expect(page.locator("xpath=//span[@data-testid='result-count']")).toBeVisible();
+});</code></pre>
+
+          <div class="explanation">
+            <b>How to think about each locator in this exercise:</b>
+            <ol>
+              <li><code>getByRole()</code> should be your first choice for buttons, links, headings, dialogs, checkboxes, and rows because it matches how users and assistive tools understand the page.</li>
+              <li><code>getByLabel()</code> is the most natural choice for form work because it stays stable even if the input HTML changes from <code>input</code> to <code>textarea</code> or <code>select</code>.</li>
+              <li><code>getByPlaceholder()</code> is helpful for quick demos, but placeholders are still UI copy and can change, so prefer labels when both exist.</li>
+              <li><code>getByText()</code> is best for visible content assertions like section names, help text, toast messages, and page state text.</li>
+              <li><code>getByTestId()</code> is excellent for automation-heavy apps because it avoids dependency on styling classes or fragile DOM depth.</li>
+              <li><code>getByTitle()</code> is a niche but valid choice when the app exposes a helpful title attribute, such as the password visibility toggle on the login page.</li>
+              <li><code>getByAltText()</code> is ideal for real images, and the HRMS login page now gives you a direct example through the practice logo image.</li>
+              <li><code>locator('css')</code> is useful for structural containers like the step indicator, especially when you need to assert layout widgets rather than user-facing controls.</li>
+              <li><code>locator('xpath=...')</code> is included here so beginners recognize it, but it should almost never be your first design choice in Playwright.</li>
+              <li><code>filter({ hasText })</code> and <code>filter({ has })</code> are the correct answer for dynamic tables because they let you target a record by business meaning instead of visual position.</li>
+              <li><code>nth()</code>, <code>first()</code>, and <code>last()</code> are acceptable only after stronger locators have already narrowed the search as much as possible.</li>
+              <li><code>frameLocator()</code> belongs to the iframe case only. The HRMS register page includes a real embedded calendar, so you can practice it without inventing an artificial example.</li>
+              <li><code>and()</code>, <code>or()</code>, <code>hasNotText</code>, and <code>hasNot</code> are advanced narrowing tools. Use them when the page can appear in multiple states or when you need to exclude noisy matches instead of selecting by position.</li>
+            </ol>
+          </div>
+
+          <h3>Mini Challenges for a New Learner</h3>
+          <ol>
+            <li>Replace one <code>getByTestId()</code> call with a stronger semantic locator such as <code>getByRole()</code> or <code>getByLabel()</code>.</li>
+            <li>On the Register page, fill the same data using only <code>getByLabel()</code> where possible and note which fields become easier to read.</li>
+            <li>On the Employees page, search for a department, then use row filtering to assert that at least one matching employee is visible.</li>
+            <li>Open the login page and compare <code>getByLabel('Password')</code>, <code>getByPlaceholder('Enter your password')</code>, and <code>getByTestId('login-password')</code>. Decide which one you would keep in a real framework and explain why.</li>
+            <li>Write one bad selector using a long CSS chain, then refactor it to a stable Playwright locator.</li>
+            <li>Add one assertion that uses <code>and()</code> or <code>or()</code> only when two legitimate UI paths must be supported.</li>
+          </ol>
+
+          <h3>Coverage Check</h3>
+          <p>
+            This lesson now covers the main Playwright locator families used in practice: role, label, placeholder, text, alt text, title, test id, CSS, XPath, frame locators, row filtering, parent-child chaining, and positional narrowing.
+            It also calls out the advanced operators <code>and()</code>, <code>or()</code>, <code>hasNotText</code>, and <code>hasNot</code> so a new learner sees both the common path and the advanced path in one place.
+          </p>
+
+          <h3>React and Vue Note</h3>
+          <p>
+            Playwright also has framework-specific locator engines such as <code>_react=</code> and <code>_vue=</code>, but those are useful only when the application is actually built with React or Vue and the team has a clear reason to couple tests to component structure.
+            For most real projects, especially beginner-friendly automation, prefer user-facing locators like <code>getByRole()</code>, <code>getByLabel()</code>, and <code>getByTestId()</code> first because they remain more stable across UI refactors.
+          </p>
+        </section>
+
         <h2>Common Mistake to Avoid</h2>
         <p>Using positional selectors like nth-child first. Prefer role, label, parent scoping, and filter with text before using index.</p>
 
