@@ -45,15 +45,60 @@
           They are defined in TypeScript files (usually inside <code>src/support/</code>) and are
           picked up by Cucumber through the <code>require</code> paths in <code>cucumber.json</code>.
         </p>
-        <p>The four hook types are:</p>
+        <p>The six commonly used hook types in Cucumber.js are:</p>
         <ul>
-          <li><code>Before</code> — runs before each scenario.</li>
-          <li><code>After</code> — runs after each scenario.</li>
           <li><code>BeforeAll</code> — runs once before the entire test suite.</li>
           <li><code>AfterAll</code> — runs once after the entire test suite.</li>
+          <li><code>Before</code> — runs before each scenario.</li>
+          <li><code>After</code> — runs after each scenario.</li>
+          <li><code>BeforeStep</code> — runs before each step in a scenario.</li>
+          <li><code>AfterStep</code> — runs after each step in a scenario.</li>
         </ul>
 
-        <h2>2. The Essential Browser Lifecycle Hook</h2>
+        <h2>2. All Hook Types with Proper Definitions</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Hook</th>
+              <th>Runs When</th>
+              <th>Best Use</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>BeforeAll</code></td>
+              <td>Exactly once before any scenario starts.</td>
+              <td>Suite-level setup: launch browser, seed shared config, initialize global resources.</td>
+            </tr>
+            <tr>
+              <td><code>AfterAll</code></td>
+              <td>Exactly once after all scenarios finish.</td>
+              <td>Suite-level teardown: close browser, release shared resources, final reporting cleanup.</td>
+            </tr>
+            <tr>
+              <td><code>Before</code></td>
+              <td>Before each scenario.</td>
+              <td>Scenario isolation: create fresh context/page, set viewport, clear scenario state.</td>
+            </tr>
+            <tr>
+              <td><code>After</code></td>
+              <td>After each scenario.</td>
+              <td>Cleanup and diagnostics: screenshots on failure, attach logs, close scenario context.</td>
+            </tr>
+            <tr>
+              <td><code>BeforeStep</code></td>
+              <td>Before each step inside a scenario.</td>
+              <td>Step-level observability: lightweight logging, tracing current step text.</td>
+            </tr>
+            <tr>
+              <td><code>AfterStep</code></td>
+              <td>After each step inside a scenario.</td>
+              <td>Step-level diagnostics: attach per-step screenshots/logs only when a step fails.</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h2>3. The Essential Browser Lifecycle Hook</h2>
         <p>
           The most important hook in a Playwright + Cucumber project launches and closes the browser.
           This goes in <code>src/support/hooks.ts</code>:
@@ -88,7 +133,7 @@ AfterAll(async function () {
   await sharedBrowser.close();
 });</code></pre>
 
-        <h2>3. The <code>this.attach()</code> Method</h2>
+        <h2>4. The <code>this.attach()</code> Method</h2>
         <p>
           Inside hooks and step definitions, <code>this.attach()</code> embeds data into the Cucumber report.
           You can attach screenshots, text, or JSON:
@@ -103,7 +148,7 @@ this.attach('User was redirected to dashboard', 'text/plain');
 // Attach JSON data
 this.attach(JSON.stringify({ userId: 42 }), 'application/json');</code></pre>
 
-        <h2>4. Tagged Hooks</h2>
+        <h2>5. Tagged Hooks</h2>
         <p>
           You can run a hook only when a scenario has a specific tag. This is useful for scenarios
           that need a logged-in user without making all tests go through login.
@@ -125,7 +170,7 @@ Before({ tags: '@api' }, async function (this: CustomWorld) {
   // Set up API request context
 });</code></pre>
 
-        <h2>5. Hook Order and Priority</h2>
+        <h2>6. Hook Order and Priority</h2>
         <p>
           When multiple Before hooks match a scenario, they run in the order they are registered.
           You can control the order with <code>order</code>:
@@ -141,7 +186,29 @@ Before({ order: 2, tags: '@authenticated' }, async function (this: CustomWorld) 
   await loginAsAdmin(this.page);
 });</code></pre>
 
-        <h2>6. Tags in Depth</h2>
+        <h2>7. Step-Level Hooks (<code>BeforeStep</code> and <code>AfterStep</code>)</h2>
+        <p>
+          Step hooks are powerful for debugging because they execute around every step.
+          Keep them lightweight to avoid slowing test execution.
+        </p>
+        <pre><code>import { BeforeStep, AfterStep, Status } from '@cucumber/cucumber';
+import { CustomWorld } from './world';
+
+BeforeStep(async function (this: CustomWorld, step) {
+  // Good: lightweight trace of what is about to run
+  this.attach(`Starting step: ${step.pickleStep.text}`, 'text/plain');
+});
+
+AfterStep(async function (this: CustomWorld, step) {
+  // Good: capture evidence only when a step fails
+  if (step.result?.status === Status.FAILED) {
+    const shot = await this.page.screenshot({ fullPage: true });
+    this.attach(shot, 'image/png');
+    this.attach(`Failed step: ${step.pickleStep.text}`, 'text/plain');
+  }
+});</code></pre>
+
+        <h2>8. Tags in Depth</h2>
         <p>Tags can be applied at Feature level, Scenario level, or Scenario Outline level:</p>
         <pre><code>@smoke
 Feature: Login
@@ -159,7 +226,7 @@ Feature: Login
           <code>@smoke</code>, <code>@regression</code>, and <code>@critical</code>.
         </p>
 
-        <h2>7. Running Tests by Tag</h2>
+        <h2>9. Running Tests by Tag</h2>
         <pre><code># Run all smoke tests
 npx cucumber-js --tags "@smoke"
 
@@ -180,7 +247,7 @@ npx cucumber-js --tags "@smoke and not @critical"</code></pre>
         </p>
         <pre><code>npx cucumber-js --tags "@smoke"</code></pre>
 
-        <h2>8. Scenario Status in the After Hook</h2>
+        <h2>10. Scenario Status in the After Hook</h2>
         <p>
           The <code>After</code> hook receives a <code>scenario</code> object with the result. Use it to
           clean up differently based on pass or fail:
@@ -204,9 +271,17 @@ After(async function (this: CustomWorld, scenario) {
   await this.context.close();
 });</code></pre>
 
-        <h2>9. Complete hooks.ts Template</h2>
+        <h2>11. Complete hooks.ts Template (All Hooks)</h2>
         <pre><code>// src/support/hooks.ts
-import { Before, After, BeforeAll, AfterAll, Status } from '@cucumber/cucumber';
+      import {
+        Before,
+        After,
+        BeforeAll,
+        AfterAll,
+        BeforeStep,
+        AfterStep,
+        Status
+      } from '@cucumber/cucumber';
 import { chromium, Browser } from '@playwright/test';
 import { CustomWorld } from './world';
 
@@ -233,6 +308,18 @@ Before({ tags: '@authenticated' }, async function (this: CustomWorld) {
   await this.page.waitForURL(/hrms/);
 });
 
+BeforeStep(async function (this: CustomWorld, step) {
+  this.attach(`STEP START: ${step.pickleStep.text}`, 'text/plain');
+});
+
+AfterStep(async function (this: CustomWorld, step) {
+  if (step.result?.status === Status.FAILED) {
+    const shot = await this.page.screenshot({ fullPage: true });
+    this.attach(shot, 'image/png');
+    this.attach(`STEP FAILED: ${step.pickleStep.text}`, 'text/plain');
+  }
+});
+
 After(async function (this: CustomWorld, scenario) {
   if (scenario.result?.status === Status.FAILED) {
     const screenshot = await this.page.screenshot({ fullPage: true });
@@ -245,24 +332,57 @@ AfterAll(async function () {
   await browser.close();
 });</code></pre>
 
+        <h2>12. Hook Exercise Using the Sample Apps</h2>
+        <p>
+          This exercise intentionally uses multiple practice pages so you can see where each hook is useful.
+        </p>
+        <pre><code>@smoke @basic
+Scenario: Fill basic controls form
+  Given the user opens the basic controls page
+  When the user fills text, email, number and select fields
+  Then the form actions should be successful
+
+@regression @authenticated
+Scenario: Search employees after login
+  Given the user opens the HRMS employees page
+  When the user searches for "Emma"
+  Then at least one employee row should be visible
+
+@regression @dialogs
+Scenario: Handle alert and confirm
+  Given the user opens the dialogs page
+  When the user triggers an alert and accepts it
+  And the user triggers a confirm and dismisses it
+  Then dialog results should be displayed
+
+@regression @frame @shadow
+Scenario: Use iframe and shadow controls
+  Given the user opens the register page step five
+  When the user selects a date in the iframe calendar
+  And the user enters tags in the shadow component
+  Then profile preview should update</code></pre>
+
+        <p><strong>Required hook implementation tasks:</strong></p>
+        <ol>
+          <li><code>BeforeAll</code>: launch one browser for the suite.</li>
+          <li><code>Before</code>: create a fresh context and page per scenario.</li>
+          <li><code>Before</code> tagged <code>@authenticated</code>: login to HRMS with <code>admin/admin</code>.</li>
+          <li><code>BeforeStep</code>: attach the current step text as plain text.</li>
+          <li><code>AfterStep</code>: on failed step, attach screenshot and failed step text.</li>
+          <li><code>After</code>: always close context and attach scenario-level screenshot on failure.</li>
+          <li><code>AfterAll</code>: close shared browser.</li>
+        </ol>
+
+        <p><strong>Expected learning outcome:</strong> You can explain exactly why each hook belongs at suite, scenario, or step scope, and when to use tagged hooks instead of hard-coding setup in step definitions.</p>
+
         <section class="exercise">
           <h2>Practice Exercise</h2>
           <ol>
-            <li>
-              Create <code>src/support/hooks.ts</code> with <code>Before</code> and <code>After</code> hooks
-              that open and close a browser context and page.
-            </li>
-            <li>
-              Add screenshot-on-failure logic in the <code>After</code> hook using <code>this.attach()</code>.
-            </li>
-            <li>
-              Create a feature file with two scenarios: one tagged <code>@smoke</code> and one tagged
-              <code>@regression</code>. Run only <code>@smoke</code> using the tags flag.
-            </li>
-            <li>
-              Create a tagged hook that only runs for scenarios tagged <code>@authenticated</code>
-              — it should navigate to a login page and fill in credentials.
-            </li>
+            <li>Create <code>src/support/hooks.ts</code> with all six hooks: <code>BeforeAll</code>, <code>AfterAll</code>, <code>Before</code>, <code>After</code>, <code>BeforeStep</code>, <code>AfterStep</code>.</li>
+            <li>Implement the <code>@authenticated</code> tagged hook that logs into <code>hrms/login.html</code> using <code>admin/admin</code>.</li>
+            <li>Run only <code>@dialogs</code> scenarios and verify step-level logs from <code>BeforeStep</code> are attached.</li>
+            <li>Force one failing step in the iframe or shadow scenario and verify <code>AfterStep</code> attaches screenshot evidence.</li>
+            <li>Run full suite and confirm browser launches once (<code>BeforeAll</code>) but context/page are recreated per scenario (<code>Before</code>).</li>
           </ol>
         </section>
 
@@ -303,9 +423,12 @@ AfterAll(async function () {
 
         <section class="exercise">
           <h2>🧪 Try It in the Practice App</h2>
-          <p>Add hooks and tags to your existing scenarios for the demo application:</p>
+          <p>Add hooks and tags to your existing scenarios for the demo applications:</p>
           <ul>
-            <li><a href="../practice-app/index.html" target="_blank">Basic Controls Lab</a> — add a <code>Before</code> hook that navigates to this page, then tag scenarios by control type</li>
+            <li><a href="../practice-app/index.html" target="_blank">Basic Controls Lab</a> — validate scenario-level setup/teardown with <code>Before</code> and <code>After</code></li>
+            <li><a href="../practice-app/dialogs.html" target="_blank">Dialogs &amp; Windows Lab</a> — ideal for step-level hooks and failure diagnostics with <code>AfterStep</code></li>
+            <li><a href="../practice-app/hrms/login.html" target="_blank">HRMS Login</a> + <a href="../practice-app/hrms/employees.html" target="_blank">HRMS Employees</a> — practice <code>@authenticated</code> tagged hook and post-login scenarios</li>
+            <li><a href="../practice-app/hrms/register.html" target="_blank">HRMS Register</a> — practice hooks around iframe and shadow-based interactions</li>
           </ul>
         </section>
 

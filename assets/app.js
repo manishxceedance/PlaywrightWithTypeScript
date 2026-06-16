@@ -79,9 +79,7 @@ function setupQuizAutoGrader() {
         const expectedText = expectedLabel
           ? expectedLabel.textContent.replace(/^\s+|\s+$/g, '')
           : 'Correct option unavailable';
-        const selected = quiz.querySelector(
-          `input[name="quiz-${quizIndex}-q${questionIndex}"]:checked`
-        );
+        const selected = question.querySelector('input:checked');
 
         let feedback = question.querySelector('[data-feedback]');
         if (!feedback) {
