@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Module 18 - Best Practices</title>
+    <link rel="stylesheet" href="../../../assets/styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <a class="brand" href="../../../index.html">Playwright/TypeScript Training Hub</a>
+      <button class="menu-toggle" data-menu-toggle>Open Menu</button>
+    </header>
+
+    <div class="layout">
+      <aside class="sidebar" data-sidebar>
+        <h2>Learning Menus</h2>
+        <div class="menu-group">
+          <p class="menu-group-title">Playwright</p>
+          <ul>
+            <li><a href="../01-playwright-complete-guide.html">Playwright Mastery Roadmap</a></li>
+            <li><a href="../00-playwright-for-absolutely-beginners.html">0. Absolute Beginner Start Here</a></li>
+            <li><a href="01-basics.html">1. Basics</a></li>
+            <li><a href="02-setup.html">2. Setup</a></li>
+            <li><a href="03-core-playwright.html">3. Core Playwright</a></li>
+            <li><a href="04-locators.html">4. Locators</a></li>
+            <li><a href="05-actions-elements.html">5. Actions and Elements</a></li>
+            <li><a href="06-wait-handling.html">6. Wait Handling</a></li>
+            <li><a href="07-browser-handling.html">7. Browser Handling</a></li>
+            <li><a href="08-validation.html">8. Validation</a></li>
+            <li><a href="09-test-data.html">9. Test Data</a></li>
+            <li><a href="10-framework-design.html">10. Framework Design</a></li>
+            <li><a href="11-api-testing.html">11. API Testing</a></li>
+            <li><a href="12-authentication.html">12. Authentication</a></li>
+            <li><a href="13-execution.html">13. Execution</a></li>
+            <li><a href="14-reporting.html">14. Reporting</a></li>
+            <li><a href="15-debugging.html">15. Debugging</a></li>
+            <li><a href="16-ci-cd.html">16. CI/CD</a></li>
+            <li><a href="17-advanced-topics.html">17. Advanced Topics</a></li>
+            <li><a href="18-best-practices.html">18. Best Practices</a></li>
+            <li><a href="19-project-implementation.html">19. Project Implementation</a></li>
+            <li><a href="20-dom-challenges-lab.html">20. DOM Challenges Lab</a></li>
+            <li><a href="../playwright-typescript-expert-project-rubric.html">Final Project Rubric (Playwright + TypeScript)</a></li>
+            <li><a href="../99-playwright-capstone-50-mcq.html">Final Capstone (50 MCQ)</a></li>
+          </ul>
+        </div>
+      </aside>
+      <main class="content lesson">
+        <h1>Module 18: Best Practices</h1>
+        <p class="lesson-meta">
+          <span class="difficulty-badge">Beginner Friendly</span>
+          This module explains concepts in plain language and then gives practical examples.
+        </p>
+
+        <h2>What You Will Learn</h2>
+        <p>How to keep tests readable, stable, and scalable.</p>
+
+        <h2>Simple Explanation</h2>
+        <p>Best practices reduce maintenance cost and flaky failures as suite size grows.</p>
+
+        <h2>Real-World Example</h2>
+        <p>With clear naming and reusable helpers, new team members can understand and extend tests faster.</p>
+
+        <h2>Step-by-Step Example (Code)</h2>
+        <pre><code>// Best-practice checklist
+// 1) Clear test names
+// 2) Stable locators
+// 3) Deterministic data
+// 4) Focused assertions</code></pre>
+
+        <div class="explanation">
+          <b>What each best practice means in practice:</b>
+          <ol>
+            <li><b>Clear test names:</b> Write names that describe the expected outcome. Good: <code>test('user sees error message when password is wrong', ...)</code>. Bad: <code>test('test2', ...)</code>. Clear names make reports self-explanatory without reading the code.</li>
+            <li><b>Stable locators:</b> Prefer <code>getByRole</code>, <code>getByLabel</code>, <code>getByTestId</code>. Avoid deep CSS class chains like <code>.container .list:nth-child(2) .btn--primary</code> — they break whenever a developer changes styling or restructures HTML.</li>
+            <li><b>Deterministic data:</b> Use fixed test accounts or generate unique data (e.g., <code>user_${Date.now()}@test.com</code>). Avoid shared accounts that other tests or developers may modify, causing random interference between test runs.</li>
+            <li><b>Focused assertions:</b> Each test should verify one specific outcome. Multiple unrelated checks in one test make it hard to identify exactly what failed. If a test has 10 assertions for 10 different features, split it into 10 tests.</li>
+            <li><b>No fixed sleeps:</b> Never use <code>waitForTimeout(3000)</code> as a substitute for real synchronization. Use <code>waitForURL</code>, <code>toBeVisible</code>, or <code>toHaveText</code> instead — they adapt to page speed automatically.</li>
+          </ol>
+        </div>
+
+        <section class="exercise">
+          <h2>Beginner Notes</h2>
+          <ol>
+            <li>Follow these four rules from the start — retrofitting a large suite to fix bad practices is expensive.</li>
+            <li>Code-review test files the same way you review production code. Quality standards apply equally.</li>
+            <li>Document your team's locator priority order and naming conventions so everyone follows them consistently.</li>
+          </ol>
+        </section>
+
+        <h2>Common Mistake to Avoid</h2>
+        <p>Adding long fixed waits instead of addressing synchronization/data problems.</p>
+
+        <section class="exercise">
+          <h2>Practice Exercise</h2>
+          <ol>
+            <li>Refactor one flaky test using better locator and wait strategy.</li>
+            <li>Create a team checklist for stable test design.</li>
+          </ol>
+        </section>
+
+                <section class="exercise">
+          <h2>Expert Readiness Rubric (This Module)</h2>
+          <ul>
+            <li><strong>Can Explain</strong>: I can explain this module topic in simple language with one real project example.</li>
+            <li><strong>Can Implement</strong>: I can write at least one stable TypeScript Playwright test for this module skill.</li>
+            <li><strong>Can Debug</strong>: I can diagnose one failure and fix locator, wait, data, or assertion root cause.</li>
+            <li><strong>Can Reuse</strong>: I can convert this learning into reusable page object, helper, or fixture code.</li>
+          </ul>
+          <p><strong>Score Yourself:</strong> 0 = not started, 1 = learning, 2 = independent, 3 = confident mentor level. Target 10+ before moving to next module.</p>
+        </section>
+        <section class="quiz" data-quiz>
+          <h2>MCQ Self-Check</h2>
+          <div class="question" data-answer="a">
+            <p>1. Best flaky-test strategy is:</p>
+            <label><input type="radio" name="quiz-0-q0" value="a" /> Root-cause fix with evidence</label>
+            <label><input type="radio" name="quiz-0-q0" value="b" /> Ignore failures</label>
+            <label><input type="radio" name="quiz-0-q0" value="c" /> Add random waits</label>
+          </div>
+
+          <div class="question" data-answer="a">
+            <p>2. Stable design usually includes:</p>
+            <label><input type="radio" name="quiz-0-q1" value="a" /> Deterministic data and resilient locators</label>
+            <label><input type="radio" name="quiz-0-q1" value="b" /> Random selectors</label>
+            <label><input type="radio" name="quiz-0-q1" value="c" /> No assertions</label>
+          </div>
+
+          <button class="grade-btn" type="button" data-grade>Grade Me</button>
+          <p class="result" data-result aria-live="polite"></p>
+        </section>
+
+        <section class="exercise">
+          <h2>🧪 Try It in the Practice App</h2>
+          <p>Apply what you learned against the interactive demo application:</p>
+          <ul>
+            <li><a href="../../practice-app/index.html" target="_blank">Basic Controls Lab</a> — apply meaningful test names, scoped assertions, and DRY helpers</li>
+            <li><a href="../../practice-app/grid-controls.html" target="_blank">Grid with Controls</a> — practice clean row-level assertions without index-based selectors</li>
+          </ul>
+        </section>
+
+        <section class="exercise">
+          <h2>Navigation</h2>
+          <p><a href="17-advanced-topics.html">Previous</a> | <a href="19-project-implementation.html">Next</a></p>
+        </section>
+        <a href="../../../index.html" class="home-btn floating-home-btn" title="Back to Home">&#8962; Home</a>
+      </main>
+    </div>
+
+    <script src="../../../assets/app.js"></script>
+  </body>
+</html>
+
+
+
+
+

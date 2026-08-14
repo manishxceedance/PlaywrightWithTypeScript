@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Practice App - Grid & Frame</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <section class="home-hero" style="margin-bottom:2.5rem;">
+    <h1 style="font-size:2.2rem; margin-bottom:0.5rem;">Practice App: Grid & Frame</h1>
+    <div class="home-meta" style="margin-bottom:1.2rem;">
+      <span class="home-pill" style="background:var(--accent-soft);color:var(--accent);margin-right:0.7em;">Practice Lab</span>
+      <span class="home-pill" style="background:var(--warm);color:#fff;">UI Automation</span>
+    </div>
+    <p style="font-size:1.15rem;max-width:600px;">Practice table/grid selectors and iframe handling. Use this page to master row filtering and frame locators in Playwright.</p>
+  </section>
+
+  <nav style="margin-bottom:2rem;">
+    <a href="index.html">Basic Controls</a> |
+    <a href="grid-frame.html">Grid & Frame</a> |
+    <a href="grid-controls.html"><b>Grid with Controls</b></a> |
+    <a href="shadow.html">Shadow DOM</a> |
+    <a href="../practice-app/index.html">Practice App Home</a>
+  </nav>
+
+  <section class="home-card" style="margin-bottom:2.5rem;">
+    <h2 style="margin-top:0;">HTML Table (Grid)</h2>
+    <table border="1" id="practice-table">
+      <thead>
+        <tr><th>ID</th><th>Name</th><th>Status</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>1</td><td>Alice</td><td>Active</td></tr>
+        <tr><td>2</td><td>Bob</td><td>Inactive</td></tr>
+        <tr><td>3</td><td>Charlie</td><td>Active</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section class="home-card" style="margin-bottom:2.5rem;">
+    <h2>Embedded Frame (iframe)</h2>
+    <iframe src="mini-form.html" title="Mini Form" width="400" height="220" style="border:1px solid #888;"></iframe>
+  </section>
+
+  <a href="../../index.html" class="home-btn floating-home-btn" title="Back to Home">&#8962; Home</a>
+  <script src="../../assets/app.js"></script>
+</body>
+</html>

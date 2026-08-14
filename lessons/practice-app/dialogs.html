@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dialogs & Windows - Practice App</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .dialog-section {
+      background: #fff;
+      max-width: 700px;
+      margin: 2em auto;
+      padding: 2em 2em 1.5em 2em;
+      border-radius: 16px;
+      box-shadow: 0 4px 16px rgba(25,118,210,0.10);
+      border: 1.5px solid #e3f2fd;
+    }
+    .dialog-section h2 {
+      margin-top: 0;
+      text-align: left;
+      font-size: 1.2rem;
+      color: #1976d2;
+    }
+    .dialog-section p {
+      color: #444;
+      font-size: 0.97rem;
+      margin-bottom: 1em;
+    }
+    .result-box {
+      margin-top: 1em;
+      padding: 0.7em 1em;
+      border-radius: 8px;
+      background: #f1f8e9;
+      border: 1.5px solid #aed581;
+      color: #33691e;
+      font-size: 1rem;
+      min-height: 2em;
+      display: none;
+    }
+    .result-box.error {
+      background: #fce4ec;
+      border-color: #ef9a9a;
+      color: #b71c1c;
+    }
+    .badge {
+      display: inline-block;
+      font-size: 0.78rem;
+      font-weight: bold;
+      padding: 0.2em 0.7em;
+      border-radius: 20px;
+      margin-left: 0.5em;
+      vertical-align: middle;
+    }
+    .badge-blue  { background: #e3f2fd; color: #1565c0; }
+    .badge-green { background: #e8f5e9; color: #2e7d32; }
+    .badge-orange{ background: #fff3e0; color: #e65100; }
+    .badge-red   { background: #fce4ec; color: #b71c1c; }
+
+    /* Security alert modal */
+    #auth-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.55);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+    }
+    #auth-overlay.active { display: flex; }
+    #auth-modal {
+      background: #fff;
+      border-radius: 10px;
+      padding: 2em 2.5em;
+      width: 370px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.22);
+      position: relative;
+    }
+    #auth-modal h3 {
+      margin-top: 0;
+      color: #b71c1c;
+      font-size: 1.1rem;
+    }
+    #auth-modal .lock-icon {
+      font-size: 2.4rem;
+      text-align: center;
+      display: block;
+      margin-bottom: 0.5em;
+    }
+    #auth-modal label { color: #333; font-weight: 600; font-size: 0.95rem; }
+    #auth-modal input {
+      margin-bottom: 0.9em;
+      width: 100%;
+      padding: 0.55em 0.8em;
+      border-radius: 6px;
+      border: 1.5px solid #bdbdbd;
+      font-size: 1rem;
+      box-sizing: border-box;
+    }
+    #auth-modal .btn-row { display: flex; gap: 0.8em; margin-top: 0.5em; }
+    #auth-modal button {
+      flex: 1;
+      padding: 0.6em;
+      border-radius: 7px;
+      border: none;
+      font-weight: bold;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+    #auth-modal #auth-submit { background: #1976d2; color: #fff; }
+    #auth-modal #auth-cancel { background: #e0e0e0; color: #333; }
+    #auth-error { color: #b71c1c; font-size: 0.9rem; margin-top: 0.5em; display: none; }
+
+    /* New window preview */
+    #new-win-result { display: none; }
+
+    .btn-group { display: flex; flex-wrap: wrap; gap: 0.7em; }
+    .btn-group button { margin-top: 0; width: auto; padding: 0.55em 1.3em; font-size: 0.98rem; }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a href="index.html">Basic Controls</a> |
+    <a href="grid-frame.html">Grid &amp; Frame</a> |
+    <a href="grid-controls.html">Grid with Controls</a> |
+    <a href="shadow.html">Shadow DOM</a> |
+    <a href="dialogs.html"><b>Dialogs &amp; Windows</b></a> |
+    <a href="hrms/login.html" style="color:#ffeb3b;font-weight:bold">🏢 HRMS App</a>
+  </nav>
+
+  <section class="home-hero" style="max-width:700px;margin:0 auto 2rem auto;padding:0 1em;">
+    <h1 style="font-size:2rem;margin-bottom:0.4rem;text-align:left;">Dialogs &amp; Windows</h1>
+    <div style="margin-bottom:1rem;">
+      <span class="badge badge-blue">Practice Lab</span>
+      <span class="badge badge-orange">UI Automation</span>
+    </div>
+    <p style="font-size:1.05rem;color:#444;">
+      Practice handling browser dialogs (<code>alert</code>, <code>confirm</code>, <code>prompt</code>),
+      new window / tab popups, file downloads, and security (basic-auth) alerts with Playwright.
+    </p>
+  </section>
+
+  <!-- ── 1. Alert ──────────────────────────────────────────────── -->
+  <section class="dialog-section" id="section-alert">
+    <h2>1. Alert Dialog <span class="badge badge-blue">window.alert()</span></h2>
+    <p>
+      Triggers a browser <code>alert()</code>. Playwright: listen with
+      <code>page.on('dialog', d =&gt; d.accept())</code>.
+    </p>
+    <div class="btn-group">
+      <button id="btn-alert" data-testid="btn-alert">Trigger Alert</button>
+    </div>
+    <div class="result-box" id="res-alert"></div>
+  </section>
+
+  <!-- ── 2. Confirm ────────────────────────────────────────────── -->
+  <section class="dialog-section" id="section-confirm">
+    <h2>2. Confirm Dialog <span class="badge badge-green">window.confirm()</span></h2>
+    <p>
+      Triggers a <code>confirm()</code> dialog. Playwright: <code>d.accept()</code> → OK,
+      <code>d.dismiss()</code> → Cancel.
+    </p>
+    <div class="btn-group">
+      <button id="btn-confirm-accept" data-testid="btn-confirm-accept">Trigger Confirm (Accept)</button>
+      <button id="btn-confirm-dismiss" data-testid="btn-confirm-dismiss">Trigger Confirm (Dismiss)</button>
+    </div>
+    <div class="result-box" id="res-confirm"></div>
+  </section>
+
+  <!-- ── 3. Prompt ─────────────────────────────────────────────── -->
+  <section class="dialog-section" id="section-prompt">
+    <h2>3. Prompt Dialog <span class="badge badge-orange">window.prompt()</span></h2>
+    <p>
+      Triggers a <code>prompt()</code) dialog. Playwright: <code>d.accept('your text')</code>
+      to type a value, or <code>d.dismiss()</code> to cancel.
+    </p>
+    <div class="btn-group">
+      <button id="btn-prompt" data-testid="btn-prompt">Trigger Prompt</button>
+      <button id="btn-prompt-dismiss" data-testid="btn-prompt-dismiss">Trigger Prompt (Dismiss)</button>
+    </div>
+    <div class="result-box" id="res-prompt"></div>
+  </section>
+
+  <!-- ── 4. New Window / Tab ───────────────────────────────────── -->
+  <section class="dialog-section" id="section-window">
+    <h2>4. New Window / Tab <span class="badge badge-blue">window.open()</span></h2>
+    <p>
+      Opens a new browser tab. Playwright: use
+      <code>page.context().waitForEvent('page')</code> before clicking
+      to capture the new page handle.
+    </p>
+    <div class="btn-group">
+      <button id="btn-new-tab" data-testid="btn-new-tab">Open New Tab (same origin)</button>
+      <button id="btn-new-win" data-testid="btn-new-win">Open New Window</button>
+    </div>
+    <div class="result-box" id="res-window"></div>
+  </section>
+
+  <!-- ── 5. File Download ──────────────────────────────────────── -->
+  <section class="dialog-section" id="section-download">
+    <h2>5. File Download <span class="badge badge-green">download event</span></h2>
+    <p>
+      Triggers a file download. Playwright: use
+      <code>page.waitForEvent('download')</code> before clicking,
+      then <code>download.saveAs(path)</code>.
+    </p>
+    <div class="btn-group">
+      <button id="btn-download-csv" data-testid="btn-download-csv">Download CSV</button>
+      <button id="btn-download-txt" data-testid="btn-download-txt">Download TXT</button>
+    </div>
+    <div class="result-box" id="res-download"></div>
+  </section>
+
+  <!-- ── 6. Security / Basic-Auth Alert ───────────────────────── -->
+  <section class="dialog-section" id="section-auth">
+    <h2>6. Security Alert – Basic Auth <span class="badge badge-red">HTTP Auth</span></h2>
+    <p>
+      Simulates a browser HTTP Basic-Auth challenge dialog.
+      Playwright: use <code>page.authenticate({ username, password })</code>
+      before navigating, or handle via
+      <code>page.on('dialog', ...)</code> for credential prompts.<br>
+      <strong>Valid credentials:</strong> username <code>admin</code>, password <code>secret</code>.
+    </p>
+    <div class="btn-group">
+      <button id="btn-auth" data-testid="btn-auth">Open Protected Resource</button>
+    </div>
+    <div class="result-box" id="res-auth"></div>
+  </section>
+
+  <!-- ── 7. Timed / Auto-close Alert ──────────────────────────── -->
+  <section class="dialog-section" id="section-timed">
+    <h2>7. Timed / Delayed Alert <span class="badge badge-orange">setTimeout</span></h2>
+    <p>
+      An alert fires after a 3-second delay. Playwright: register the
+      <code>page.on('dialog', ...)</code> handler <em>before</em> clicking —
+      the event fires whenever the dialog appears.
+    </p>
+    <div class="btn-group">
+      <button id="btn-timed" data-testid="btn-timed">Trigger Delayed Alert (3 s)</button>
+    </div>
+    <div class="result-box" id="res-timed"></div>
+  </section>
+
+  <!-- ── Security/Auth Modal ──────────────────────────────────── -->
+  <div id="auth-overlay" role="dialog" aria-modal="true" aria-labelledby="auth-title">
+    <div id="auth-modal">
+      <span class="lock-icon">🔒</span>
+      <h3 id="auth-title">Authentication Required</h3>
+      <p style="color:#555;font-size:0.93rem;margin:0 0 1em 0;">
+        The server <strong>practice-app.local</strong> requires a username and password.
+      </p>
+      <label for="auth-user">Username</label>
+      <input type="text" id="auth-user" data-testid="auth-username" placeholder="Username" autocomplete="username">
+      <label for="auth-pass">Password</label>
+      <input type="password" id="auth-pass" data-testid="auth-password" placeholder="Password" autocomplete="current-password">
+      <div id="auth-error">Invalid credentials. Try again.</div>
+      <div class="btn-row">
+        <button id="auth-submit" data-testid="auth-submit">Sign In</button>
+        <button id="auth-cancel" data-testid="auth-cancel">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <a href="../../index.html" class="home-btn floating-home-btn" title="Back to Home">&#8962; Home</a>
+
+  <script src="../../assets/app.js"></script>
+  <script>
+    // ── helpers ──────────────────────────────────────────────────
+    function showResult(id, msg, isError = false) {
+      const el = document.getElementById(id);
+      el.textContent = msg;
+      el.className = 'result-box' + (isError ? ' error' : '');
+      el.style.display = 'block';
+    }
+
+    // ── 1. Alert ─────────────────────────────────────────────────
+    document.getElementById('btn-alert').addEventListener('click', () => {
+      alert('This is a simple Alert dialog. Click OK to dismiss.');
+      showResult('res-alert', 'Alert was dismissed (OK clicked).');
+    });
+
+    // ── 2. Confirm ───────────────────────────────────────────────
+    document.getElementById('btn-confirm-accept').addEventListener('click', () => {
+      const result = confirm('Do you want to proceed?');
+      if (result) {
+        showResult('res-confirm', 'Confirm result: ACCEPTED (OK clicked).');
+      } else {
+        showResult('res-confirm', 'Confirm result: DISMISSED (Cancel clicked).', true);
+      }
+    });
+    document.getElementById('btn-confirm-dismiss').addEventListener('click', () => {
+      const result = confirm('Do you want to proceed?');
+      if (result) {
+        showResult('res-confirm', 'Confirm result: ACCEPTED (OK clicked).');
+      } else {
+        showResult('res-confirm', 'Confirm result: DISMISSED (Cancel clicked).', true);
+      }
+    });
+
+    // ── 3. Prompt ────────────────────────────────────────────────
+    document.getElementById('btn-prompt').addEventListener('click', () => {
+      const value = prompt('Enter your name:', 'Playwright User');
+      if (value !== null) {
+        showResult('res-prompt', `Prompt result: "${value}"`);
+      } else {
+        showResult('res-prompt', 'Prompt was dismissed (Cancel clicked).', true);
+      }
+    });
+    document.getElementById('btn-prompt-dismiss').addEventListener('click', () => {
+      const value = prompt('Enter your name:', 'Playwright User');
+      if (value !== null) {
+        showResult('res-prompt', `Prompt result: "${value}"`);
+      } else {
+        showResult('res-prompt', 'Prompt was dismissed (Cancel clicked).', true);
+      }
+    });
+
+    // ── 4. New Window / Tab ──────────────────────────────────────
+    document.getElementById('btn-new-tab').addEventListener('click', () => {
+      const win = window.open('mini-form.html', '_blank');
+      if (win) {
+        showResult('res-window', 'New tab opened: mini-form.html');
+      } else {
+        showResult('res-window', 'Popup was blocked by the browser.', true);
+      }
+    });
+    document.getElementById('btn-new-win').addEventListener('click', () => {
+      const win = window.open('index.html', 'practiceWindow',
+        'width=800,height=600,top=100,left=100,resizable=yes,scrollbars=yes');
+      if (win) {
+        showResult('res-window', 'New window opened: index.html (800×600)');
+      } else {
+        showResult('res-window', 'Popup was blocked by the browser.', true);
+      }
+    });
+
+    // ── 5. File Download ─────────────────────────────────────────
+    function triggerDownload(filename, content, mime) {
+      const blob = new Blob([content], { type: mime });
+      const url  = URL.createObjectURL(blob);
+      const a    = document.createElement('a');
+      a.href     = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
+
+    document.getElementById('btn-download-csv').addEventListener('click', () => {
+      const csv = 'id,name,role\n1,Alice,Admin\n2,Bob,User\n3,Carol,Manager\n';
+      triggerDownload('sample-data.csv', csv, 'text/csv');
+      showResult('res-download', 'Download started: sample-data.csv');
+    });
+    document.getElementById('btn-download-txt').addEventListener('click', () => {
+      const txt = 'Playwright Practice App\nDialog & Window Handling\nDownload test file.\n';
+      triggerDownload('sample-data.txt', txt, 'text/plain');
+      showResult('res-download', 'Download started: sample-data.txt');
+    });
+
+    // ── 6. Security / Basic-Auth (modal simulation) ──────────────
+    const VALID_USER = 'admin';
+    const VALID_PASS = 'secret';
+    const overlay    = document.getElementById('auth-overlay');
+    const authError  = document.getElementById('auth-error');
+
+    document.getElementById('btn-auth').addEventListener('click', () => {
+      document.getElementById('auth-user').value = '';
+      document.getElementById('auth-pass').value = '';
+      authError.style.display = 'none';
+      overlay.classList.add('active');
+      document.getElementById('auth-user').focus();
+    });
+
+    document.getElementById('auth-submit').addEventListener('click', () => {
+      const u = document.getElementById('auth-user').value.trim();
+      const p = document.getElementById('auth-pass').value;
+      if (u === VALID_USER && p === VALID_PASS) {
+        overlay.classList.remove('active');
+        showResult('res-auth',
+          `Authentication SUCCESS ✔ — logged in as "${u}". Protected resource granted.`);
+      } else {
+        authError.style.display = 'block';
+        document.getElementById('auth-pass').value = '';
+        document.getElementById('auth-pass').focus();
+      }
+    });
+
+    document.getElementById('auth-cancel').addEventListener('click', () => {
+      overlay.classList.remove('active');
+      showResult('res-auth', 'Authentication cancelled by user.', true);
+    });
+
+    // Allow Enter key in auth fields
+    ['auth-user', 'auth-pass'].forEach(id => {
+      document.getElementById(id).addEventListener('keydown', e => {
+        if (e.key === 'Enter') document.getElementById('auth-submit').click();
+      });
+    });
+
+    // Close overlay on background click
+    overlay.addEventListener('click', e => {
+      if (e.target === overlay) document.getElementById('auth-cancel').click();
+    });
+
+    // ── 7. Timed / Delayed Alert ─────────────────────────────────
+    document.getElementById('btn-timed').addEventListener('click', () => {
+      showResult('res-timed', 'Alert will fire in 3 seconds…');
+      setTimeout(() => {
+        alert('This alert was triggered after a 3-second delay!');
+        showResult('res-timed', 'Delayed alert was dismissed.');
+      }, 3000);
+    });
+  </script>
+</body>
+</html>

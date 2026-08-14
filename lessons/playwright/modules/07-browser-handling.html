@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Module 7 - Browser Handling</title>
+    <link rel="stylesheet" href="../../../assets/styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <a class="brand" href="../../../index.html">Playwright/TypeScript Training Hub</a>
+      <button class="menu-toggle" data-menu-toggle>Open Menu</button>
+    </header>
+
+    <div class="layout">
+      <aside class="sidebar" data-sidebar>
+        <h2>Learning Menus</h2>
+        <div class="menu-group">
+          <p class="menu-group-title">Playwright</p>
+          <ul>
+            <li><a href="../01-playwright-complete-guide.html">Playwright Mastery Roadmap</a></li>
+            <li><a href="../00-playwright-for-absolutely-beginners.html">0. Absolute Beginner Start Here</a></li>
+            <li><a href="01-basics.html">1. Basics</a></li>
+            <li><a href="02-setup.html">2. Setup</a></li>
+            <li><a href="03-core-playwright.html">3. Core Playwright</a></li>
+            <li><a href="04-locators.html">4. Locators</a></li>
+            <li><a href="05-actions-elements.html">5. Actions and Elements</a></li>
+            <li><a href="06-wait-handling.html">6. Wait Handling</a></li>
+            <li><a href="07-browser-handling.html">7. Browser Handling</a></li>
+            <li><a href="08-validation.html">8. Validation</a></li>
+            <li><a href="09-test-data.html">9. Test Data</a></li>
+            <li><a href="10-framework-design.html">10. Framework Design</a></li>
+            <li><a href="11-api-testing.html">11. API Testing</a></li>
+            <li><a href="12-authentication.html">12. Authentication</a></li>
+            <li><a href="13-execution.html">13. Execution</a></li>
+            <li><a href="14-reporting.html">14. Reporting</a></li>
+            <li><a href="15-debugging.html">15. Debugging</a></li>
+            <li><a href="16-ci-cd.html">16. CI/CD</a></li>
+            <li><a href="17-advanced-topics.html">17. Advanced Topics</a></li>
+            <li><a href="18-best-practices.html">18. Best Practices</a></li>
+            <li><a href="19-project-implementation.html">19. Project Implementation</a></li>
+            <li><a href="20-dom-challenges-lab.html">20. DOM Challenges Lab</a></li>
+            <li><a href="../playwright-typescript-expert-project-rubric.html">Final Project Rubric (Playwright + TypeScript)</a></li>
+            <li><a href="../99-playwright-capstone-50-mcq.html">Final Capstone (50 MCQ)</a></li>
+          </ul>
+        </div>
+      </aside>
+      <main class="content lesson">
+        <h1>Module 7: Browser Handling</h1>
+        <p class="lesson-meta">
+          <span class="difficulty-badge">Beginner Friendly</span>
+          This module explains concepts in plain language and then gives practical examples.
+        </p>
+
+        <h2>What You Will Learn</h2>
+        <p>How to manage tabs, contexts, cookies, and sessions.</p>
+
+        <h2>Simple Explanation</h2>
+        <p>Browser context is like an isolated browser profile. Multiple contexts let you test admin and user behavior in parallel.</p>
+
+        <h2>Real-World Example</h2>
+        <p>You can keep an admin logged in one context and a customer in another, then verify both sides of a workflow.</p>
+
+        <h2>Step-by-Step Example (Code)</h2>
+        <pre><code>const newTabPromise = page.context().waitForEvent('page');
+await page.getByRole('link', { name: 'Open docs' }).click();
+const newTab = await newTabPromise;
+const cookies = await page.context().cookies();</code></pre>
+
+        <div class="explanation">
+          <b>Line-by-line explanation:</b>
+          <ol>
+            <li><code>const newTabPromise = page.context().waitForEvent('page')</code> — Creates a listener that will capture the next new browser tab to open. <b>Important:</b> set this up BEFORE clicking the link that opens the new tab, otherwise the tab can open and be missed.</li>
+            <li><code>await page.getByRole('link', { name: 'Open docs' }).click()</code> — Clicks the &quot;Open docs&quot; link. This action causes a new browser tab to open.</li>
+            <li><code>const newTab = await newTabPromise</code> — Waits for the new tab to appear and stores a reference to it. You can now use <code>newTab.url()</code>, <code>newTab.title()</code>, or any other page methods on the new tab.</li>
+            <li><code>await page.context().cookies()</code> — Reads all cookies in the current browser context. Useful to verify session tokens, persistent login cookies, or feature-flag cookies without inspecting DevTools manually.</li>
+            <li><b>Browser context isolation:</b> Each <code>BrowserContext</code> is like an independent incognito profile with its own cookies, localStorage, and sessions. Use separate contexts to test admin and regular user roles in the same test run without interference.</li>
+          </ol>
+        </div>
+
+        <section class="exercise">
+          <h2>Beginner Notes</h2>
+          <ol>
+            <li>Always call <code>waitForEvent('page')</code> before the action that opens a new tab.</li>
+            <li>Each browser context is isolated — like a separate incognito window.</li>
+            <li>Use two contexts to test interactions between two different user roles in one test.</li>
+          </ol>
+        </section>
+
+        <h2>Common Mistake to Avoid</h2>
+        <p>Using one shared session for all tests, which can cause hidden cross-test dependency.</p>
+
+        <section class="exercise">
+          <h2>Practice Exercise</h2>
+          <ol>
+            <li>Capture a new tab and validate URL/title.</li>
+            <li>Create two contexts and run role-based checks.</li>
+          </ol>
+        </section>
+
+                <section class="exercise">
+          <h2>Expert Readiness Rubric (This Module)</h2>
+          <ul>
+            <li><strong>Can Explain</strong>: I can explain this module topic in simple language with one real project example.</li>
+            <li><strong>Can Implement</strong>: I can write at least one stable TypeScript Playwright test for this module skill.</li>
+            <li><strong>Can Debug</strong>: I can diagnose one failure and fix locator, wait, data, or assertion root cause.</li>
+            <li><strong>Can Reuse</strong>: I can convert this learning into reusable page object, helper, or fixture code.</li>
+          </ul>
+          <p><strong>Score Yourself:</strong> 0 = not started, 1 = learning, 2 = independent, 3 = confident mentor level. Target 10+ before moving to next module.</p>
+        </section>
+        <section class="quiz" data-quiz>
+          <h2>MCQ Self-Check</h2>
+          <div class="question" data-answer="a">
+            <p>1. Context helps mainly with:</p>
+            <label><input type="radio" name="quiz-0-q0" value="a" /> Session isolation</label>
+            <label><input type="radio" name="quiz-0-q0" value="b" /> Code compilation</label>
+            <label><input type="radio" name="quiz-0-q0" value="c" /> CSS rendering</label>
+          </div>
+
+          <div class="question" data-answer="a">
+            <p>2. New tab event name is:</p>
+            <label><input type="radio" name="quiz-0-q1" value="a" /> page</label>
+            <label><input type="radio" name="quiz-0-q1" value="b" /> tab</label>
+            <label><input type="radio" name="quiz-0-q1" value="c" /> browserTab</label>
+          </div>
+
+          <button class="grade-btn" type="button" data-grade>Grade Me</button>
+          <p class="result" data-result aria-live="polite"></p>
+        </section>
+
+        <section class="exercise">
+          <h2>🧪 Try It in the Practice App</h2>
+          <p>Apply what you learned against the interactive demo application:</p>
+          <ul>
+            <li><a href="../../practice-app/grid-frame.html" target="_blank">Grid &amp; Frame Lab</a> — handle iframe navigation and cross-frame element access</li>
+            <li><a href="../../practice-app/mini-form.html" target="_blank">Mini Form (iframe)</a> — interact with a form embedded inside an iframe</li>
+          </ul>
+        </section>
+
+        <section class="exercise">
+          <h2>Navigation</h2>
+          <p><a href="06-wait-handling.html">Previous</a> | <a href="08-validation.html">Next</a></p>
+        </section>
+        <a href="../../../index.html" class="home-btn floating-home-btn" title="Back to Home">&#8962; Home</a>
+      </main>
+    </div>
+
+    <script src="../../../assets/app.js"></script>
+  </body>
+</html>
+
+
+
+
+

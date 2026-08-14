@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Practice App - Dynamic Object Repository</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .demo-shell {
+      max-width: 1050px;
+      margin: 0 auto;
+      padding: 1rem;
+      display: grid;
+      gap: 1rem;
+      grid-template-columns: 1.1fr 1fr;
+    }
+
+    .panel {
+      background: #fff;
+      border: 1px solid #dbe7ff;
+      border-radius: 14px;
+      box-shadow: 0 4px 14px rgba(25, 118, 210, 0.1);
+      padding: 1rem;
+    }
+
+    .panel h2 {
+      text-align: left;
+      margin: 0 0 0.7rem 0;
+      font-size: 1.2rem;
+      color: #1259a7;
+    }
+
+    .hint {
+      background: #edf6ff;
+      border-left: 4px solid #1976d2;
+      padding: 0.6rem 0.7rem;
+      border-radius: 6px;
+      margin-bottom: 0.8rem;
+      color: #24415f;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.8rem;
+    }
+
+    .stack {
+      display: grid;
+      gap: 0.6rem;
+    }
+
+    .mini-btn {
+      width: auto;
+      padding: 0.6rem 1rem;
+      margin-top: 0;
+    }
+
+    .toolbar {
+      display: flex;
+      gap: 0.6rem;
+      flex-wrap: wrap;
+      margin-top: 0.6rem;
+    }
+
+    .result-box,
+    .selector-box,
+    .log-box {
+      background: #f8fbff;
+      border: 1px solid #d5e4ff;
+      border-radius: 8px;
+      padding: 0.65rem;
+      min-height: 2.3rem;
+      font-family: Consolas, "Courier New", monospace;
+      font-size: 0.95rem;
+      overflow-x: auto;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    .result-label {
+      font-weight: 700;
+      color: #16437b;
+      margin-bottom: 0.35rem;
+      display: block;
+    }
+
+    .demo-menu {
+      display: flex;
+      gap: 0.7rem;
+      flex-wrap: wrap;
+      margin-bottom: 1rem;
+    }
+
+    .menu-btn {
+      background: linear-gradient(90deg, #1565c0 65%, #2e7d32 100%);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 0.5rem 0.9rem;
+      cursor: pointer;
+      font-weight: 700;
+    }
+
+    .menu-btn:hover {
+      filter: brightness(1.04);
+    }
+
+    .policy-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 0.4rem;
+    }
+
+    .policy-table th,
+    .policy-table td {
+      border: 1px solid #cadefa;
+      padding: 0.55rem 0.6rem;
+      text-align: left;
+      font-size: 0.95rem;
+    }
+
+    .policy-table th {
+      background: #eaf2ff;
+    }
+
+    .action-btn {
+      background: #1c7d41;
+      color: #fff;
+      border: none;
+      border-radius: 7px;
+      padding: 0.45rem 0.7rem;
+      cursor: pointer;
+      font-weight: 700;
+    }
+
+    .status {
+      margin-top: 0.9rem;
+      padding: 0.65rem;
+      border-radius: 7px;
+      font-weight: 600;
+      background: #f4f9ff;
+      border: 1px dashed #9bc2f6;
+      color: #264a77;
+    }
+
+    @media (max-width: 900px) {
+      .demo-shell {
+        grid-template-columns: 1fr;
+      }
+
+      .grid-2 {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <section class="home-hero" style="margin-bottom:1.8rem;">
+    <h1 style="font-size:2rem;margin-bottom:0.35rem;">Dynamic Object Repository Playground</h1>
+    <p style="max-width:860px;margin:0 auto;">
+      Practice Katalon-style dynamic objects with runtime tokens like <b>${menuName}</b> and <b>${policyNumber}</b>.
+      Resolve selectors, click matched elements, and inspect real-time output.
+    </p>
+  </section>
+
+  <nav style="margin-bottom:1.2rem;">
+    <a href="index.html">Basic Controls</a> |
+    <a href="grid-frame.html">Grid &amp; Frame</a> |
+    <a href="grid-controls.html">Grid with Controls</a> |
+    <a href="shadow.html">Shadow DOM</a> |
+    <a href="dialogs.html">Dialogs &amp; Windows</a> |
+    <a href="dynamic-object-repository.html"><b>Dynamic OR</b></a>
+  </nav>
+
+  <div class="demo-shell">
+    <section class="panel">
+      <h2>Object Repository Engine</h2>
+      <div class="hint">
+        Choose an object key, provide token values, then click <b>Resolve</b> or <b>Resolve + Click</b>.
+      </div>
+
+      <div class="stack">
+        <label for="objectKey">Object Key</label>
+        <select id="objectKey">
+          <option value="menuByName">menuByName</option>
+          <option value="policyActionByNumber">policyActionByNumber</option>
+          <option value="policyRowByNumber">policyRowByNumber</option>
+        </select>
+      </div>
+
+      <div class="grid-2">
+        <div class="stack">
+          <label for="menuName">menuName</label>
+          <input id="menuName" value="Claim" />
+        </div>
+        <div class="stack">
+          <label for="policyNumber">policyNumber</label>
+          <input id="policyNumber" value="99-XYZ-987654-10" />
+        </div>
+      </div>
+
+      <div class="stack">
+        <label for="action">action</label>
+        <input id="action" value="open" />
+      </div>
+
+      <div class="toolbar">
+        <button id="resolveBtn" class="mini-btn" type="button">Resolve Selector</button>
+        <button id="resolveAndClickBtn" class="mini-btn" type="button">Resolve + Click</button>
+      </div>
+
+      <div style="margin-top:0.85rem;">
+        <span class="result-label">Resolved Selector</span>
+        <div id="resolvedSelector" class="selector-box">(not resolved yet)</div>
+      </div>
+
+      <div style="margin-top:0.85rem;">
+        <span class="result-label">Log</span>
+        <div id="logs" class="log-box">Ready.</div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2>Demo UI Under Test</h2>
+
+      <div class="demo-menu">
+        <button type="button" class="menu-btn" data-menu="Home" onclick="setAction('menu:Home')">Home</button>
+        <button type="button" class="menu-btn" data-menu="Claim" onclick="setAction('menu:Claim')">Claim</button>
+        <button type="button" class="menu-btn" data-menu="Reports" onclick="setAction('menu:Reports')">Reports</button>
+      </div>
+
+      <table class="policy-table">
+        <thead>
+          <tr>
+            <th>Policy Number</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr data-policy="12-ABC-123456-78">
+            <td>12-ABC-123456-78</td>
+            <td>
+              <button type="button" class="action-btn" data-action="open" onclick="setAction('policy:12-ABC-123456-78:open')">Open</button>
+            </td>
+          </tr>
+          <tr data-policy="99-XYZ-987654-10">
+            <td>99-XYZ-987654-10</td>
+            <td>
+              <button type="button" class="action-btn" data-action="open" onclick="setAction('policy:99-XYZ-987654-10:open')">Open</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="status">
+        <span class="result-label">Action Result</span>
+        <div id="result" class="result-box">none</div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    const OR = {
+      menuByName: "button[data-menu='${menuName}']",
+      policyActionByNumber: "tr[data-policy='${policyNumber}'] button[data-action='${action}']",
+      policyRowByNumber: "tr[data-policy='${policyNumber}']"
+    };
+
+    const TOKEN_REGEX = /\$\{([A-Za-z0-9_]+)\}/g;
+
+    function resolveDynamicSelector(selectorTemplate, params, strict = true) {
+      const missing = new Set();
+      const resolved = selectorTemplate.replace(TOKEN_REGEX, (full, token) => {
+        if (!(token in params)) {
+          missing.add(token);
+          return full;
+        }
+        return String(params[token]);
+      });
+
+      if (strict && missing.size > 0) {
+        throw new Error(`Missing dynamic selector parameter(s): ${[...missing].sort().join(", ")}`);
+      }
+
+      return resolved;
+    }
+
+    function findTestObject(repository, objectKey, params, options = { strict: true }) {
+      const selectorTemplate = repository[objectKey];
+      if (!selectorTemplate) {
+        throw new Error(`Object repository key not found: ${objectKey}`);
+      }
+      const selector = resolveDynamicSelector(selectorTemplate, params, options.strict !== false);
+      return document.querySelector(selector);
+    }
+
+    function setAction(text) {
+      document.getElementById("result").textContent = text;
+    }
+
+    function getParams() {
+      return {
+        menuName: document.getElementById("menuName").value.trim(),
+        policyNumber: document.getElementById("policyNumber").value.trim(),
+        action: document.getElementById("action").value.trim()
+      };
+    }
+
+    function setLog(message) {
+      const now = new Date();
+      const stamp = now.toLocaleTimeString();
+      document.getElementById("logs").textContent = `[${stamp}] ${message}`;
+    }
+
+    function renderResolvedSelector() {
+      const objectKey = document.getElementById("objectKey").value;
+      const selector = resolveDynamicSelector(OR[objectKey], getParams(), true);
+      document.getElementById("resolvedSelector").textContent = selector;
+      return { objectKey, selector };
+    }
+
+    document.getElementById("resolveBtn").addEventListener("click", () => {
+      try {
+        const { objectKey, selector } = renderResolvedSelector();
+        setLog(`Resolved '${objectKey}' to: ${selector}`);
+      } catch (error) {
+        setLog(error.message);
+      }
+    });
+
+    document.getElementById("resolveAndClickBtn").addEventListener("click", () => {
+      try {
+        const objectKey = document.getElementById("objectKey").value;
+        const element = findTestObject(OR, objectKey, getParams(), { strict: true });
+        const selector = resolveDynamicSelector(OR[objectKey], getParams(), true);
+        document.getElementById("resolvedSelector").textContent = selector;
+
+        if (!element) {
+          setLog(`No element matched selector: ${selector}`);
+          return;
+        }
+
+        element.click();
+        setLog(`Clicked object '${objectKey}' using selector: ${selector}`);
+      } catch (error) {
+        setLog(error.message);
+      }
+    });
+  </script>
+
+  <a href="index.html" class="home-btn floating-home-btn" title="Back to Home">Home</a>
+</body>
+</html>

@@ -1,0 +1,228 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lesson 7 - Async and Error Handling</title>
+    <link rel="stylesheet" href="../../assets/styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <a class="brand" href="../../index.html">Playwright/TypeScript Training Hub</a>
+      <button class="menu-toggle" data-menu-toggle>Open Menu</button>
+    </header>
+
+    <div class="layout">
+      <aside class="sidebar" data-sidebar>
+        <h2>Learning Menus</h2>
+        <div class="menu-group">
+          <p class="menu-group-title">TypeScript</p>
+          <ul>
+            <li><a href="../typescript/00-javascript-basics.html">0. JavaScript Basics (Must Learn First)</a></li>
+            <li><a href="../typescript/01-introduction.html">1. Introduction and Setup</a></li>
+            <li><a href="../typescript/02-types-and-unions.html">2. Types, Unions, and Narrowing</a></li>
+            <li><a href="../typescript/03-functions-and-objects.html">3. Functions and Object Types</a></li>
+            <li><a href="../typescript/04-interfaces-and-type-aliases.html">4. Interfaces and Type Aliases</a></li>
+            <li><a href="../capstone.html">Final Capstone Assessment</a></li>
+          </ul>
+        </div>
+        <div class="menu-group">
+          <p class="menu-group-title">Type Script</p>
+          <ul>
+            <li><a href="05-classes-and-oop.html">5. Classes and OOP</a></li>
+            <li><a href="06-generics.html">6. Generics</a></li>
+            <li><a class="active" href="07-async-and-errors.html">7. Async Patterns and Error Handling</a></li>
+            <li><a href="08-conditions-and-loops.html">8. Conditions and Loops</a></li>
+            <li><a href="09-tsconfig-and-modules.html">9. tsconfig and Modules</a></li>
+          </ul>
+        </div>
+      </aside>
+
+      <main class="content lesson">
+
+        <h1>Lesson 7: Async Programming and Error Handling</h1>
+        <p class="lesson-meta">
+          <span class="difficulty-badge">Level: Advanced</span>
+          Learn how to write reliable async code and handle errors in TypeScript.
+        </p>
+        <p>
+          Most test automation and API tasks are asynchronous. Typed async code avoids fragile workflows and makes your code robust.
+        </p>
+
+        <section class="lesson-section">
+          <h2>1. What is Asynchronous Code?</h2>
+          <p>Async code lets you do things that take time (like API calls or timers) without blocking the rest of your program.</p>
+        </section>
+
+        <section class="lesson-section">
+          <h2>2. Promise Basics</h2>
+          <p>A <b>Promise</b> represents a value that will be available later. Use <code>Promise</code> for async operations.</p>
+          <pre><code>function waitMs(ms: number): Promise&lt;string&gt; {
+  return new Promise((resolve) => {
+    setTimeout(() => resolve(`Waited ${ms} ms`), ms);
+  });
+}
+          </code></pre>
+
+          <div class="explanation">
+            <b>Explanation:</b> This function returns a Promise that resolves after a given number of milliseconds. It uses <code>setTimeout</code> to wait, then calls <code>resolve</code> with a message. This is a basic pattern for creating asynchronous delays.
+          </div>
+        </section>
+
+        <section class="lesson-section">
+          <h2>3. async/await</h2>
+          <p><code>async</code> functions always return a Promise. Use <code>await</code> to pause until a Promise is ready.</p>
+          <pre><code>async function runHealthCheck(): Promise&lt;void&gt; {
+  const message = await waitMs(300);
+  console.log(message);
+}
+runHealthCheck();
+          </code></pre>
+
+          <div class="explanation">
+            <b>Explanation:</b> The <code>async</code> keyword makes the function always return a Promise. Inside, <code>await</code> pauses execution until <code>waitMs(300)</code> resolves, then logs the result. This makes async code look and behave more like synchronous code.
+          </div>
+        </section>
+
+        <section class="lesson-section">
+          <h2>4. Typed API Fetch Example</h2>
+          <p>Always type your async results for safety. <b>Important:</b> <code>fetch</code> is built into Node.js 18+ and all modern browsers. For TypeScript to recognise it without a <em>"Cannot find name 'fetch'"</em> error, add <code>"lib": ["ES2020", "DOM"]</code> to the <code>compilerOptions</code> in your <code>tsconfig.json</code>.</p>
+          <pre><code>// tsconfig.json â€” required addition to compilerOptions:
+// "lib": ["ES2020", "DOM"]
+// Without this, TypeScript reports: Cannot find name 'fetch'.
+
+type HealthResponse = { status: string; uptime: number };
+
+async function fetchHealth(): Promise&lt;HealthResponse&gt; {
+  const response = await fetch("/health");
+  if (!response.ok) {
+    throw new Error(`HTTP ${response.status}`);
+  }
+  return (await response.json()) as HealthResponse;
+}
+          </code></pre>
+
+          <div class="explanation">
+            <b>Explanation:</b>
+            <ol>
+              <li><code>"lib": ["ES2020", "DOM"]</code> in tsconfig â€” The <code>DOM</code> lib adds type declarations for browser and Node.js 18+ globals like <code>fetch</code>, <code>Response</code>, and <code>Headers</code>. Without it, TypeScript does not know these exist and rejects the code at compile time.</li>
+              <li><code>type HealthResponse</code> â€” Declares the shape of the expected JSON response. TypeScript uses this to check that you only access valid fields (e.g. <code>health.status</code>), catching typos like <code>health.stats</code> at compile time.</li>
+              <li><code>await fetch("/health")</code> â€” Sends an HTTP GET request and waits for the response object. The response body is not yet read at this point.</li>
+              <li><code>if (!response.ok)</code> â€” <code>response.ok</code> is <code>true</code> for any 2xx status code. Throwing here ensures the caller always gets a typed result or a clear error â€” never a silent wrong response.</li>
+              <li><code>(await response.json()) as HealthResponse</code> â€” Reads and parses the response body as JSON, then asserts it matches <code>HealthResponse</code>. The <code>as</code> cast is necessary because <code>response.json()</code> returns <code>any</code> by default.</li>
+            </ol>
+          </div>
+        </section>
+
+        <section class="lesson-section">
+          <h2>5. Error Handling Pattern</h2>
+          <p>Use <code>try/catch</code> to handle errors in async code. Always check the error type.</p>
+          <pre><code>async function safeHealthCheck(): Promise&lt;void&gt; {
+  try {
+    const health = await fetchHealth();
+    console.log("Service status:", health.status);
+  } catch (error) {
+    if (error instanceof Error) {
+      console.error("Health check failed:", error.message);
+    } else {
+      console.error("Unknown failure", error);
+    }
+  }
+}
+          </code></pre>
+
+          <div class="explanation">
+            <b>Explanation:</b> This uses <code>try/catch</code> to handle errors from async code. It checks if the error is an instance of <code>Error</code> for safe logging. This pattern prevents crashes and gives meaningful error messages.
+          </div>
+        </section>
+
+        <section class="lesson-section">
+          <h2>6. Parallel Async: Promise.all</h2>
+          <p>Use <code>Promise.all</code> to run multiple async tasks at once and wait for all results.</p>
+          <pre><code>async function runAll() {
+  const [a, b] = await Promise.all([
+    waitMs(100),
+    waitMs(200)
+  ]);
+  console.log(a, b);
+}
+runAll();
+          </code></pre>
+
+          <div class="explanation">
+            <b>Explanation:</b> <code>Promise.all</code> runs multiple async tasks in parallel and waits for all to finish. The results are returned as an array. This is efficient for independent async operations.
+          </div>
+        </section>
+
+        <section class="lesson-section">
+          <h2>7. Utility: Safe Fetch Helper</h2>
+          <p>Write a generic async helper for safe API calls. Like section 4, this uses <code>fetch</code> â€” add <code>"lib": ["ES2020", "DOM"]</code> to your <code>tsconfig.json</code> <code>compilerOptions</code> so TypeScript recognises it.</p>
+          <pre><code>// Requires "lib": ["ES2020", "DOM"] in tsconfig.json compilerOptions
+async function safeFetchJson&lt;T&gt;(url: string): Promise&lt;T | null&gt; {
+  try {
+    const res = await fetch(url);
+    if (!res.ok) throw new Error("Bad response");
+    return (await res.json()) as T; // explicit cast: res.json() returns 'any'; cast to T makes the return type safe
+  } catch (e) {
+    return null;
+  }
+}
+          </code></pre>
+
+          <div class="explanation">
+            <b>Line-by-line explanation:</b>
+            <ol>
+              <li><code>async function safeFetchJson&lt;T&gt;</code> â€” A generic async function. The caller decides what type <code>T</code> represents. For example, <code>safeFetchJson&lt;User&gt;("/api/me")</code> makes the return type <code>Promise&lt;User | null&gt;</code>.</li>
+              <li><code>Promise&lt;T | null&gt;</code> â€” The return type signals two possible outcomes: a correctly typed value on success, or <code>null</code> if anything went wrong. The caller must handle both without crashing.</li>
+              <li><code>const res = await fetch(url)</code> â€” Sends the HTTP request and waits for the response headers. The body is not yet read at this point.</li>
+              <li><code>if (!res.ok) throw new Error("Bad response")</code> â€” Fails fast for any non-2xx status. The thrown error is caught by the <code>catch</code> block, which returns <code>null</code> instead of crashing the caller.</li>
+              <li><code>(await res.json()) as T</code> â€” Reads and parses the response body as JSON, then <b>explicitly casts</b> it to <code>T</code>. This is necessary because <code>res.json()</code> returns <code>any</code> by default. Without the cast, TypeScript with <code>strict</code> mode may infer an implicit <code>any</code> return, which defeats the purpose of the generic. The cast documents your intent and enables IDE autocomplete on the result.</li>
+              <li><code>catch (e) { return null }</code> â€” Any error (network failure, JSON parse error, bad status) results in <code>null</code>. The caller only needs one check: <code>if (result === null)</code>. This is much cleaner than propagating errors up the call stack for routine network issues.</li>
+            </ol>
+          </div>
+        </section>
+
+        <section class="exercise">
+          <h2>Practice Exercise</h2>
+          <ol>
+            <li>Create async function that waits and returns a typed object.</li>
+            <li>Call it with <code>await</code> and print result fields.</li>
+            <li>Add <code>try/catch</code> with typed error branch.</li>
+            <li>Create a reusable <code>safeFetchJson&lt;T&gt;</code> helper.</li>
+          </ol>
+        </section>
+
+        <section class="quiz" data-quiz>
+          <h2>MCQ Self-Check</h2>
+
+          <div class="question" data-answer="b">
+            <p>1. Async function generally returns:</p>
+            <label><input type="radio" name="quiz-0-q0" value="a" /> string</label>
+            <label><input type="radio" name="quiz-0-q0" value="b" /> Promise&lt;...&gt;</label>
+            <label><input type="radio" name="quiz-0-q0" value="c" /> void only</label>
+          </div>
+
+          <div class="question" data-answer="a">
+            <p>2. Which keyword waits for a Promise result?</p>
+            <label><input type="radio" name="quiz-0-q1" value="a" /> await</label>
+            <label><input type="radio" name="quiz-0-q1" value="b" /> wait</label>
+            <label><input type="radio" name="quiz-0-q1" value="c" /> defer</label>
+          </div>
+
+          <div class="question" data-answer="c">
+            <p>3. Best practice for async runtime failures is:</p>
+            <label><input type="radio" name="quiz-0-q2" value="a" /> Ignore errors</label>
+            <label><input type="radio" name="quiz-0-q2" value="b" /> Retry forever</label>
+            <label><input type="radio" name="quiz-0-q2" value="c" /> Use try/catch and meaningful logs</label>
+          </div>
+
+          <button class="grade-btn" type="button" data-grade>Grade Me</button>
+          <p class="result" data-result aria-live="polite"></p>
+        </section>
+      </main>
+    </div>
+
+    <script src="../../assets/app.js"></script>
+  </body>
+</html>
+

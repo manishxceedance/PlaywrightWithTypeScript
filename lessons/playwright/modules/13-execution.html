@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Module 13 - Execution</title>
+    <link rel="stylesheet" href="../../../assets/styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <a class="brand" href="../../../index.html">Playwright/TypeScript Training Hub</a>
+      <button class="menu-toggle" data-menu-toggle>Open Menu</button>
+    </header>
+
+    <div class="layout">
+      <aside class="sidebar" data-sidebar>
+        <h2>Learning Menus</h2>
+        <div class="menu-group">
+          <p class="menu-group-title">Playwright</p>
+          <ul>
+            <li><a href="../01-playwright-complete-guide.html">Playwright Mastery Roadmap</a></li>
+            <li><a href="../00-playwright-for-absolutely-beginners.html">0. Absolute Beginner Start Here</a></li>
+            <li><a href="01-basics.html">1. Basics</a></li>
+            <li><a href="02-setup.html">2. Setup</a></li>
+            <li><a href="03-core-playwright.html">3. Core Playwright</a></li>
+            <li><a href="04-locators.html">4. Locators</a></li>
+            <li><a href="05-actions-elements.html">5. Actions and Elements</a></li>
+            <li><a href="06-wait-handling.html">6. Wait Handling</a></li>
+            <li><a href="07-browser-handling.html">7. Browser Handling</a></li>
+            <li><a href="08-validation.html">8. Validation</a></li>
+            <li><a href="09-test-data.html">9. Test Data</a></li>
+            <li><a href="10-framework-design.html">10. Framework Design</a></li>
+            <li><a href="11-api-testing.html">11. API Testing</a></li>
+            <li><a href="12-authentication.html">12. Authentication</a></li>
+            <li><a href="13-execution.html">13. Execution</a></li>
+            <li><a href="14-reporting.html">14. Reporting</a></li>
+            <li><a href="15-debugging.html">15. Debugging</a></li>
+            <li><a href="16-ci-cd.html">16. CI/CD</a></li>
+            <li><a href="17-advanced-topics.html">17. Advanced Topics</a></li>
+            <li><a href="18-best-practices.html">18. Best Practices</a></li>
+            <li><a href="19-project-implementation.html">19. Project Implementation</a></li>
+            <li><a href="20-dom-challenges-lab.html">20. DOM Challenges Lab</a></li>
+            <li><a href="../playwright-typescript-expert-project-rubric.html">Final Project Rubric (Playwright + TypeScript)</a></li>
+            <li><a href="../99-playwright-capstone-50-mcq.html">Final Capstone (50 MCQ)</a></li>
+          </ul>
+        </div>
+      </aside>
+      <main class="content lesson">
+        <h1>Module 13: Execution</h1>
+        <p class="lesson-meta">
+          <span class="difficulty-badge">Beginner Friendly</span>
+          This module explains concepts in plain language and then gives practical examples.
+        </p>
+
+        <h2>What You Will Learn</h2>
+        <p>How to run tests in parallel and across browsers.</p>
+
+        <h2>Simple Explanation</h2>
+        <p>Parallel workers reduce total runtime. Browser projects help verify behavior on multiple engines.</p>
+
+        <h2>Real-World Example</h2>
+        <p>A flow works in Chromium but fails in WebKit due to rendering difference. Cross-browser run finds this early.</p>
+
+        <h2>Step-by-Step Example (Code)</h2>
+        <pre><code>// playwright.config.ts
+projects: [
+  { name: 'chromium', use: { browserName: 'chromium' } },
+  { name: 'firefox', use: { browserName: 'firefox' } },
+  { name: 'webkit', use: { browserName: 'webkit' } }
+];</code></pre>
+
+        <div class="explanation">
+          <b>Line-by-line explanation:</b>
+          <ol>
+            <li><code>projects: [...]</code> — Defines multiple browser and device configurations. Playwright runs all projects automatically, so your entire test suite executes once per browser entry.</li>
+            <li><code>{ name: 'chromium', use: { browserName: 'chromium' } }</code> — One project for Chromium (the engine behind Chrome and Edge). The <code>name</code> appears in reports to show which browser each result came from.</li>
+            <li><code>{ name: 'firefox', ... }</code> and <code>{ name: 'webkit', ... }</code> — Same pattern for Firefox and Safari (WebKit). Adding these catches browser-specific bugs that would be invisible in Chromium-only testing.</li>
+            <li><b>Run one browser only:</b> <code>npx playwright test --project=chromium</code> — useful during development to run fast and switch to full cross-browser only in CI.</li>
+            <li><b>Parallel workers:</b> Set <code>workers: 4</code> in <code>playwright.config.ts</code> to run 4 tests simultaneously. Each worker gets its own browser context so tests are fully isolated.</li>
+          </ol>
+        </div>
+
+        <section class="exercise">
+          <h2>Beginner Notes</h2>
+          <ol>
+            <li>Parallel execution runs multiple tests at the same time, dramatically reducing total suite runtime.</li>
+            <li>Cross-browser testing reveals rendering differences and browser-specific JavaScript bugs early.</li>
+            <li>Start with Chromium only during development, then run all browsers in CI before release.</li>
+          </ol>
+        </section>
+
+        <h2>Common Mistake to Avoid</h2>
+        <p>Setting too many workers for unstable test environment. Tune worker count to infrastructure capacity.</p>
+
+        <section class="exercise">
+          <h2>Practice Exercise</h2>
+          <ol>
+            <li>Run suite with 2 workers and compare runtime.</li>
+            <li>Run same test in Chromium and Firefox and compare behavior.</li>
+          </ol>
+        </section>
+
+                <section class="exercise">
+          <h2>Expert Readiness Rubric (This Module)</h2>
+          <ul>
+            <li><strong>Can Explain</strong>: I can explain this module topic in simple language with one real project example.</li>
+            <li><strong>Can Implement</strong>: I can write at least one stable TypeScript Playwright test for this module skill.</li>
+            <li><strong>Can Debug</strong>: I can diagnose one failure and fix locator, wait, data, or assertion root cause.</li>
+            <li><strong>Can Reuse</strong>: I can convert this learning into reusable page object, helper, or fixture code.</li>
+          </ul>
+          <p><strong>Score Yourself:</strong> 0 = not started, 1 = learning, 2 = independent, 3 = confident mentor level. Target 10+ before moving to next module.</p>
+        </section>
+        <section class="quiz" data-quiz>
+          <h2>MCQ Self-Check</h2>
+          <div class="question" data-answer="a">
+            <p>1. Parallel execution improves mostly:</p>
+            <label><input type="radio" name="quiz-0-q0" value="a" /> Total runtime</label>
+            <label><input type="radio" name="quiz-0-q0" value="b" /> Code formatting</label>
+            <label><input type="radio" name="quiz-0-q0" value="c" /> Color theme</label>
+          </div>
+
+          <div class="question" data-answer="a">
+            <p>2. Cross-browser testing means:</p>
+            <label><input type="radio" name="quiz-0-q1" value="a" /> Run on multiple browser engines</label>
+            <label><input type="radio" name="quiz-0-q1" value="b" /> Run only on one browser</label>
+            <label><input type="radio" name="quiz-0-q1" value="c" /> No browser required</label>
+          </div>
+
+          <button class="grade-btn" type="button" data-grade>Grade Me</button>
+          <p class="result" data-result aria-live="polite"></p>
+        </section>
+
+        <section class="exercise">
+          <h2>🧪 Try It in the Practice App</h2>
+          <p>Apply what you learned against the interactive demo application:</p>
+          <ul>
+            <li><a href="../../practice-app/index.html" target="_blank">Basic Controls Lab</a> — run your suite with <code>--project=chromium</code>, <code>firefox</code>, and <code>webkit</code></li>
+          </ul>
+        </section>
+
+        <section class="exercise">
+          <h2>Navigation</h2>
+          <p><a href="12-authentication.html">Previous</a> | <a href="14-reporting.html">Next</a></p>
+        </section>
+        <a href="../../../index.html" class="home-btn floating-home-btn" title="Back to Home">&#8962; Home</a>
+      </main>
+    </div>
+
+    <script src="../../../assets/app.js"></script>
+  </body>
+</html>
+
+
+
+
+

@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Module 12 - Authentication</title>
+    <link rel="stylesheet" href="../../../assets/styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <a class="brand" href="../../../index.html">Playwright/TypeScript Training Hub</a>
+      <button class="menu-toggle" data-menu-toggle>Open Menu</button>
+    </header>
+
+    <div class="layout">
+      <aside class="sidebar" data-sidebar>
+        <h2>Learning Menus</h2>
+        <div class="menu-group">
+          <p class="menu-group-title">Playwright</p>
+          <ul>
+            <li><a href="../01-playwright-complete-guide.html">Playwright Mastery Roadmap</a></li>
+            <li><a href="../00-playwright-for-absolutely-beginners.html">0. Absolute Beginner Start Here</a></li>
+            <li><a href="01-basics.html">1. Basics</a></li>
+            <li><a href="02-setup.html">2. Setup</a></li>
+            <li><a href="03-core-playwright.html">3. Core Playwright</a></li>
+            <li><a href="04-locators.html">4. Locators</a></li>
+            <li><a href="05-actions-elements.html">5. Actions and Elements</a></li>
+            <li><a href="06-wait-handling.html">6. Wait Handling</a></li>
+            <li><a href="07-browser-handling.html">7. Browser Handling</a></li>
+            <li><a href="08-validation.html">8. Validation</a></li>
+            <li><a href="09-test-data.html">9. Test Data</a></li>
+            <li><a href="10-framework-design.html">10. Framework Design</a></li>
+            <li><a href="11-api-testing.html">11. API Testing</a></li>
+            <li><a href="12-authentication.html">12. Authentication</a></li>
+            <li><a href="13-execution.html">13. Execution</a></li>
+            <li><a href="14-reporting.html">14. Reporting</a></li>
+            <li><a href="15-debugging.html">15. Debugging</a></li>
+            <li><a href="16-ci-cd.html">16. CI/CD</a></li>
+            <li><a href="17-advanced-topics.html">17. Advanced Topics</a></li>
+            <li><a href="18-best-practices.html">18. Best Practices</a></li>
+            <li><a href="19-project-implementation.html">19. Project Implementation</a></li>
+            <li><a href="20-dom-challenges-lab.html">20. DOM Challenges Lab</a></li>
+            <li><a href="../playwright-typescript-expert-project-rubric.html">Final Project Rubric (Playwright + TypeScript)</a></li>
+            <li><a href="../99-playwright-capstone-50-mcq.html">Final Capstone (50 MCQ)</a></li>
+          </ul>
+        </div>
+      </aside>
+      <main class="content lesson">
+        <h1>Module 12: Authentication</h1>
+        <p class="lesson-meta">
+          <span class="difficulty-badge">Beginner Friendly</span>
+          This module explains concepts in plain language and then gives practical examples.
+        </p>
+
+        <h2>What You Will Learn</h2>
+        <p>How to reuse logged-in state and reduce repeated login steps.</p>
+
+        <h2>Simple Explanation</h2>
+        <p>storageState saves cookies and local storage after login. Other tests can reuse it to start already authenticated.</p>
+
+        <h2>Real-World Example</h2>
+        <p>Instead of logging in 200 times for 200 tests, login once and reuse session file.</p>
+
+        <h2>Step-by-Step Example (Code)</h2>
+        <pre><code>// Save auth state after successful login
+await page.context().storageState({
+  path: 'playwright/.auth/user.json'
+});</code></pre>
+
+        <div class="explanation">
+          <b>Line-by-line explanation:</b>
+          <ol>
+            <li><code>await page.context().storageState({ path: '...' })</code> — Saves the entire browser session state to a JSON file: cookies, localStorage, and sessionStorage. This is the equivalent of a browser &quot;remembering&quot; you are logged in.</li>
+            <li><code>path: 'playwright/.auth/user.json'</code> — The file path where the session is saved. Playwright reads this file in other tests so they start already authenticated, skipping the login UI completely.</li>
+            <li><b>How to reuse in tests:</b> In <code>playwright.config.ts</code>, add <code>use: { storageState: 'playwright/.auth/user.json' }</code> to the project config. Every test in that project starts with an active session.</li>
+            <li><b>Setup project pattern:</b> Create a special <code>setup</code> project that runs one login test first. Other projects list it as a <code>dependency</code> so they only start after the auth file is created.</li>
+            <li><b>Security note:</b> Add <code>playwright/.auth/</code> to your <code>.gitignore</code> to avoid committing session data. Always use test accounts, never production credentials.</li>
+          </ol>
+        </div>
+
+        <section class="exercise">
+          <h2>Beginner Notes</h2>
+          <ol>
+            <li>Login once, save the session — reuse it across all tests that need an authenticated state.</li>
+            <li>Without auth reuse, 200 tests that each log in via UI could add many minutes to your suite runtime.</li>
+            <li>Different roles (admin, viewer) need separate auth files — one per role.</li>
+          </ol>
+        </section>
+
+        <h2>Common Mistake to Avoid</h2>
+        <p>Committing auth state files with real secrets. Use test accounts and secure storage policies.</p>
+
+        <section class="exercise">
+          <h2>Practice Exercise</h2>
+          <ol>
+            <li>Create one auth setup test that saves storage state.</li>
+            <li>Run a protected-page test using saved state.</li>
+          </ol>
+        </section>
+
+                <section class="exercise">
+          <h2>Expert Readiness Rubric (This Module)</h2>
+          <ul>
+            <li><strong>Can Explain</strong>: I can explain this module topic in simple language with one real project example.</li>
+            <li><strong>Can Implement</strong>: I can write at least one stable TypeScript Playwright test for this module skill.</li>
+            <li><strong>Can Debug</strong>: I can diagnose one failure and fix locator, wait, data, or assertion root cause.</li>
+            <li><strong>Can Reuse</strong>: I can convert this learning into reusable page object, helper, or fixture code.</li>
+          </ul>
+          <p><strong>Score Yourself:</strong> 0 = not started, 1 = learning, 2 = independent, 3 = confident mentor level. Target 10+ before moving to next module.</p>
+        </section>
+        <section class="quiz" data-quiz>
+          <h2>MCQ Self-Check</h2>
+          <div class="question" data-answer="a">
+            <p>1. storageState saves mostly:</p>
+            <label><input type="radio" name="quiz-0-q0" value="a" /> Auth/session storage data</label>
+            <label><input type="radio" name="quiz-0-q0" value="b" /> Test report output</label>
+            <label><input type="radio" name="quiz-0-q0" value="c" /> Browser binaries</label>
+          </div>
+
+          <div class="question" data-answer="a">
+            <p>2. Main benefit of auth reuse:</p>
+            <label><input type="radio" name="quiz-0-q1" value="a" /> Faster and stable suites</label>
+            <label><input type="radio" name="quiz-0-q1" value="b" /> More random failures</label>
+            <label><input type="radio" name="quiz-0-q1" value="c" /> No need for locators</label>
+          </div>
+
+          <button class="grade-btn" type="button" data-grade>Grade Me</button>
+          <p class="result" data-result aria-live="polite"></p>
+        </section>
+
+        <section class="exercise">
+          <h2>🧪 Try It in the Practice App</h2>
+          <p>Apply what you learned against the interactive demo application:</p>
+          <ul>
+            <li><a href="../../practice-app/index.html" target="_blank">Basic Controls Lab</a> — capture and reuse session storage state across tests</li>
+          </ul>
+        </section>
+
+        <section class="exercise">
+          <h2>Navigation</h2>
+          <p><a href="11-api-testing.html">Previous</a> | <a href="13-execution.html">Next</a></p>
+        </section>
+        <a href="../../../index.html" class="home-btn floating-home-btn" title="Back to Home">&#8962; Home</a>
+      </main>
+    </div>
+
+    <script src="../../../assets/app.js"></script>
+  </body>
+</html>
+
+
+
+
+

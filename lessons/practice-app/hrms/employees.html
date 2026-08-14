@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Employees – HRMS Practice App</title>
+  <link rel="stylesheet" href="css/hrms.css">
+</head>
+<body>
+<div class="app-layout">
+
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      <div class="brand-icon">🏢</div>
+      <div class="brand-name">HRMS<small>Practice App</small></div>
+    </div>
+    <nav class="sidebar-nav" aria-label="Main navigation">
+      <div class="nav-section-label">Main</div>
+      <a class="nav-item" href="index.html" data-testid="nav-dashboard"><span class="nav-icon">📊</span> Dashboard</a>
+      <a class="nav-item active" href="employees.html" data-testid="nav-employees"><span class="nav-icon">👥</span> Employees</a>
+      <a class="nav-item" href="register.html" data-testid="nav-register"><span class="nav-icon">➕</span> Add Employee</a>
+      <div class="nav-section-label">Tools</div>
+      <a class="nav-item" href="api-docs.html" data-testid="nav-api"><span class="nav-icon">🔌</span> API Docs</a>
+      <a class="nav-item" href="../index.html" data-testid="nav-practice"><span class="nav-icon">🧪</span> Practice Labs</a>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="sidebar-user">
+        <div class="sidebar-avatar" id="sidebar-avatar">A</div>
+        <div class="sidebar-user-info">
+          <div class="name" id="sidebar-user-name">Loading…</div>
+          <div class="role" id="sidebar-user-role">employee</div>
+        </div>
+      </div>
+      <button class="nav-item" data-action="logout" data-testid="logout-btn" style="width:100%;margin-top:6px">
+        <span class="nav-icon">🚪</span> Logout
+      </button>
+    </div>
+  </aside>
+
+  <!-- Main -->
+  <div class="main-content">
+    <header class="topbar">
+      <button class="menu-toggle-btn" style="display:none" aria-label="Menu">☰</button>
+      <div class="topbar-title">Employee Management</div>
+      <div class="topbar-actions">
+        <button class="btn btn-primary btn-sm" id="btn-add-emp" data-testid="btn-add-employee">+ Add Employee</button>
+        <button class="btn btn-ghost btn-sm" id="btn-export" data-testid="btn-export-csv">⬇ Export CSV</button>
+      </div>
+    </header>
+
+    <div class="page-body">
+
+      <!-- Filter bar -->
+      <div class="card mb-24">
+        <div class="filter-bar" data-testid="filter-bar">
+          <div class="search-wrap">
+            <span class="search-icon">🔍</span>
+            <input type="search" id="search-input" placeholder="Search by name, email, ID, title…"
+              data-testid="search-input" autocomplete="off">
+          </div>
+          <select class="filter-select" id="filter-dept" data-testid="filter-dept">
+            <option value="">All Departments</option>
+            <option>Engineering</option><option>Human Resources</option>
+            <option>Finance</option><option>Marketing</option><option>Sales</option>
+            <option>Operations</option><option>Legal</option><option>Design</option>
+            <option>Product</option><option>Customer Support</option>
+          </select>
+          <select class="filter-select" id="filter-status" data-testid="filter-status">
+            <option value="">All Statuses</option>
+            <option value="Active">Active</option>
+            <option value="Inactive">Inactive</option>
+            <option value="On Leave">On Leave</option>
+          </select>
+          <select class="filter-select" id="filter-type" data-testid="filter-type">
+            <option value="">All Types</option>
+            <option value="Full-time">Full-time</option>
+            <option value="Part-time">Part-time</option>
+            <option value="Contract">Contract</option>
+            <option value="Intern">Intern</option>
+          </select>
+          <button class="btn btn-ghost btn-sm" id="btn-clear-filters" data-testid="btn-clear-filters">✕ Clear</button>
+          <span class="filter-count" id="filter-count" data-testid="result-count"></span>
+        </div>
+
+        <!-- Table -->
+        <div class="table-wrap" id="table-wrap">
+          <div class="loading-overlay" id="loading-overlay">
+            <div class="loading-spinner"></div>
+            <span>Loading employees…</span>
+          </div>
+          <table class="data-table" id="emp-table" data-testid="employee-table" style="display:none">
+            <thead>
+              <tr>
+                <th class="sortable" data-sort="firstName" data-testid="sort-name">Employee <span class="sort-icon" id="si-firstName">↕</span></th>
+                <th class="sortable" data-sort="department" data-testid="sort-dept">Department <span class="sort-icon" id="si-department">↕</span></th>
+                <th class="sortable" data-sort="jobTitle" data-testid="sort-title">Job Title <span class="sort-icon" id="si-jobTitle">↕</span></th>
+                <th class="sortable" data-sort="status" data-testid="sort-status">Status <span class="sort-icon" id="si-status">↕</span></th>
+                <th class="sortable" data-sort="employmentType" data-testid="sort-type">Type <span class="sort-icon" id="si-employmentType">↕</span></th>
+                <th class="sortable" data-sort="salary" data-testid="sort-salary">Salary <span class="sort-icon" id="si-salary">↕</span></th>
+                <th class="sortable" data-sort="hireDate" data-testid="sort-hire">Hire Date <span class="sort-icon" id="si-hireDate">↕</span></th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="emp-tbody" data-testid="employee-tbody"></tbody>
+          </table>
+          <div class="empty-state hidden" id="empty-state">
+            <div class="empty-icon">🔍</div>
+            <p>No employees found. Try adjusting your filters.</p>
+          </div>
+        </div>
+
+        <!-- Pagination -->
+        <div class="pagination" id="pagination" data-testid="pagination"></div>
+      </div>
+    </div><!-- /page-body -->
+  </div><!-- /main-content -->
+</div><!-- /app-layout -->
+
+<!-- ── Add / Edit Employee Modal ───────────────────────────── -->
+<div class="modal-overlay" id="emp-modal" data-testid="employee-modal">
+  <div class="modal" style="max-width:780px">
+    <div class="modal-header">
+      <h2 id="modal-title">Add Employee</h2>
+      <button class="modal-close" id="modal-close-btn" data-testid="modal-close">✕</button>
+    </div>
+    <div class="modal-body">
+      <form id="emp-form" novalidate>
+        <input type="hidden" id="emp-id" name="id">
+
+        <div class="form-grid">
+          <div class="form-group">
+            <label class="form-label" for="m-firstName">First Name <span class="required">*</span></label>
+            <input type="text" id="m-firstName" name="firstName" class="form-control"
+              placeholder="John" required data-testid="m-firstName">
+            <div class="form-error" id="m-err-firstName"></div>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="m-lastName">Last Name <span class="required">*</span></label>
+            <input type="text" id="m-lastName" name="lastName" class="form-control"
+              placeholder="Smith" required data-testid="m-lastName">
+            <div class="form-error" id="m-err-lastName"></div>
+          </div>
+        </div>
+
+        <div class="form-grid">
+          <div class="form-group">
+            <label class="form-label" for="m-email">Email <span class="required">*</span></label>
+            <input type="email" id="m-email" name="email" class="form-control"
+              placeholder="john@company.com" required data-testid="m-email">
+            <div class="form-error" id="m-err-email"></div>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="m-phone">Phone</label>
+            <input type="tel" id="m-phone" name="phone" class="form-control"
+              placeholder="+1-555-000-1234" data-testid="m-phone">
+          </div>
+        </div>
+
+        <div class="form-grid">
+          <div class="form-group">
+            <label class="form-label" for="m-department">Department <span class="required">*</span></label>
+            <select id="m-department" name="department" class="form-control" required data-testid="m-department">
+              <option value="">-- Select --</option>
+              <option>Engineering</option><option>Human Resources</option>
+              <option>Finance</option><option>Marketing</option><option>Sales</option>
+              <option>Operations</option><option>Legal</option><option>Design</option>
+              <option>Product</option><option>Customer Support</option>
+            </select>
+            <div class="form-error" id="m-err-department"></div>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="m-jobTitle">Job Title</label>
+            <input type="text" id="m-jobTitle" name="jobTitle" class="form-control"
+              placeholder="Software Engineer" data-testid="m-jobTitle">
+          </div>
+        </div>
+
+        <div class="form-grid">
+          <div class="form-group">
+            <label class="form-label" for="m-status">Status</label>
+            <select id="m-status" name="status" class="form-control" data-testid="m-status">
+              <option value="Active">Active</option>
+              <option value="Inactive">Inactive</option>
+              <option value="On Leave">On Leave</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="m-employmentType">Employment Type</label>
+            <select id="m-employmentType" name="employmentType" class="form-control" data-testid="m-emptype">
+              <option value="Full-time">Full-time</option>
+              <option value="Part-time">Part-time</option>
+              <option value="Contract">Contract</option>
+              <option value="Intern">Intern</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-grid">
+          <div class="form-group">
+            <label class="form-label" for="m-salary">Annual Salary (USD)</label>
+            <input type="number" id="m-salary" name="salary" class="form-control"
+              placeholder="65000" min="0" step="1000" data-testid="m-salary">
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="m-hireDate">Hire Date</label>
+            <input type="date" id="m-hireDate" name="hireDate" class="form-control" data-testid="m-hireDate">
+          </div>
+        </div>
+
+        <div class="form-grid">
+          <div class="form-group">
+            <label class="form-label" for="m-dateOfBirth">Date of Birth</label>
+            <input type="date" id="m-dateOfBirth" name="dateOfBirth" class="form-control" data-testid="m-dob">
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="m-gender">Gender</label>
+            <select id="m-gender" name="gender" class="form-control" data-testid="m-gender">
+              <option value="">-- Select --</option>
+              <option value="Male">Male</option>
+              <option value="Female">Female</option>
+              <option value="Non-binary">Non-binary</option>
+              <option value="Prefer not to say">Prefer not to say</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-grid">
+          <div class="form-group">
+            <label class="form-label" for="m-country">Country</label>
+            <select id="m-country" name="country" class="form-control" data-testid="m-country">
+              <option value="">-- Select --</option>
+              <option value="USA">United States</option>
+              <option value="United Kingdom">United Kingdom</option>
+              <option value="Canada">Canada</option>
+              <option value="Australia">Australia</option>
+              <option value="Germany">Germany</option>
+              <option value="France">France</option>
+              <option value="India">India</option>
+              <option value="Singapore">Singapore</option>
+              <option value="Netherlands">Netherlands</option>
+              <option value="Spain">Spain</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="m-city">City</label>
+            <input type="text" id="m-city" name="city" class="form-control"
+              placeholder="San Francisco" data-testid="m-city">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="m-manager">Manager</label>
+          <input type="text" id="m-manager" name="manager" class="form-control"
+            placeholder="Manager name" data-testid="m-manager">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="m-skills">Skills (comma-separated)</label>
+          <input type="text" id="m-skills" name="skills" class="form-control"
+            placeholder="JavaScript, React, Node.js" data-testid="m-skills">
+          <div class="form-hint">Separate skills with commas</div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="m-experience">Years of Experience: <span id="m-exp-val">0</span></label>
+          <input type="range" id="m-experience" name="experience" class="form-control"
+            min="0" max="30" value="0" step="1" data-testid="m-experience">
+          <div class="range-labels"><span>0</span><span>10</span><span>20</span><span>30</span></div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="m-performanceRating">Performance Rating</label>
+          <select id="m-performanceRating" name="performanceRating" class="form-control" data-testid="m-rating">
+            <option value="0">Not rated</option>
+            <option value="1">1 – Poor</option>
+            <option value="2">2 – Below average</option>
+            <option value="3">3 – Average</option>
+            <option value="4">4 – Good</option>
+            <option value="5">5 – Excellent</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="m-notes">Notes</label>
+          <textarea id="m-notes" name="notes" class="form-control"
+            rows="3" placeholder="Additional notes…" data-testid="m-notes"></textarea>
+        </div>
+      </form>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" id="modal-cancel" data-testid="modal-cancel">Cancel</button>
+      <button class="btn btn-primary" id="modal-save" data-testid="modal-save">Save Employee</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── View Employee Modal ─────────────────────────────────── -->
+<div class="modal-overlay" id="view-modal" data-testid="view-modal">
+  <div class="modal" style="max-width:680px">
+    <div class="modal-header">
+      <h2>Employee Details</h2>
+      <button class="modal-close" onclick="HRMS.closeModal('view-modal')" data-testid="view-modal-close">✕</button>
+    </div>
+    <div class="modal-body" id="view-modal-body"></div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="HRMS.closeModal('view-modal')">Close</button>
+      <button class="btn btn-primary" id="view-edit-btn" data-testid="view-edit-btn">Edit Employee</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── Delete Confirm Modal ────────────────────────────────── -->
+<div class="modal-overlay modal-sm" id="delete-modal" data-testid="delete-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <h2>Confirm Delete</h2>
+      <button class="modal-close" onclick="HRMS.closeModal('delete-modal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <p style="font-size:0.92rem">Are you sure you want to delete <strong id="delete-emp-name"></strong>?<br>
+      <span style="color:var(--error);font-size:0.82rem">This action cannot be undone.</span></p>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="HRMS.closeModal('delete-modal')" data-testid="delete-cancel">Cancel</button>
+      <button class="btn btn-danger" id="delete-confirm-btn" data-testid="delete-confirm">Delete</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast-container" class="toast-container"></div>
+
+<script src="js/hrms-data.js"></script>
+<script src="js/shadow-components.js"></script>
+<script src="js/hrms.js"></script>
+<script>
+(async () => {
+  const ready = await HRMS.init();
+  if (!ready) return;
+
+  let state = { page: 1, limit: 20, search: '', dept: '', status: '', type: '', sort: 'firstName', order: 'asc' };
+  let currentViewId = null;
+  let deleteTargetId = null;
+  let isEditMode = false;
+
+  // ── Fetch & render table ──────────────────────────────────
+  async function loadEmployees() {
+    document.getElementById('loading-overlay').style.display = 'flex';
+    document.getElementById('emp-table').style.display = 'none';
+    document.getElementById('empty-state').classList.add('hidden');
+
+    const params = {
+      page: state.page, limit: state.limit,
+      ...(state.search && { search: state.search }),
+      ...(state.dept   && { department: state.dept }),
+      ...(state.status && { status: state.status }),
+      ...(state.type   && { employmentType: state.type }),
+      sort: state.sort, order: state.order
+    };
+
+    try {
+      const res = await HRMS.Employees.list(params);
+      renderTable(res.data);
+      renderPagination(res.pagination);
+      document.getElementById('filter-count').textContent =
+        `${res.pagination.total} record${res.pagination.total !== 1 ? 's' : ''}`;
+    } catch (e) {
+      HRMS.toast('Failed to load employees: ' + e.message, 'error');
+    } finally {
+      document.getElementById('loading-overlay').style.display = 'none';
+    }
+  }
+
+  function renderTable(data) {
+    const tbody = document.getElementById('emp-tbody');
+    if (!data.length) {
+      document.getElementById('emp-table').style.display = 'none';
+      document.getElementById('empty-state').classList.remove('hidden');
+      tbody.innerHTML = '';
+      return;
+    }
+    document.getElementById('emp-table').style.display = 'table';
+    tbody.innerHTML = data.map(e => `
+      <tr data-id="${e.id}" data-testid="emp-row-${e.id}">
+        <td>
+          <div class="emp-cell">
+            ${HRMS.avatar(e.firstName, e.lastName, e.profileColor)}
+            <div>
+              <div class="emp-name">${HRMS.escape(e.firstName)} ${HRMS.escape(e.lastName)}</div>
+              <div class="emp-id">${e.id} · ${HRMS.escape(e.email)}</div>
+            </div>
+          </div>
+        </td>
+        <td>${HRMS.escape(e.department)}</td>
+        <td>${HRMS.escape(e.jobTitle || '—')}</td>
+        <td>${HRMS.statusBadge(e.status)}</td>
+        <td>${HRMS.empTypeBadge(e.employmentType)}</td>
+        <td>${HRMS.fmt$(e.salary)}</td>
+        <td>${HRMS.fmtDate(e.hireDate)}</td>
+        <td>
+          <div class="btn-group">
+            <button class="btn btn-ghost btn-sm btn-view" data-id="${e.id}"
+              data-testid="btn-view-${e.id}" title="View">👁</button>
+            <button class="btn btn-outline btn-sm btn-edit" data-id="${e.id}"
+              data-testid="btn-edit-${e.id}" title="Edit">✏️</button>
+            <button class="btn btn-danger btn-sm btn-delete" data-id="${e.id}"
+              data-testid="btn-delete-${e.id}" title="Delete">🗑</button>
+          </div>
+        </td>
+      </tr>`).join('');
+
+    tbody.querySelectorAll('.btn-view').forEach(b => b.addEventListener('click', () => viewEmployee(b.dataset.id)));
+    tbody.querySelectorAll('.btn-edit').forEach(b => b.addEventListener('click', () => openEditModal(b.dataset.id)));
+    tbody.querySelectorAll('.btn-delete').forEach(b => b.addEventListener('click', () => confirmDelete(b.dataset.id)));
+  }
+
+  function renderPagination({ page, pages, total, limit }) {
+    const pg = document.getElementById('pagination');
+    if (pages <= 1) { pg.innerHTML = ''; return; }
+    const info = `<span class="page-info">Page ${page} of ${pages} (${total} total)</span>`;
+    const prev = `<button class="page-btn" id="pg-prev" ${page===1?'disabled':''} data-testid="pg-prev">‹</button>`;
+    const next = `<button class="page-btn" id="pg-next" ${page===pages?'disabled':''} data-testid="pg-next">›</button>`;
+    // Show ±2 pages
+    let nums = '';
+    for (let i = 1; i <= pages; i++) {
+      if (i === 1 || i === pages || Math.abs(i - page) <= 2) {
+        nums += `<button class="page-btn ${i===page?'active':''}" data-p="${i}" data-testid="pg-${i}">${i}</button>`;
+      } else if (Math.abs(i - page) === 3) {
+        nums += `<span style="padding:0 4px;color:var(--text-muted)">…</span>`;
+      }
+    }
+    pg.innerHTML = info + prev + nums + next;
+    pg.querySelectorAll('.page-btn[data-p]').forEach(b => b.addEventListener('click', () => { state.page = parseInt(b.dataset.p); loadEmployees(); }));
+    const pp = pg.querySelector('#pg-prev'); if (pp) pp.addEventListener('click', () => { if (state.page > 1) { state.page--; loadEmployees(); } });
+    const pn = pg.querySelector('#pg-next'); if (pn) pn.addEventListener('click', () => { if (state.page < pages) { state.page++; loadEmployees(); } });
+  }
+
+  // ── Sort ──────────────────────────────────────────────────
+  document.querySelectorAll('th.sortable').forEach(th => {
+    th.addEventListener('click', () => {
+      const s = th.dataset.sort;
+      if (state.sort === s) state.order = state.order === 'asc' ? 'desc' : 'asc';
+      else { state.sort = s; state.order = 'asc'; }
+      document.querySelectorAll('.sort-icon').forEach(si => si.textContent = '↕');
+      const icon = document.getElementById('si-' + s);
+      if (icon) icon.textContent = state.order === 'asc' ? '↑' : '↓';
+      state.page = 1; loadEmployees();
+    });
+  });
+
+  // ── Filters ───────────────────────────────────────────────
+  let searchTimer;
+  document.getElementById('search-input').addEventListener('input', e => {
+    clearTimeout(searchTimer);
+    searchTimer = setTimeout(() => { state.search = e.target.value.trim(); state.page = 1; loadEmployees(); }, 350);
+  });
+  document.getElementById('filter-dept').addEventListener('change', e => { state.dept = e.target.value; state.page = 1; loadEmployees(); });
+  document.getElementById('filter-status').addEventListener('change', e => { state.status = e.target.value; state.page = 1; loadEmployees(); });
+  document.getElementById('filter-type').addEventListener('change', e => { state.type = e.target.value; state.page = 1; loadEmployees(); });
+  document.getElementById('btn-clear-filters').addEventListener('click', () => {
+    state = { ...state, search: '', dept: '', status: '', type: '', page: 1 };
+    document.getElementById('search-input').value = '';
+    document.getElementById('filter-dept').value = '';
+    document.getElementById('filter-status').value = '';
+    document.getElementById('filter-type').value = '';
+    loadEmployees();
+  });
+
+  // ── Export CSV ────────────────────────────────────────────
+  document.getElementById('btn-export').addEventListener('click', async () => {
+    try { await HRMS.Employees.exportCSV(); HRMS.toast('CSV downloaded', 'success'); }
+    catch (e) { HRMS.toast('Export failed: ' + e.message, 'error'); }
+  });
+
+  // ── View Employee ─────────────────────────────────────────
+  async function viewEmployee(id) {
+    try {
+      const e = await HRMS.Employees.get(id);
+      currentViewId = id;
+      document.getElementById('view-modal-body').innerHTML = `
+        <div style="display:flex;align-items:center;gap:16px;margin-bottom:20px">
+          ${HRMS.avatar(e.firstName, e.lastName, e.profileColor)}
+          <div>
+            <div style="font-size:1.15rem;font-weight:700">${HRMS.escape(e.firstName)} ${HRMS.escape(e.lastName)}</div>
+            <div style="color:var(--text-secondary);font-size:0.85rem">${HRMS.escape(e.jobTitle||'')} · ${HRMS.escape(e.department)}</div>
+            <div style="margin-top:5px">${HRMS.statusBadge(e.status)} ${HRMS.empTypeBadge(e.employmentType)}</div>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px 20px;font-size:0.88rem">
+          ${field('🪪 Employee ID', e.id)}
+          ${field('✉️ Email', e.email)}
+          ${field('📞 Phone', e.phone||'—')}
+          ${field('📅 Hire Date', HRMS.fmtDate(e.hireDate))}
+          ${field('🎂 Date of Birth', HRMS.fmtDate(e.dateOfBirth))}
+          ${field('⚧ Gender', e.gender||'—')}
+          ${field('💰 Salary', HRMS.fmt$(e.salary))}
+          ${field('🌍 Location', [e.city, e.country].filter(Boolean).join(', ')||'—')}
+          ${field('👔 Manager', e.manager||'—')}
+          ${field('⏱ Experience', e.experience != null ? e.experience + ' yrs' : '—')}
+          ${field('⭐ Rating', e.performanceRating > 0 ? '★'.repeat(e.performanceRating) + '☆'.repeat(5-e.performanceRating) : 'Not rated')}
+          ${field('🕐 Shift Start', e.shiftStart||'—')}
+        </div>
+        ${e.skills?.length ? `<div style="margin-top:14px"><div style="font-size:0.75rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:7px">Skills</div><div style="display:flex;flex-wrap:wrap;gap:5px">${e.skills.map(s=>`<span style="background:var(--primary-light);color:var(--primary-dark);border-radius:10px;padding:2px 9px;font-size:0.78rem;font-weight:500">${HRMS.escape(s)}</span>`).join('')}</div></div>` : ''}
+        ${e.notes ? `<div style="margin-top:14px;padding:12px;background:var(--bg);border-radius:var(--radius-sm);font-size:0.85rem;color:var(--text-secondary)">${HRMS.escape(e.notes)}</div>` : ''}
+        <div style="margin-top:12px;font-size:0.75rem;color:var(--text-muted)">Created: ${HRMS.fmtDate(e.createdAt)} · Updated: ${HRMS.fmtDate(e.updatedAt)}</div>`;
+      HRMS.openModal('view-modal');
+    } catch (err) { HRMS.toast('Failed to load: ' + err.message, 'error'); }
+  }
+
+  function field(label, value) {
+    return `<div><div style="font-size:0.72rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.4px;margin-bottom:2px">${label}</div><div style="font-weight:500">${HRMS.escape(String(value||'—'))}</div></div>`;
+  }
+
+  document.getElementById('view-edit-btn').addEventListener('click', () => {
+    HRMS.closeModal('view-modal');
+    if (currentViewId) openEditModal(currentViewId);
+  });
+
+  // ── Add / Edit Modal ──────────────────────────────────────
+  document.getElementById('btn-add-emp').addEventListener('click', () => openAddModal());
+
+  function openAddModal() {
+    isEditMode = false;
+    document.getElementById('modal-title').textContent = 'Add Employee';
+    document.getElementById('modal-save').textContent = '+ Add Employee';
+    document.getElementById('emp-form').reset();
+    document.getElementById('emp-id').value = '';
+    document.getElementById('m-exp-val').textContent = '0';
+    HRMS.openModal('emp-modal');
+  }
+
+  async function openEditModal(id) {
+    try {
+      const e = await HRMS.Employees.get(id);
+      isEditMode = true;
+      document.getElementById('modal-title').textContent = 'Edit Employee';
+      document.getElementById('modal-save').textContent = '💾 Save Changes';
+      document.getElementById('emp-id').value  = e.id;
+      setVal('m-firstName', e.firstName);
+      setVal('m-lastName',  e.lastName);
+      setVal('m-email',     e.email);
+      setVal('m-phone',     e.phone||'');
+      setVal('m-department', e.department);
+      setVal('m-jobTitle',  e.jobTitle||'');
+      setVal('m-status',    e.status||'Active');
+      setVal('m-employmentType', e.employmentType||'Full-time');
+      setVal('m-salary',    e.salary||'');
+      setVal('m-hireDate',  e.hireDate||'');
+      setVal('m-dateOfBirth', e.dateOfBirth||'');
+      setVal('m-gender',    e.gender||'');
+      setVal('m-country',   e.country||'');
+      setVal('m-city',      e.city||'');
+      setVal('m-manager',   e.manager||'');
+      setVal('m-skills',    (e.skills||[]).join(', '));
+      setVal('m-experience', e.experience||0);
+      setVal('m-performanceRating', e.performanceRating||0);
+      setVal('m-notes',     e.notes||'');
+      document.getElementById('m-exp-val').textContent = e.experience||0;
+      HRMS.openModal('emp-modal');
+    } catch (err) { HRMS.toast('Failed to load: ' + err.message, 'error'); }
+  }
+
+  function setVal(id, v) { const el = document.getElementById(id); if (el) el.value = v ?? ''; }
+
+  document.getElementById('m-experience').addEventListener('input', function() {
+    document.getElementById('m-exp-val').textContent = this.value;
+  });
+
+  document.getElementById('modal-close-btn').addEventListener('click', () => HRMS.closeModal('emp-modal'));
+  document.getElementById('modal-cancel').addEventListener('click', () => HRMS.closeModal('emp-modal'));
+
+  document.getElementById('modal-save').addEventListener('click', async () => {
+    // Validate
+    const fn   = document.getElementById('m-firstName').value.trim();
+    const ln   = document.getElementById('m-lastName').value.trim();
+    const em   = document.getElementById('m-email').value.trim();
+    const dept = document.getElementById('m-department').value;
+    let valid  = true;
+    if (!fn)   { document.getElementById('m-err-firstName').textContent  = 'Required'; valid = false; } else document.getElementById('m-err-firstName').textContent = '';
+    if (!ln)   { document.getElementById('m-err-lastName').textContent   = 'Required'; valid = false; } else document.getElementById('m-err-lastName').textContent = '';
+    if (!em || !em.includes('@')) { document.getElementById('m-err-email').textContent = 'Valid email required'; valid = false; } else document.getElementById('m-err-email').textContent = '';
+    if (!dept) { document.getElementById('m-err-department').textContent = 'Required'; valid = false; } else document.getElementById('m-err-department').textContent = '';
+    if (!valid) return;
+
+    const skillsRaw = document.getElementById('m-skills').value;
+    const payload = {
+      firstName:    fn, lastName: ln, email: em,
+      phone:        document.getElementById('m-phone').value.trim(),
+      department:   dept,
+      jobTitle:     document.getElementById('m-jobTitle').value.trim(),
+      status:       document.getElementById('m-status').value,
+      employmentType: document.getElementById('m-employmentType').value,
+      salary:       parseFloat(document.getElementById('m-salary').value)||0,
+      hireDate:     document.getElementById('m-hireDate').value,
+      dateOfBirth:  document.getElementById('m-dateOfBirth').value,
+      gender:       document.getElementById('m-gender').value,
+      country:      document.getElementById('m-country').value,
+      city:         document.getElementById('m-city').value.trim(),
+      manager:      document.getElementById('m-manager').value.trim(),
+      skills:       skillsRaw ? skillsRaw.split(',').map(s => s.trim()).filter(Boolean) : [],
+      experience:   parseInt(document.getElementById('m-experience').value)||0,
+      performanceRating: parseInt(document.getElementById('m-performanceRating').value)||0,
+      notes:        document.getElementById('m-notes').value.trim()
+    };
+
+    const btn = document.getElementById('modal-save');
+    btn.disabled = true; btn.textContent = '⏳ Saving…';
+
+    try {
+      const empId = document.getElementById('emp-id').value;
+      if (isEditMode && empId) {
+        await HRMS.Employees.update(empId, payload);
+        HRMS.toast('Employee updated', 'success');
+      } else {
+        await HRMS.Employees.create(payload);
+        HRMS.toast('Employee added', 'success');
+      }
+      HRMS.closeModal('emp-modal');
+      loadEmployees();
+    } catch (err) {
+      HRMS.toast(err.message || 'Save failed', 'error');
+    } finally {
+      btn.disabled = false;
+      btn.textContent = isEditMode ? '💾 Save Changes' : '+ Add Employee';
+    }
+  });
+
+  // ── Delete ────────────────────────────────────────────────
+  function confirmDelete(id) {
+    deleteTargetId = id;
+    const row = document.querySelector(`tr[data-id="${id}"]`);
+    const nameCell = row?.querySelector('.emp-name');
+    document.getElementById('delete-emp-name').textContent = nameCell?.textContent || id;
+    HRMS.openModal('delete-modal');
+  }
+
+  document.getElementById('delete-confirm-btn').addEventListener('click', async () => {
+    if (!deleteTargetId) return;
+    const btn = document.getElementById('delete-confirm-btn');
+    btn.disabled = true; btn.textContent = '⏳ Deleting…';
+    try {
+      await HRMS.Employees.delete(deleteTargetId);
+      HRMS.toast('Employee deleted', 'success');
+      HRMS.closeModal('delete-modal');
+      loadEmployees();
+    } catch (err) {
+      HRMS.toast(err.message || 'Delete failed', 'error');
+    } finally {
+      btn.disabled = false; btn.textContent = 'Delete'; deleteTargetId = null;
+    }
+  });
+
+  // ── Init ──────────────────────────────────────────────────
+  loadEmployees();
+})();
+</script>
+</body>
+</html>

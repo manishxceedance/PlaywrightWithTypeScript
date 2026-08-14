@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Module 10 - Framework Design</title>
+    <link rel="stylesheet" href="../../../assets/styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <a class="brand" href="../../../index.html">Playwright/TypeScript Training Hub</a>
+      <button class="menu-toggle" data-menu-toggle>Open Menu</button>
+    </header>
+
+    <div class="layout">
+      <aside class="sidebar" data-sidebar>
+        <h2>Learning Menus</h2>
+        <div class="menu-group">
+          <p class="menu-group-title">Playwright</p>
+          <ul>
+            <li><a href="../01-playwright-complete-guide.html">Playwright Mastery Roadmap</a></li>
+            <li><a href="../00-playwright-for-absolutely-beginners.html">0. Absolute Beginner Start Here</a></li>
+            <li><a href="01-basics.html">1. Basics</a></li>
+            <li><a href="02-setup.html">2. Setup</a></li>
+            <li><a href="03-core-playwright.html">3. Core Playwright</a></li>
+            <li><a href="04-locators.html">4. Locators</a></li>
+            <li><a href="05-actions-elements.html">5. Actions and Elements</a></li>
+            <li><a href="06-wait-handling.html">6. Wait Handling</a></li>
+            <li><a href="07-browser-handling.html">7. Browser Handling</a></li>
+            <li><a href="08-validation.html">8. Validation</a></li>
+            <li><a href="09-test-data.html">9. Test Data</a></li>
+            <li><a href="10-framework-design.html">10. Framework Design</a></li>
+            <li><a href="11-api-testing.html">11. API Testing</a></li>
+            <li><a href="12-authentication.html">12. Authentication</a></li>
+            <li><a href="13-execution.html">13. Execution</a></li>
+            <li><a href="14-reporting.html">14. Reporting</a></li>
+            <li><a href="15-debugging.html">15. Debugging</a></li>
+            <li><a href="16-ci-cd.html">16. CI/CD</a></li>
+            <li><a href="17-advanced-topics.html">17. Advanced Topics</a></li>
+            <li><a href="18-best-practices.html">18. Best Practices</a></li>
+            <li><a href="19-project-implementation.html">19. Project Implementation</a></li>
+            <li><a href="20-dom-challenges-lab.html">20. DOM Challenges Lab</a></li>
+            <li><a href="../playwright-typescript-expert-project-rubric.html">Final Project Rubric (Playwright + TypeScript)</a></li>
+            <li><a href="../99-playwright-capstone-50-mcq.html">Final Capstone (50 MCQ)</a></li>
+          </ul>
+        </div>
+      </aside>
+      <main class="content lesson">
+        <h1>Module 10: Framework Design</h1>
+        <p class="lesson-meta">
+          <span class="difficulty-badge">Beginner Friendly</span>
+          This module explains concepts in plain language and then gives practical examples.
+        </p>
+
+        <h2>What You Will Learn</h2>
+        <p>How to design scalable and maintainable test framework structure.</p>
+
+        <h2>Simple Explanation</h2>
+        <p>POM stores page interaction logic in one place, so test files stay clean and readable.</p>
+
+        <h2>Real-World Example</h2>
+        <p>If login button text changes, update locator once in LoginPage class instead of many test files.</p>
+
+        <h2>Step-by-Step Example (Code)</h2>
+        <pre><code>import { Page } from '@playwright/test';
+
+export class LoginPage {
+  constructor(private readonly page: Page) {}
+
+  async login(email: string, password: string) {
+    await this.page.getByLabel('Email').fill(email);
+    await this.page.getByLabel('Password').fill(password);
+    await this.page.getByRole('button', { name: 'Sign in' }).click();
+  }
+}</code></pre>
+
+        <div class="explanation">
+          <b>Line-by-line explanation:</b>
+          <ol>
+            <li><code>import { Page } from '@playwright/test';</code> — Imports the <code>Page</code> type from Playwright. This type annotation is required by TypeScript so the IDE knows what methods are available on <code>this.page</code>, enabling autocomplete and compile-time type checking. Without this import, TypeScript will report &quot;Cannot find name 'Page'&quot; and the file will not compile.</li>
+            <li><code>export class LoginPage {</code> — Defines a reusable Page Object class. <code>export</code> makes it importable in test files. All login-related locators and actions live here — tests never need to know the implementation details.</li>
+            <li><code>constructor(private readonly page: Page) {}</code> — TypeScript constructor that receives the Playwright <code>page</code> object from the test. Stored as <code>this.page</code> so all methods in the class can use it.</li>
+            <li><code>async login(email: string, password: string)</code> — A reusable method that encapsulates the full login sequence. Tests call this one line instead of repeating three separate actions every time.</li>
+            <li><code>await this.page.getByLabel('Email').fill(email)</code> — Uses <code>this.page</code> (the stored browser reference) to type the email. The value comes from the caller, making the method flexible for any user.</li>
+            <li><code>await this.page.getByRole('button', { name: 'Sign in' }).click()</code> — Clicks Sign in to complete the login flow.</li>
+            <li><b>Usage in a test:</b> <code>const loginPage = new LoginPage(page);</code> then <code>await loginPage.login('user@test.com', 'pass');</code> — The test is now two readable lines. If the login UI changes, you update only the <code>LoginPage</code> class.</li>
+          </ol>
+        </div>
+
+        <section class="exercise">
+          <h2>Beginner Notes</h2>
+          <ol>
+            <li>The Page Object Model (POM) pattern puts all locators and actions for one page into one class file.</li>
+            <li>If a locator or label changes in the app, you fix it in one place — all tests that use the class are automatically fixed.</li>
+            <li>Test files should read like plain English: <em>&quot;login, navigate to orders, assert order count&quot;</em> — not raw locator chains.</li>
+          </ol>
+        </section>
+
+        <h2>Common Mistake to Avoid</h2>
+        <p>Mixing page locators and business assertions in one huge file. Split by responsibility.</p>
+
+        <section class="exercise">
+          <h2>Practice Exercise</h2>
+          <ol>
+            <li>Create a LoginPage class and use it in one test.</li>
+            <li>Add one helper utility for random email generation.</li>
+          </ol>
+        </section>
+
+                <section class="exercise">
+          <h2>Expert Readiness Rubric (This Module)</h2>
+          <ul>
+            <li><strong>Can Explain</strong>: I can explain this module topic in simple language with one real project example.</li>
+            <li><strong>Can Implement</strong>: I can write at least one stable TypeScript Playwright test for this module skill.</li>
+            <li><strong>Can Debug</strong>: I can diagnose one failure and fix locator, wait, data, or assertion root cause.</li>
+            <li><strong>Can Reuse</strong>: I can convert this learning into reusable page object, helper, or fixture code.</li>
+          </ul>
+          <p><strong>Score Yourself:</strong> 0 = not started, 1 = learning, 2 = independent, 3 = confident mentor level. Target 10+ before moving to next module.</p>
+        </section>
+        <section class="quiz" data-quiz>
+          <h2>MCQ Self-Check</h2>
+          <div class="question" data-answer="a">
+            <p>1. Main purpose of POM:</p>
+            <label><input type="radio" name="quiz-0-q0" value="a" /> Maintainability and reuse</label>
+            <label><input type="radio" name="quiz-0-q0" value="b" /> Remove assertions</label>
+            <label><input type="radio" name="quiz-0-q0" value="c" /> Avoid fixtures</label>
+          </div>
+
+          <div class="question" data-answer="a">
+            <p>2. Shared utility functions belong in:</p>
+            <label><input type="radio" name="quiz-0-q1" value="a" /> utils folder</label>
+            <label><input type="radio" name="quiz-0-q1" value="b" /> reports folder</label>
+            <label><input type="radio" name="quiz-0-q1" value="c" /> screenshots folder</label>
+          </div>
+
+          <button class="grade-btn" type="button" data-grade>Grade Me</button>
+          <p class="result" data-result aria-live="polite"></p>
+        </section>
+
+        <section class="exercise">
+          <h2>🧪 Try It in the Practice App</h2>
+          <p>Apply what you learned against the interactive demo application:</p>
+          <ul>
+            <li><a href="../../practice-app/index.html" target="_blank">Basic Controls Lab</a> — build a Page Object Model for the controls form and use it in your tests</li>
+          </ul>
+        </section>
+
+        <section class="exercise">
+          <h2>Navigation</h2>
+          <p><a href="09-test-data.html">Previous</a> | <a href="11-api-testing.html">Next</a></p>
+        </section>
+        <a href="../../../index.html" class="home-btn floating-home-btn" title="Back to Home">&#8962; Home</a>
+      </main>
+    </div>
+
+    <script src="../../../assets/app.js"></script>
+  </body>
+</html>
+
+
+
+
+

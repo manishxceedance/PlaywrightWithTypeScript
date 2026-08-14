@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Module 5 - Actions and Elements</title>
+    <link rel="stylesheet" href="../../../assets/styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <a class="brand" href="../../../index.html">Playwright/TypeScript Training Hub</a>
+      <button class="menu-toggle" data-menu-toggle>Open Menu</button>
+    </header>
+
+    <div class="layout">
+      <aside class="sidebar" data-sidebar>
+        <h2>Learning Menus</h2>
+        <div class="menu-group">
+          <p class="menu-group-title">Playwright</p>
+          <ul>
+            <li><a href="../01-playwright-complete-guide.html">Playwright Mastery Roadmap</a></li>
+            <li><a href="../00-playwright-for-absolutely-beginners.html">0. Absolute Beginner Start Here</a></li>
+            <li><a href="01-basics.html">1. Basics</a></li>
+            <li><a href="02-setup.html">2. Setup</a></li>
+            <li><a href="03-core-playwright.html">3. Core Playwright</a></li>
+            <li><a href="04-locators.html">4. Locators</a></li>
+            <li><a href="05-actions-elements.html">5. Actions and Elements</a></li>
+            <li><a href="06-wait-handling.html">6. Wait Handling</a></li>
+            <li><a href="07-browser-handling.html">7. Browser Handling</a></li>
+            <li><a href="08-validation.html">8. Validation</a></li>
+            <li><a href="09-test-data.html">9. Test Data</a></li>
+            <li><a href="10-framework-design.html">10. Framework Design</a></li>
+            <li><a href="11-api-testing.html">11. API Testing</a></li>
+            <li><a href="12-authentication.html">12. Authentication</a></li>
+            <li><a href="13-execution.html">13. Execution</a></li>
+            <li><a href="14-reporting.html">14. Reporting</a></li>
+            <li><a href="15-debugging.html">15. Debugging</a></li>
+            <li><a href="16-ci-cd.html">16. CI/CD</a></li>
+            <li><a href="17-advanced-topics.html">17. Advanced Topics</a></li>
+            <li><a href="18-best-practices.html">18. Best Practices</a></li>
+            <li><a href="19-project-implementation.html">19. Project Implementation</a></li>
+            <li><a href="20-dom-challenges-lab.html">20. DOM Challenges Lab</a></li>
+            <li><a href="../playwright-typescript-expert-project-rubric.html">Final Project Rubric (Playwright + TypeScript)</a></li>
+            <li><a href="../99-playwright-capstone-50-mcq.html">Final Capstone (50 MCQ)</a></li>
+          </ul>
+        </div>
+      </aside>
+      <main class="content lesson">
+        <h1>Module 5: Actions and Elements</h1>
+        <p class="lesson-meta">
+          <span class="difficulty-badge">Beginner Friendly</span>
+          This module explains concepts in plain language and then gives practical examples.
+        </p>
+
+        <h2>What You Will Learn</h2>
+        <p>How to perform common UI actions safely, including alerts, iframes, and shadow DOM components.</p>
+
+        <h2>Simple Explanation</h2>
+        <p>Playwright can click, type, select dropdown values, check options, handle browser alerts, and work inside iframes and shadow DOM. These are common real-world blockers for beginners.</p>
+
+        <h2>Real-World Example</h2>
+        <p>A checkout flow usually needs typing address, selecting country, accepting terms, confirming an alert, and entering payment details inside iframe fields.</p>
+
+        <h2>Step-by-Step Example (Code)</h2>
+        <pre><code>await page.getByRole('button', { name: 'Checkout' }).click();
+      await page.getByLabel('Address').fill('Bengaluru');
+      await page.locator('#country').selectOption('IN');
+      await page.getByLabel('I agree').check();
+
+      // Alert handling: register listener before clicking the alert trigger
+      page.once('dialog', async dialog =&gt; {
+        await expect(dialog.message()).toContain('Are you sure');
+        await dialog.accept();
+      });
+      await page.getByRole('button', { name: 'Delete item' }).click();
+
+      // Frame handling: switch to iframe with frameLocator
+      const paymentFrame = page.frameLocator('#payment-frame');
+      await paymentFrame.getByPlaceholder('1234 1234 1234 1234').fill('4242 4242 4242 4242');
+      await paymentFrame.getByLabel('Expiry').fill('12/30');
+
+      // Shadow DOM handling: Playwright supports open shadow roots through locator chaining
+      await page.locator('user-card').locator('[data-testid="menu-button"]').click();</code></pre>
+
+        <div class="explanation">
+          <b>Line-by-line explanation:</b>
+          <ol>
+            <li><code>await page.getByRole('button', { name: 'Checkout' }).click()</code> — Finds and clicks the &quot;Checkout&quot; button by its accessible name. Always prefer role-based locators for buttons and links.</li>
+            <li><code>await page.getByLabel('Address').fill('Bengaluru')</code> — Finds the input field associated with the &quot;Address&quot; label and types the value. Works reliably because it uses the HTML <code>&lt;label&gt;</code> element.</li>
+            <li><code>await page.locator('#country').selectOption('IN')</code> — Selects &quot;IN&quot; from a <code>&lt;select&gt;</code> dropdown by its option value. You can also select by visible text: <code>selectOption('India')</code>.</li>
+            <li><code>await page.getByLabel('I agree').check()</code> — Ticks a checkbox. Use <code>uncheck()</code> to untick, or <code>isChecked()</code> to read the current state.</li>
+            <li><code>page.once('dialog', async dialog =&gt; { ... })</code> — Registers a one-time listener for browser dialogs (alert/confirm/prompt). <b>Critical:</b> register this BEFORE clicking the button that triggers the dialog.</li>
+            <li><code>await expect(dialog.message()).toContain('Are you sure')</code> — Validates the dialog message text before accepting, ensuring the right dialog appeared.</li>
+            <li><code>page.frameLocator('#payment-frame')</code> — Creates a scoped reference to an iframe. All locator calls on this reference search only inside that frame. You cannot use <code>page.locator()</code> to reach elements inside iframes directly.</li>
+            <li><code>paymentFrame.getByPlaceholder('1234 ...').fill('4242 ...')</code> — Interacts with an iframe element exactly like a normal page element — after obtaining the frame reference.</li>
+            <li><code>page.locator('user-card').locator('[data-testid="menu-button"]')</code> — For open shadow DOM, chain from the host element (<code>user-card</code>) to an inner element. Playwright automatically pierces open shadow roots when chaining locators.</li>
+          </ol>
+        </div>
+
+        <section class="exercise">
+          <h2>Beginner Notes</h2>
+          <ol>
+            <li>Always register <code>page.once('dialog', ...)</code> <em>before</em> clicking the button that opens the dialog.</li>
+            <li>Use <code>frameLocator()</code> for iframe content — normal <code>page.locator()</code> cannot reach inside iframes.</li>
+            <li>For shadow DOM, chain locators from the host custom element to the internal element.</li>
+          </ol>
+        </section>
+
+        <section class="exercise">
+          <h2>Complete Actions Reference Based on the Practice Apps</h2>
+          <p>
+            This lesson now maps Playwright actions to the sample applications that already exist in this training repo.
+            That means each action below can be practiced on a real page instead of an imaginary demo.
+          </p>
+
+          <h3>Action Coverage Table</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Playwright Action</th>
+                <th>When to Use It</th>
+                <th>Practice Page</th>
+                <th>Example</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>click()</code></td>
+                <td>Primary mouse action for buttons, links, toggles, sortable headers, and custom controls.</td>
+                <td>Basic Controls, HRMS Register, HRMS Employees, Dialogs</td>
+                <td><code>await page.getByRole('button', { name: 'Submit' }).click();</code></td>
+              </tr>
+              <tr>
+                <td><code>fill()</code></td>
+                <td>Best for replacing the entire value of text-like inputs and textareas.</td>
+                <td>Basic Controls, HRMS Register, HRMS Login, Employees modal</td>
+                <td><code>await page.getByLabel('Email Address').fill('learner@example.com');</code></td>
+              </tr>
+              <tr>
+                <td><code>clear()</code></td>
+                <td>Use when you want to empty an existing editable field before the next step.</td>
+                <td>HRMS Employees search, Basic Controls text fields</td>
+                <td><code>await page.getByTestId('search-input').clear();</code></td>
+              </tr>
+              <tr>
+                <td><code>press()</code></td>
+                <td>Use keyboard actions such as <code>Enter</code>, <code>Tab</code>, or <code>Escape</code> on a focused field.</td>
+                <td>Dialogs auth modal, HRMS search and form fields</td>
+                <td><code>await page.getByTestId('auth-password').press('Enter');</code></td>
+              </tr>
+              <tr>
+                <td><code>selectOption()</code></td>
+                <td>Use with native <code>&lt;select&gt;</code> and multi-select dropdowns.</td>
+                <td>Basic Controls, Grid with Controls, HRMS Register, Employees modal</td>
+                <td><code>await page.getByLabel('Country').selectOption('India');</code></td>
+              </tr>
+              <tr>
+                <td><code>check()</code> / <code>uncheck()</code></td>
+                <td>Use for checkboxes and radio buttons.</td>
+                <td>Basic Controls, HRMS Register, HRMS Login, Grid with Controls</td>
+                <td><code>await page.getByRole('checkbox', { name: 'Remember me' }).check();</code></td>
+              </tr>
+              <tr>
+                <td><code>setInputFiles()</code></td>
+                <td>Use for file upload fields, even when the UI wraps them in a custom upload area.</td>
+                <td>HRMS Register</td>
+                <td><code>await page.getByTestId('resume-input').setInputFiles({ name: 'resume.pdf', mimeType: 'application/pdf', buffer: Buffer.from('demo') });</code></td>
+              </tr>
+              <tr>
+                <td><code>hover()</code></td>
+                <td>Use when a page has hover-only states, menus, or style changes you want to verify.</td>
+                <td>HRMS frame calendar, custom dropdowns, action buttons</td>
+                <td><code>await page.frameLocator('#date-picker-frame').getByTitle('Next month').hover();</code></td>
+              </tr>
+              <tr>
+                <td><code>focus()</code></td>
+                <td>Useful before keyboard-only actions or when you want to assert the active field.</td>
+                <td>Dialogs auth modal, Basic Controls inputs</td>
+                <td><code>await page.getByTestId('auth-username').focus();</code></td>
+              </tr>
+              <tr>
+                <td><code>page.once('dialog', ...)</code></td>
+                <td>Required for native browser <code>alert</code>, <code>confirm</code>, and <code>prompt</code>.</td>
+                <td>Dialogs</td>
+                <td><code>page.once('dialog', dialog =&gt; dialog.accept());</code></td>
+              </tr>
+              <tr>
+                <td><code>page.waitForEvent('download')</code></td>
+                <td>Use when clicking a control starts a file download.</td>
+                <td>Dialogs, HRMS Employees export</td>
+                <td><code>const download = await page.waitForEvent('download');</code></td>
+              </tr>
+              <tr>
+                <td><code>page.context().waitForEvent('page')</code></td>
+                <td>Use when a click opens a new tab or window.</td>
+                <td>Dialogs</td>
+                <td><code>const popup = await page.context().waitForEvent('page');</code></td>
+              </tr>
+              <tr>
+                <td><code>frameLocator()</code></td>
+                <td>Required for any action inside an iframe.</td>
+                <td>Grid &amp; Frame, HRMS Register date picker</td>
+                <td><code>await page.frameLocator('#date-picker-frame').getByTestId('cal-next').click();</code></td>
+              </tr>
+              <tr>
+                <td><code>locator(...).locator(...)</code></td>
+                <td>Use inside shadow DOM hosts or custom containers to keep action scope tight.</td>
+                <td>Shadow DOM, custom controls, Employees filter bar</td>
+                <td><code>await page.locator('practice-shadow').locator('#shadow-btn').click();</code></td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3>Element Coverage Table</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Element Type</th>
+                <th>Where It Exists</th>
+                <th>Typical Playwright Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Text, password, email, number, tel, url inputs</td>
+                <td>Basic Controls, HRMS Register, HRMS Login, Employees modal</td>
+                <td><code>fill()</code>, <code>clear()</code>, <code>press()</code></td>
+              </tr>
+              <tr>
+                <td>Date, time, month, datetime-local, search inputs</td>
+                <td>HRMS Register, HRMS Employees</td>
+                <td><code>fill()</code>, <code>clear()</code>, <code>press()</code></td>
+              </tr>
+              <tr>
+                <td>Textarea</td>
+                <td>Basic Controls, HRMS Register, Employees modal</td>
+                <td><code>fill()</code></td>
+              </tr>
+              <tr>
+                <td>Native select and multi-select</td>
+                <td>Basic Controls, Grid with Controls, HRMS Register, Employees modal</td>
+                <td><code>selectOption()</code></td>
+              </tr>
+              <tr>
+                <td>Checkboxes and radio buttons</td>
+                <td>Basic Controls, HRMS Register, HRMS Login, Grid with Controls</td>
+                <td><code>check()</code>, <code>uncheck()</code></td>
+              </tr>
+              <tr>
+                <td>Buttons and links</td>
+                <td>All practice apps</td>
+                <td><code>click()</code></td>
+              </tr>
+              <tr>
+                <td>File inputs</td>
+                <td>HRMS Register</td>
+                <td><code>setInputFiles()</code></td>
+              </tr>
+              <tr>
+                <td>Modal dialogs</td>
+                <td>Dialogs auth modal, HRMS Employees modals</td>
+                <td><code>click()</code>, <code>fill()</code>, <code>press()</code></td>
+              </tr>
+              <tr>
+                <td>Tables and row-scoped controls</td>
+                <td>Grid &amp; Frame, Grid with Controls, HRMS Employees</td>
+                <td><code>filter()</code>, chained <code>click()</code>, <code>fill()</code>, <code>check()</code></td>
+              </tr>
+              <tr>
+                <td>Custom elements and open shadow DOM</td>
+                <td>Basic Controls, Shadow DOM, HRMS Register</td>
+                <td>Scoped <code>locator()</code> chaining, then normal actions such as <code>click()</code> or <code>fill()</code></td>
+              </tr>
+              <tr>
+                <td>iframe content</td>
+                <td>Grid &amp; Frame, HRMS Register</td>
+                <td><code>frameLocator()</code> plus standard actions inside the frame</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3>Master Practice Flow</h3>
+          <pre><code>import { test, expect } from '@playwright/test';
+
+test('practice major Playwright actions across the sample apps', async ({ page }) =&gt; {
+  // 1. Basic form actions
+  await page.goto('https://manishxceedance.github.io/PlaywrightWithTypeScript/lessons/practice-app/index.html');
+  await page.getByLabel('Text Input:').fill('Playwright learner');
+  await page.getByLabel('Password:').fill('Secret@123');
+  await page.getByLabel('Email:').fill('learner@example.com');
+  await page.getByLabel('Number:').fill('42');
+  await page.getByLabel('Textarea:').fill('Practicing common input actions.');
+  await page.getByLabel('Select:').selectOption('two');
+  await page.getByLabel('A').check();
+  await page.getByLabel('B').check();
+  await page.getByLabel('B').uncheck();
+  await page.getByLabel('Y').check();
+  await page.getByRole('button', { name: 'Reset' }).click();
+
+  // 2. HRMS Register page for advanced element types
+  await page.goto('https://manishxceedance.github.io/PlaywrightWithTypeScript/lessons/practice-app/hrms/register.html');
+  await page.getByLabel('First Name').fill('Asha');
+  await page.getByLabel('Last Name').fill('Gupta');
+  await page.getByLabel('Email Address').fill('asha@example.com');
+  await page.getByTestId('btn-next').click();
+  await page.getByLabel('Date of Birth').fill('1998-04-10');
+  await page.getByLabel('Country').selectOption('India');
+  await page.getByTestId('btn-next').click();
+  await page.getByLabel('Hire Date').fill('2024-01-15');
+  await page.getByLabel('Shift Start Time').fill('09:30');
+  await page.getByLabel('Start Month').fill('2024-01');
+  await page.getByLabel('Last Seen (Datetime)').fill('2024-01-15T09:30');
+  await page.getByTestId('benefit-health').check();
+  await page.getByTestId('benefit-dental').check();
+  await page.getByTestId('btn-next').click();
+  await page.getByTestId('skills-multi').selectOption(['TypeScript', 'SQL', 'AWS']);
+  await page.getByTestId('profile-photo-input').setInputFiles({
+    name: 'profile.png',
+    mimeType: 'image/png',
+    buffer: Buffer.from('demo image content')
+  });
+  await page.getByTestId('resume-input').setInputFiles({
+    name: 'resume.pdf',
+    mimeType: 'application/pdf',
+    buffer: Buffer.from('demo resume content')
+  });
+  await page.getByTestId('managerSearch').fill('Emma Wilson');
+  await page.getByTestId('notes').fill('Testing uploads, search, and textarea actions.');
+  await page.getByTestId('btn-next').click();
+
+  // 3. iframe and shadow-based actions
+  const calendar = page.frameLocator('#date-picker-frame');
+  await calendar.getByTestId('cal-next').hover();
+  await calendar.getByTestId('cal-next').click();
+  await calendar.getByTestId('cal-clear').click();
+
+  // 4. Native browser dialogs
+  await page.goto('https://manishxceedance.github.io/PlaywrightWithTypeScript/lessons/practice-app/dialogs.html');
+  page.once('dialog', dialog =&gt; dialog.accept());
+  await page.getByTestId('btn-alert').click();
+
+  page.once('dialog', dialog =&gt; dialog.dismiss());
+  await page.getByTestId('btn-confirm-dismiss').click();
+
+  page.once('dialog', dialog =&gt; dialog.accept('Copilot User'));
+  await page.getByTestId('btn-prompt').click();
+
+  // 5. Popup and download handling
+  const popupPromise = page.context().waitForEvent('page');
+  await page.getByTestId('btn-new-tab').click();
+  const popup = await popupPromise;
+  await popup.waitForLoadState();
+
+  const downloadPromise = page.waitForEvent('download');
+  await page.getByTestId('btn-download-csv').click();
+  const download = await downloadPromise;
+  await expect(download.suggestedFilename()).toContain('sample-data');
+
+  // 6. Keyboard action inside modal
+  await page.getByTestId('btn-auth').click();
+  await page.getByTestId('auth-username').fill('admin');
+  await page.getByTestId('auth-password').fill('secret');
+  await page.getByTestId('auth-password').press('Enter');
+
+  // 7. Grid and row-scoped actions
+  await page.goto('https://manishxceedance.github.io/PlaywrightWithTypeScript/lessons/practice-app/hrms/login.html');
+  await page.getByLabel('Username').fill('admin');
+  await page.getByLabel('Password').fill('admin');
+  await page.getByRole('button', { name: 'Sign In' }).click();
+  await page.waitForURL('**/index.html');
+  await page.getByTestId('nav-employees').click();
+  await page.waitForURL('**/employees.html');
+  await page.getByTestId('search-input').fill('Emma');
+  const emmaRow = page.locator('[data-testid^="emp-row-"]').filter({ hasText: 'Emma' }).first();
+  await expect(emmaRow).toBeVisible();
+  await page.getByTestId('sort-name').click();
+  await page.getByTestId('btn-add-employee').click();
+  await expect(page.getByTestId('employee-modal')).toBeVisible();
+  await page.getByTestId('m-firstName').fill('Demo');
+  await page.getByTestId('m-lastName').fill('User');
+  await page.getByTestId('modal-cancel').click();
+
+  // 8. Shadow DOM component
+  await page.goto('https://manishxceedance.github.io/PlaywrightWithTypeScript/lessons/practice-app/shadow.html');
+  await page.locator('practice-shadow').locator('#shadow-input').fill('Shadow value');
+  await page.locator('practice-shadow').locator('#shadow-btn').click();
+  await expect(page.locator('practice-shadow').locator('#shadow-msg')).toContainText('Shadow value');
+});</code></pre>
+
+          <div class="explanation">
+            <b>How to think about these actions:</b>
+            <ol>
+              <li><code>click()</code> is the default action, but you should still wait for the UI state that proves the click had the intended result.</li>
+              <li><code>fill()</code> replaces the current value in one shot. Use it for most form fields instead of typing character by character.</li>
+              <li><code>clear()</code> is useful for search boxes and reusable inputs where the page already contains text from a previous step.</li>
+              <li><code>press()</code> matters when the application reacts to keyboard behavior, such as pressing Enter to submit a dialog or Tab to move focus.</li>
+              <li><code>selectOption()</code> is only for native <code>&lt;select&gt;</code> elements. Custom dropdowns usually need normal clicks on their visible options.</li>
+              <li><code>check()</code> and <code>uncheck()</code> are safer than clicking checkboxes directly because they express the target state instead of just toggling.</li>
+              <li><code>setInputFiles()</code> targets the hidden native file input, not the visual upload card around it.</li>
+              <li>Dialogs, downloads, and popups are event-based actions. Register the wait or listener before the click that triggers them.</li>
+              <li><code>frameLocator()</code> and shadow DOM locator chaining are not special actions by themselves. They are the path that lets normal actions reach otherwise isolated content.</li>
+              <li>Tables and modals are where real-world tests become flaky. Scope actions to one row or one dialog before clicking or typing.</li>
+            </ol>
+          </div>
+
+          <h3>What the Sample Apps Cover Well</h3>
+          <ul>
+            <li>Form actions: text entry, date/time entry, select, multi-select, checkbox, radio, search, textarea, reset.</li>
+            <li>File-based actions: image upload and resume upload.</li>
+            <li>Event-based actions: alert, confirm, prompt, popup, download, delayed dialog.</li>
+            <li>Complex surfaces: iframe, shadow DOM, sortable tables, row-scoped controls, and modal dialogs.</li>
+          </ul>
+
+          <h3>What This Repo Does Not Explicitly Demonstrate Yet</h3>
+          <p>
+            The current sample apps do not provide a strong dedicated lab for actions like <code>dragTo()</code>, right-click context menus, double-click-only behavior, or editable rich-text regions.
+            Those are valid Playwright actions, but they are not grounded in these sample pages yet, so this module focuses on the actions you can genuinely practice here.
+          </p>
+        </section>
+
+        <h2>Common Mistake to Avoid</h2>
+        <p>Trying to interact with iframe elements directly from page or adding dialog listener after click. Register dialog handler first, then trigger action.</p>
+
+        <section class="exercise">
+          <h2>Practice Exercise</h2>
+          <ol>
+            <li>Complete the Basic Controls page using text, number, textarea, select, checkbox, radio, and reset actions.</li>
+            <li>Use the HRMS Register page to practice date, time, month, datetime-local, multi-select, file upload, search, and textarea actions.</li>
+            <li>Handle one alert, one confirm dismiss flow, one prompt with input text, one file download, and one popup from the Dialogs page.</li>
+            <li>Open the HRMS Employees modal, fill two fields, cancel the modal, then sort the grid by employee name.</li>
+            <li>Fill one field inside the iframe and one field inside shadow DOM, then verify the result text changed.</li>
+          </ol>
+        </section>
+
+                <section class="exercise">
+          <h2>Expert Readiness Rubric (This Module)</h2>
+          <ul>
+            <li><strong>Can Explain</strong>: I can explain this module topic in simple language with one real project example.</li>
+            <li><strong>Can Implement</strong>: I can write at least one stable TypeScript Playwright test for this module skill.</li>
+            <li><strong>Can Debug</strong>: I can diagnose one failure and fix locator, wait, data, or assertion root cause.</li>
+            <li><strong>Can Reuse</strong>: I can convert this learning into reusable page object, helper, or fixture code.</li>
+          </ul>
+          <p><strong>Score Yourself:</strong> 0 = not started, 1 = learning, 2 = independent, 3 = confident mentor level. Target 10+ before moving to next module.</p>
+        </section>
+        <section class="quiz" data-quiz>
+          <h2>MCQ Self-Check</h2>
+          <div class="question" data-answer="a">
+            <p>1. For iframe interaction, use:</p>
+            <label><input type="radio" name="quiz-0-q0" value="a" /> frameLocator</label>
+            <label><input type="radio" name="quiz-0-q0" value="b" /> window.switch</label>
+            <label><input type="radio" name="quiz-0-q0" value="c" /> hoverOnly</label>
+          </div>
+
+          <div class="question" data-answer="a">
+            <p>2. Dropdown value selection method is:</p>
+            <label><input type="radio" name="quiz-0-q1" value="a" /> selectOption</label>
+            <label><input type="radio" name="quiz-0-q1" value="b" /> chooseText</label>
+            <label><input type="radio" name="quiz-0-q1" value="c" /> fillOption</label>
+          </div>
+
+          <button class="grade-btn" type="button" data-grade>Grade Me</button>
+          <p class="result" data-result aria-live="polite"></p>
+        </section>
+
+        <section class="exercise">
+          <h2>🧪 Try It in the Practice App</h2>
+          <p>Apply what you learned against the interactive demo application:</p>
+          <ul>
+            <li><a href="../../practice-app/index.html" target="_blank">Basic Controls Lab</a> — practice text entry, select, checkbox, radio, reset, and custom controls</li>
+            <li><a href="../../practice-app/dialogs.html" target="_blank">Dialogs &amp; Windows Lab</a> — practice alerts, confirms, prompts, downloads, popups, and keyboard submission in a modal</li>
+            <li><a href="../../practice-app/grid-frame.html" target="_blank">Grid &amp; Frame Lab</a> — practice iframe actions and simple table interaction</li>
+            <li><a href="../../practice-app/grid-controls.html" target="_blank">Grid with Controls</a> — practice row-scoped fill, select, check, and custom dropdown behavior</li>
+            <li><a href="../../practice-app/shadow.html" target="_blank">Shadow DOM Lab</a> — practice actions inside an open shadow root</li>
+            <li><a href="../../practice-app/hrms/register.html" target="_blank">HRMS Register</a> — practice advanced input types, uploads, custom controls, iframe, and shadow components</li>
+            <li><a href="../../practice-app/hrms/employees.html" target="_blank">HRMS Employees</a> — practice filters, sorting, modals, table actions, and export</li>
+          </ul>
+        </section>
+
+        <section class="exercise">
+          <h2>Navigation</h2>
+          <p><a href="04-locators.html">Previous</a> | <a href="06-wait-handling.html">Next</a></p>
+        </section>
+        <a href="../../../index.html" class="home-btn floating-home-btn" title="Back to Home">&#8962; Home</a>
+      </main>
+    </div>
+
+    <script src="../../../assets/app.js"></script>
+  </body>
+</html>
+
+
+
+
+

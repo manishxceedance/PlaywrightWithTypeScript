@@ -1,0 +1,298 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lesson 8 - Conditions and Loops</title>
+    <link rel="stylesheet" href="../../assets/styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <a class="brand" href="../../index.html">Playwright/TypeScript Training Hub</a>
+      <button class="menu-toggle" data-menu-toggle>Open Menu</button>
+    </header>
+
+    <div class="layout">
+      <aside class="sidebar" data-sidebar>
+        <h2>Learning Menus</h2>
+        <div class="menu-group">
+          <p class="menu-group-title">TypeScript</p>
+          <ul>
+            <li><a href="../typescript/00-javascript-basics.html">0. JavaScript Basics (Must Learn First)</a></li>
+            <li><a href="../typescript/01-introduction.html">1. Introduction and Setup</a></li>
+            <li><a href="../typescript/02-types-and-unions.html">2. Types, Unions, and Narrowing</a></li>
+            <li><a href="../typescript/03-functions-and-objects.html">3. Functions and Object Types</a></li>
+            <li><a href="../typescript/04-interfaces-and-type-aliases.html">4. Interfaces and Type Aliases</a></li>
+            <li><a href="../capstone.html">Final Capstone Assessment</a></li>
+          </ul>
+        </div>
+        <div class="menu-group">
+          <p class="menu-group-title">Type Script</p>
+          <ul>
+            <li><a href="05-classes-and-oop.html">5. Classes and OOP</a></li>
+            <li><a href="06-generics.html">6. Generics</a></li>
+            <li><a href="07-async-and-errors.html">7. Async Patterns and Error Handling</a></li>
+            <li><a class="active" href="08-conditions-and-loops.html">8. Conditions and Loops</a></li>
+            <li><a href="09-tsconfig-and-modules.html">9. tsconfig and Modules</a></li>
+          </ul>
+        </div>
+      </aside>
+
+      <main class="content lesson">
+        <h1>Lesson 8: Conditions and Loops in TypeScript</h1>
+        <p class="lesson-meta">
+          <span class="difficulty-badge">Level: Beginner-Friendly</span>
+          Learn how to make decisions and repeat actions using conditions and loop statements.
+        </p>
+        <p>
+          Conditions and loops are core programming skills. You use conditions to choose what should happen, and loops to repeat work without copying code.
+        </p>
+
+        <section class="lesson-section">
+          <h2>1. Why Conditions and Loops Matter</h2>
+          <p>
+            In real projects, you constantly ask questions like "Is user logged in?", "Did API return success?", and "Process all rows from this file".
+            Conditions solve the question part, and loops solve the repetition part.
+          </p>
+        </section>
+
+        <section class="lesson-section">
+          <h2>2. if, else if, else</h2>
+          <p>Use <code>if</code> blocks when your code needs to branch based on a boolean condition.</p>
+          <pre><code>type Candidate = {
+  name: string;
+  score: number;
+};
+
+function getGrade(candidate: Candidate): string {
+  if (candidate.score >= 90) {
+    return "A";
+  } else if (candidate.score >= 75) {
+    return "B";
+  } else if (candidate.score >= 60) {
+    return "C";
+  }
+  return "Needs Improvement";
+}
+
+console.log(getGrade({ name: "Asha", score: 84 })); // B
+          </code></pre>
+
+          <div class="explanation">
+            <b>Explanation:</b>
+            <ol>
+              <li><code>if</code> checks the first condition. If true, that block runs and function returns.</li>
+              <li><code>else if</code> checks additional conditions only when previous ones were false.</li>
+              <li><code>else</code> (or final return) handles all remaining cases.</li>
+              <li>Conditions run top to bottom, so place strictest/highest rules first.</li>
+            </ol>
+          </div>
+        </section>
+
+        <section class="lesson-section">
+          <h2>3. switch for Fixed Options</h2>
+          <p>Use <code>switch</code> when one value can match one of many known cases.</p>
+          <pre><code>function getBrowserMessage(browser: "chromium" | "firefox" | "webkit"): string {
+  switch (browser) {
+    case "chromium":
+      return "Fast and common in CI pipelines";
+    case "firefox":
+      return "Useful for cross-browser validation";
+    case "webkit":
+      return "Important for Safari-like behavior";
+    default:
+      return "Unknown browser";
+  }
+}
+          </code></pre>
+
+          <div class="explanation">
+            <b>Explanation:</b> <code>switch</code> is easier to read than many <code>if/else</code> checks when comparing the same variable. Each <code>case</code> is a branch. <code>default</code> is the fallback.
+          </div>
+        </section>
+
+        <section class="lesson-section">
+          <h2>4. Ternary Operator</h2>
+          <p>The ternary operator is a short form of <code>if/else</code> for simple expressions.</p>
+          <pre><code>const retries = 2;
+const status = retries > 0 ? "Retrying" : "No retries left";
+console.log(status);
+          </code></pre>
+
+          <div class="explanation">
+            <b>Explanation:</b> Use ternary for short assignments. If logic is long or nested, prefer normal <code>if/else</code> for readability.
+          </div>
+        </section>
+
+        <section class="lesson-section">
+          <h2>5. for Loop (Count-Based Repetition)</h2>
+          <p>Use <code>for</code> when you know how many times to run a block.</p>
+          <pre><code>for (let attempt = 1; attempt <= 3; attempt++) {
+  console.log(`Attempt ${attempt}: running health check`);
+}
+          </code></pre>
+
+          <div class="explanation">
+            <b>Explanation:</b>
+            <ol>
+              <li>Initialize counter: <code>let attempt = 1</code></li>
+              <li>Condition check before each loop: <code>attempt <= 3</code></li>
+              <li>Update step after each loop: <code>attempt++</code></li>
+            </ol>
+          </div>
+        </section>
+
+        <section class="lesson-section">
+          <h2>6. while and do...while</h2>
+          <p>Use <code>while</code> when repetition depends on a condition and count is not fixed.</p>
+          <pre><code>let queueSize = 3;
+while (queueSize > 0) {
+  console.log(`Processing job. Remaining: ${queueSize}`);
+  queueSize--;
+}
+
+let attempts = 0;
+do {
+  attempts++;
+  console.log(`Login try: ${attempts}`);
+} while (attempts < 2);
+          </code></pre>
+
+          <div class="explanation">
+            <b>Explanation:</b> <code>while</code> checks first, then runs. <code>do...while</code> runs once first, then checks. So <code>do...while</code> always executes at least one time.
+          </div>
+        </section>
+
+        <section class="lesson-section">
+          <h2>7. for...of and for...in</h2>
+          <p>Use <code>for...of</code> for array values. Use <code>for...in</code> for object keys.</p>
+          <pre><code>const endpoints = ["/health", "/users", "/reports"];
+for (const endpoint of endpoints) {
+  console.log(`Testing ${endpoint}`);
+}
+
+type EnvConfig = { baseUrl: string; timeoutMs: number };
+const config: EnvConfig = { baseUrl: "https://api.local", timeoutMs: 5000 };
+
+for (const key in config) {
+  const typedKey = key as keyof EnvConfig;
+  console.log(`${typedKey}: ${config[typedKey]}`);
+}
+          </code></pre>
+
+          <div class="explanation">
+            <b>Explanation:</b>
+            <ol>
+              <li><code>for...of</code> gives each value directly from iterable items like arrays.</li>
+              <li><code>for...in</code> gives property names (keys), not values.</li>
+              <li>In TypeScript, use <code>keyof</code> when reading object values by dynamic keys to keep type safety.</li>
+            </ol>
+          </div>
+        </section>
+
+        <section class="lesson-section">
+          <h2>8. break and continue</h2>
+          <p>Use <code>break</code> to stop a loop completely. Use <code>continue</code> to skip the current round.</p>
+          <pre><code>const executionTimes = [120, 95, 540, 80, 300];
+
+for (const ms of executionTimes) {
+  if (ms < 100) {
+    continue; // skip very small values
+  }
+
+  if (ms > 500) {
+    console.log("High latency found, stopping further checks");
+    break;
+  }
+
+  console.log(`Normal range: ${ms} ms`);
+}
+          </code></pre>
+
+          <div class="explanation">
+            <b>Explanation:</b> This pattern is common in testing and data processing where you may skip noise or stop early when a critical condition appears.
+          </div>
+        </section>
+
+        <section class="lesson-section">
+          <h2>9. Combined Real Example</h2>
+          <p>This example combines conditions and loops to process test results.</p>
+          <pre><code>type TestResult = {
+  id: string;
+  passed: boolean;
+  durationMs: number;
+};
+
+const results: TestResult[] = [
+  { id: "TC-01", passed: true, durationMs: 180 },
+  { id: "TC-02", passed: false, durationMs: 240 },
+  { id: "TC-03", passed: true, durationMs: 620 }
+];
+
+let passCount = 0;
+let failCount = 0;
+
+for (const result of results) {
+  if (result.passed) {
+    passCount++;
+  } else {
+    failCount++;
+  }
+
+  const speedLabel = result.durationMs > 500 ? "Slow" : "Normal";
+  console.log(`${result.id} => ${speedLabel}`);
+}
+
+console.log(`Passed: ${passCount}, Failed: ${failCount}`);
+          </code></pre>
+
+          <div class="explanation">
+            <b>Explanation:</b> Loop through each test result, use conditionals to update counters, and use ternary for compact speed tagging. This is a practical pattern for automation reporting.
+          </div>
+        </section>
+
+        <section class="exercise">
+          <h2>Practice Exercise</h2>
+          <ol>
+            <li>Create a function <code>getTrafficLightAction(color)</code> using <code>switch</code>.</li>
+            <li>Create a loop that prints numbers from 1 to 20 and marks even/odd using a condition.</li>
+            <li>Build an array of mock users and use <code>for...of</code> to print only active users.</li>
+            <li>Use <code>while</code> to retry an operation until success or max retries reached.</li>
+            <li>Refactor one long <code>if/else</code> block into readable logic with helper variables.</li>
+          </ol>
+        </section>
+
+        <section class="quiz" data-quiz>
+          <h2>MCQ Self-Check</h2>
+
+          <div class="question" data-answer="c">
+            <p>1. Which loop always executes at least once?</p>
+            <label><input type="radio" name="quiz-0-q0" value="a" /> for</label>
+            <label><input type="radio" name="quiz-0-q0" value="b" /> while</label>
+            <label><input type="radio" name="quiz-0-q0" value="c" /> do...while</label>
+          </div>
+
+          <div class="question" data-answer="a">
+            <p>2. Which statement should you use to skip one iteration but continue looping?</p>
+            <label><input type="radio" name="quiz-0-q1" value="a" /> continue</label>
+            <label><input type="radio" name="quiz-0-q1" value="b" /> break</label>
+            <label><input type="radio" name="quiz-0-q1" value="c" /> return</label>
+          </div>
+
+          <div class="question" data-answer="b">
+            <p>3. In TypeScript, which loop is preferred to read values from an array?</p>
+            <label><input type="radio" name="quiz-0-q2" value="a" /> for...in</label>
+            <label><input type="radio" name="quiz-0-q2" value="b" /> for...of</label>
+            <label><input type="radio" name="quiz-0-q2" value="c" /> switch</label>
+          </div>
+
+          <button class="grade-btn" type="button" data-grade>Grade Me</button>
+          <p class="result" data-result aria-live="polite"></p>
+        </section>
+      </main>
+    </div>
+
+    <script src="../../assets/app.js"></script>
+  </body>
+</html>
+

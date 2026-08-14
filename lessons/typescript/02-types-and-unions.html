@@ -1,0 +1,334 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lesson 2 - Types, Unions, and Narrowing</title>
+    <link rel="stylesheet" href="../../assets/styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <a class="brand" href="../../index.html">Playwright/TypeScript Training Hub</a>
+      <button class="menu-toggle" data-menu-toggle>Open Menu</button>
+    </header>
+
+    <div class="layout">
+      <aside class="sidebar" data-sidebar>
+        <h2>Learning Menus</h2>
+        <div class="menu-group">
+          <p class="menu-group-title">TypeScript</p>
+          <ul>
+            <li><a href="00-javascript-basics.html">0. JavaScript Basics (Must Learn First)</a></li>
+            <li><a href="01-introduction.html">1. Introduction and Setup</a></li>
+            <li><a class="active" href="02-types-and-unions.html">2. Types, Unions, and Narrowing</a></li>
+            <li><a href="03-functions-and-objects.html">3. Functions and Object Types</a></li>
+            <li><a href="04-interfaces-and-type-aliases.html">4. Interfaces and Type Aliases</a></li>
+            <li><a href="../capstone.html">Final Capstone Assessment</a></li>
+          </ul>
+        </div>
+        <div class="menu-group">
+          <p class="menu-group-title">Type Script</p>
+          <ul>
+            <li><a href="../type-script/05-classes-and-oop.html">5. Classes and OOP</a></li>
+            <li><a href="../type-script/06-generics.html">6. Generics</a></li>
+            <li><a href="../type-script/07-async-and-errors.html">7. Async Patterns and Error Handling</a></li>
+            <li><a href="../type-script/09-tsconfig-and-modules.html">9. tsconfig and Modules</a></li>
+            <li><a href="../capstone.html">Final Capstone Assessment</a></li>
+          </ul>
+        </div>
+      </aside>
+
+      <main class="content lesson">
+
+
+        <h1>Lesson 2: Core Types, Unions, and Narrowing</h1>
+        <p class="lesson-meta">
+          <span class="difficulty-badge">Level: Beginner</span>
+          Build your typing foundation before moving to functions and OOP.
+        </p>
+        <p>
+          Strong typing is the first big TypeScript advantage. In this lesson, youâ€™ll learn how to define and safely use all the core types youâ€™ll see in real projects.
+        </p>
+
+        <section class="lesson-section">
+          <h2>1. Basic Types</h2>
+          <p>TypeScript lets you specify exactly what kind of value a variable can hold. The colon means "type annotation". Example: <code>envName: string</code> means variable name is <code>envName</code> and its type must be <code>string</code>.</p>
+          <pre><code>// Basic types
+const envName: string = "staging";
+const retryCount: number = 3;
+const isRegressionRun: boolean = true;
+
+// Array of strings
+const tags: string[] = ["smoke", "api", "critical"];
+          </code></pre>
+          <p>
+            JavaScript has 7 primitive types and 1 non-primitive base type. TypeScript builds on these runtime types and adds compile-time safety.
+          </p>
+          <table>
+            <thead>
+              <tr>
+                <th>Type</th>
+                <th>Category</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>string</code></td>
+                <td>Primitive</td>
+                <td>Textual data</td>
+              </tr>
+              <tr>
+                <td><code>number</code></td>
+                <td>Primitive</td>
+                <td>Integers and decimals</td>
+              </tr>
+              <tr>
+                <td><code>boolean</code></td>
+                <td>Primitive</td>
+                <td><code>true</code> or <code>false</code></td>
+              </tr>
+              <tr>
+                <td><code>bigint</code></td>
+                <td>Primitive</td>
+                <td>Large integers</td>
+              </tr>
+              <tr>
+                <td><code>null</code></td>
+                <td>Primitive</td>
+                <td>Empty or absent value</td>
+              </tr>
+              <tr>
+                <td><code>undefined</code></td>
+                <td>Primitive</td>
+                <td>Declared but not assigned</td>
+              </tr>
+              <tr>
+                <td><code>symbol</code></td>
+                <td>Primitive</td>
+                <td>Unique identifier</td>
+              </tr>
+              <tr>
+                <td><code>object</code></td>
+                <td>Non-Primitive</td>
+                <td>Complex collections</td>
+              </tr>
+            </tbody>
+          </table>
+          <pre><code>// Less common but important primitive types
+const orderId: bigint = 9007199254740993n;
+const cacheKey: symbol = Symbol("cache-key");
+
+// Null and undefined are explicit states
+let lastRunAt: Date | null = null;
+let reportOwner: string | undefined;
+
+// Non-primitive object type
+const runMeta: object = { suite: "smoke", retries: 1 };
+          </code></pre>
+        </section>
+
+        <section class="lesson-section">
+          <h2>2. Tuples</h2>
+          <p><b>Definition:</b> A <b>tuple</b> is a fixed-size, ordered list where each position has a specific type. Use tuples for things like coordinates, RGB colors, or fixed-format data rows.</p>
+          <pre><code>// A tuple for a test result: [test case id, status, duration]
+const result: [string, string, number] = ["TC-101", "pass", 2.5];
+// You must provide exactly three items, in the right order and type.
+// result[0] is a string (id), result[1] is a string (status), result[2] is a number (duration)
+
+// Example: representing a coordinate
+const point: [number, number] = [10, 20];
+          </code></pre>
+        </section>
+
+        <section class="lesson-section">
+          <h2>3. Enums</h2>
+          <p><b>Definition:</b> An <b>enum</b> (short for "enumeration") defines a named set of fixed constants. Use enums when a value should only be one option from a known list.</p>
+          <pre><code>// Define an enum for test status
+enum Status {
+  Passed = "passed",
+  Failed = "failed",
+  Blocked = "blocked"
+}
+const runStatus: Status = Status.Passed;
+console.log(runStatus); // "passed"
+          </code></pre>
+        </section>
+
+        <section class="lesson-section">
+          <h2>4. Union Types</h2>
+          <p>A <b>union type</b> lets a variable accept more than one type. This is useful when a value could be a string or a number, for example.</p>
+          <pre><code>let testIdentifier: string | number;
+testIdentifier = "TC-101";
+testIdentifier = 101;
+          </code></pre>
+        </section>
+
+        <section class="lesson-section">
+          <h2>5. Type Narrowing</h2>
+          <p>Before using a value, narrow it so TypeScript knows which branch is safe. This means checking the type before using it in a way that only works for one type.</p>
+          <pre><code>function printTestIdentifier(id: string | number): void {
+  if (typeof id === "string") {
+    console.log(id.toUpperCase());
+  } else {
+    console.log(id.toFixed(0));
+  }
+}
+          </code></pre>
+        </section>
+
+        <section class="lesson-section">
+          <h2>6. Literal and Optional Values</h2>
+          <p><b>Definition:</b> <b>Literal types</b> restrict values to exact choices, and <b>optional values</b> allow a property to be missing using <code>?</code>.</p>
+          <pre><code>// Literal type
+type RunStatus = "passed" | "failed" | "blocked";
+let status: RunStatus = "passed";
+// status = "skipped"; // Error
+
+// Optional property in an object
+type TestCase = {
+  id: string;
+  description?: string; // optional
+};
+          </code></pre>
+        </section>
+
+        <section class="lesson-section">
+          <h2>7. Type Assertions</h2>
+          <p><b>Definition:</b> A <b>type assertion</b> tells TypeScript to treat a value as a specific type when you know more than the compiler.</p>
+          <pre><code>// Example: reading from a value that could be string or number
+let value: unknown = "123";
+// Tell TypeScript to treat value as a string
+let strValue = value as string;
+console.log(strValue.length); // 3
+
+// You can also use the angle-bracket syntax (not in JSX files):
+let numValue = &lt;number&gt;(value as unknown as number);
+          </code></pre>
+          <ul>
+            <li>Type assertions do not change the runtime value, only how TypeScript checks it.</li>
+            <li>Use assertions only when you are sure of the type, or you might get runtime errors.</li>
+          </ul>
+        </section>
+
+        <section class="lesson-section">
+          <h2>8. Type Inference</h2>
+          <p><b>Definition:</b> <b>Type inference</b> means TypeScript automatically determines a value's type from context.</p>
+          <pre><code>// TypeScript knows this is a string
+let message = "Hello";
+// message: string
+
+// TypeScript knows this is a number
+let count = 42;
+// count: number
+          </code></pre>
+        </section>
+
+        <section class="lesson-section">
+          <h2>9. Never and Unknown Types</h2>
+          <p><b>Definition:</b> <b>never</b> represents impossible values (no result), while <b>unknown</b> represents values you must check before use.</p>
+          <pre><code>// never: a function that always throws
+function fail(message: string): never {
+  throw new Error(message);
+}
+
+// unknown: must check type before using
+let input: unknown = "hello";
+if (typeof input === "string") {
+  console.log(input.toUpperCase());
+}
+          </code></pre>
+          <ul>
+            <li>Use <b>never</b> for impossible cases or functions that never finish.</li>
+            <li>Use <b>unknown</b> for values from outside (like user input or APIs) when you want safety.</li>
+          </ul>
+        </section>
+
+        <section class="lesson-section">
+          <h2>10. Type Guards</h2>
+          <p><b>Definition:</b> <b>Type guards</b> are runtime checks that narrow a value to a safer, specific type.</p>
+          <pre><code>// Using typeof
+function printId(id: string | number) {
+  if (typeof id === "string") {
+    console.log("String id:", id.toUpperCase());
+  } else {
+    console.log("Number id:", id.toFixed(2));
+  }
+}
+
+// Using 'in' for objects
+type Cat = { meow: () => void };
+type Dog = { bark: () => void };
+function speak(animal: Cat | Dog) {
+  if ("meow" in animal) {
+    animal.meow();
+  } else {
+    animal.bark();
+  }
+}
+          </code></pre>
+          <ul>
+            <li>Use <b>typeof</b> for primitives, <b>in</b> for object properties, and <b>instanceof</b> for classes.</li>
+          </ul>
+        </section>
+
+        <section class="lesson-section">
+          <h2>Practical Tester Example</h2>
+          <pre><code>type RunStatus = "passed" | "failed" | "blocked";
+
+interface TestResult {
+  caseId: string;
+  status: RunStatus;
+  defectId?: string;
+}</code></pre>
+
+          <pre><code>function summarize(result: TestResult): string {
+  const defectText = result.defectId ? `, defect: ${result.defectId}` : "";
+  return `${result.caseId} -> ${result.status}${defectText}`;
+}</code></pre>
+        </section>
+
+        <section class="exercise">
+          <h2>Practice Exercise</h2>
+          <ol>
+            <li>Create a type <code>Priority</code> with values <code>"low" | "medium" | "high"</code>.</li>
+            <li>Create an interface <code>TestCase</code> with <code>id</code>, <code>title</code>, and <code>priority</code>.</li>
+            <li>Create a function accepting <code>string | number</code> and print it safely with narrowing.</li>
+            <li>Add optional field <code>automationOwner</code> and use it in a summary message.</li>
+          </ol>
+        </section>
+
+        <section class="quiz" data-quiz>
+          <h2>MCQ Self-Check</h2>
+
+          <div class="question" data-answer="c">
+            <p>1. Which is a union type?</p>
+            <label><input type="radio" name="quiz-0-q0" value="a" /> let count: number[]</label>
+            <label><input type="radio" name="quiz-0-q0" value="b" /> let status: boolean</label>
+            <label><input type="radio" name="quiz-0-q0" value="c" /> let id: string | number</label>
+          </div>
+
+          <div class="question" data-answer="a">
+            <p>2. Which check narrows string vs number?</p>
+            <label><input type="radio" name="quiz-0-q1" value="a" /> typeof value === "string"</label>
+            <label><input type="radio" name="quiz-0-q1" value="b" /> value instanceof StringNumber</label>
+            <label><input type="radio" name="quiz-0-q1" value="c" /> Array.isArray(value)</label>
+          </div>
+
+          <div class="question" data-answer="b">
+            <p>3. Optional property syntax in interface is:</p>
+            <label><input type="radio" name="quiz-0-q2" value="a" /> defectId: string!</label>
+            <label><input type="radio" name="quiz-0-q2" value="b" /> defectId?: string</label>
+            <label><input type="radio" name="quiz-0-q2" value="c" /> optional defectId: string</label>
+          </div>
+
+          <button class="grade-btn" type="button" data-grade>Grade Me</button>
+          <p class="result" data-result aria-live="polite"></p>
+        </section>
+      </main>
+    </div>
+
+    <script src="../../assets/app.js"></script>
+  </body>
+</html>
+

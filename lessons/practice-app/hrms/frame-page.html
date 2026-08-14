@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Date Picker Frame</title>
+  <style>
+    :root {
+      --primary: #1976d2;
+      --primary-light: #e3f2fd;
+      --border: #dde3ea;
+      --text: #1a2332;
+      --text-muted: #90a4ae;
+      --radius: 8px;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: #f8fafb;
+      padding: 14px;
+      font-size: 0.88rem;
+      color: var(--text);
+    }
+    .cal-wrap { max-width: 280px; }
+    .cal-header {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 10px; padding: 0 2px;
+    }
+    .cal-nav {
+      background: none; border: 1.5px solid var(--border); border-radius: 6px;
+      width: 30px; height: 30px; cursor: pointer; font-size: 0.85rem;
+      display: flex; align-items: center; justify-content: center;
+      transition: background 0.15s; color: var(--text);
+    }
+    .cal-nav:hover { background: var(--primary-light); border-color: var(--primary); }
+    .cal-month-year { font-weight: 700; font-size: 0.95rem; color: var(--primary); }
+    .cal-grid {
+      display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px;
+    }
+    .cal-day-name {
+      text-align: center; font-size: 0.68rem; font-weight: 700;
+      color: var(--text-muted); padding: 5px 2px; text-transform: uppercase;
+    }
+    .cal-day {
+      text-align: center; padding: 7px 2px; border-radius: 6px;
+      font-size: 0.82rem; cursor: pointer; transition: background 0.15s;
+      border: 1.5px solid transparent; user-select: none;
+    }
+    .cal-day:hover { background: var(--primary-light); }
+    .cal-day.selected {
+      background: var(--primary); color: #fff;
+      font-weight: 700; border-color: var(--primary);
+    }
+    .cal-day.today { font-weight: 700; color: var(--primary); border-color: var(--primary-light); }
+    .cal-day.other-month { color: var(--text-muted); opacity: 0.45; }
+    .cal-day.disabled { opacity: 0.3; cursor: not-allowed; pointer-events: none; }
+    .selected-display {
+      margin-top: 10px; padding: 9px 12px;
+      background: var(--primary-light); border-radius: 6px;
+      font-size: 0.82rem; font-weight: 600; color: var(--primary);
+      text-align: center; min-height: 36px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .cal-label { font-size: 0.72rem; font-weight: 600; color: #546e7a; margin-bottom: 8px; letter-spacing: 0.3px; }
+    .btn-clear {
+      display: block; margin-top: 8px; width: 100%;
+      padding: 6px; border: 1.5px solid var(--border); border-radius: 6px;
+      background: #fff; cursor: pointer; font-size: 0.8rem; color: #546e7a;
+      transition: all 0.15s; font-family: inherit;
+    }
+    .btn-clear:hover { border-color: #c62828; color: #c62828; background: #ffebee; }
+  </style>
+</head>
+<body>
+<div class="cal-wrap" data-testid="frame-calendar">
+  <div class="cal-label">📅 Select Interview Date</div>
+  <div class="cal-header">
+    <button class="cal-nav" id="prev-month" data-testid="cal-prev" title="Previous month">‹</button>
+    <span class="cal-month-year" id="month-year" data-testid="cal-month-year"></span>
+    <button class="cal-nav" id="next-month" data-testid="cal-next" title="Next month">›</button>
+  </div>
+  <div class="cal-grid" id="cal-grid"></div>
+  <div class="selected-display" id="selected-display" data-testid="selected-date">No date selected</div>
+  <button class="btn-clear" id="btn-clear" data-testid="cal-clear">✕ Clear selection</button>
+</div>
+
+<script>
+(function () {
+  const DAYS = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  const MONTHS = ['January','February','March','April','May','June',
+                  'July','August','September','October','November','December'];
+  let today     = new Date();
+  let viewYear  = today.getFullYear();
+  let viewMonth = today.getMonth();
+  let selected  = null;
+
+  function pad2(n) { return String(n).padStart(2, '0'); }
+
+  function render() {
+    document.getElementById('month-year').textContent = MONTHS[viewMonth] + ' ' + viewYear;
+    const grid  = document.getElementById('cal-grid');
+    grid.innerHTML = DAYS.map(d => `<div class="cal-day-name">${d}</div>`).join('');
+
+    const first = new Date(viewYear, viewMonth, 1).getDay();
+    const total = new Date(viewYear, viewMonth + 1, 0).getDate();
+    const prevTotal = new Date(viewYear, viewMonth, 0).getDate();
+
+    // Leading days from previous month
+    for (let i = first - 1; i >= 0; i--) {
+      const d = prevTotal - i;
+      grid.insertAdjacentHTML('beforeend',
+        `<div class="cal-day other-month" data-date="${viewYear}-${pad2(viewMonth)}-${pad2(d)}">${d}</div>`);
+    }
+
+    for (let d = 1; d <= total; d++) {
+      const iso = `${viewYear}-${pad2(viewMonth + 1)}-${pad2(d)}`;
+      const isToday = today.getDate() === d && today.getMonth() === viewMonth && today.getFullYear() === viewYear;
+      const isSel   = selected === iso;
+      grid.insertAdjacentHTML('beforeend',
+        `<div class="cal-day ${isToday ? 'today' : ''} ${isSel ? 'selected' : ''}"
+              data-date="${iso}" data-testid="cal-day-${iso}">${d}</div>`);
+    }
+
+    // Trailing days
+    const used = first + total;
+    const trail = used % 7 === 0 ? 0 : 7 - (used % 7);
+    for (let d = 1; d <= trail; d++) {
+      grid.insertAdjacentHTML('beforeend',
+        `<div class="cal-day other-month" data-date="${viewYear}-${pad2(viewMonth + 2)}-${pad2(d)}">${d}</div>`);
+    }
+
+    grid.querySelectorAll('.cal-day:not(.other-month)').forEach(el => {
+      el.addEventListener('click', () => selectDate(el.dataset.date));
+    });
+  }
+
+  function selectDate(iso) {
+    selected = iso;
+    const [y, m, d] = iso.split('-').map(Number);
+    const displayDate = MONTHS[m - 1] + ' ' + d + ', ' + y;
+    document.getElementById('selected-display').textContent = displayDate;
+    render();
+    // Post message to parent for iframe communication
+    window.parent.postMessage({ type: 'dateSelected', date: iso, displayDate }, '*');
+  }
+
+  document.getElementById('prev-month').addEventListener('click', () => {
+    viewMonth--;
+    if (viewMonth < 0) { viewMonth = 11; viewYear--; }
+    render();
+  });
+
+  document.getElementById('next-month').addEventListener('click', () => {
+    viewMonth++;
+    if (viewMonth > 11) { viewMonth = 0; viewYear++; }
+    render();
+  });
+
+  document.getElementById('btn-clear').addEventListener('click', () => {
+    selected = null;
+    document.getElementById('selected-display').textContent = 'No date selected';
+    render();
+    window.parent.postMessage({ type: 'dateSelected', date: '', displayDate: '' }, '*');
+  });
+
+  render();
+})();
+</script>
+</body>
+</html>

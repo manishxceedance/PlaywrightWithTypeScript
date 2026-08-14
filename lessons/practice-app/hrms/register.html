@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Register – HRMS Practice App</title>
+  <link rel="stylesheet" href="css/hrms.css">
+  <style>
+    .section-badge {
+      display: inline-block; padding: 2px 9px; border-radius: 10px;
+      background: var(--primary-light); color: var(--primary-dark);
+      font-size: 0.7rem; font-weight: 700; letter-spacing: 0.5px;
+      text-transform: uppercase; margin-left: 8px; vertical-align: middle;
+    }
+    .control-type-label {
+      display: inline-block; font-size: 0.68rem; font-weight: 600; letter-spacing: 0.5px;
+      background: var(--bg); border: 1px solid var(--border); border-radius: 4px;
+      padding: 1px 6px; color: var(--text-muted); text-transform: uppercase; margin-left: 6px;
+    }
+  </style>
+</head>
+<body>
+<div class="register-wrap">
+  <div class="register-card">
+    <div class="register-header">
+      <h1>🏢 Create Account</h1>
+      <p>HRMS Practice App · All HTML5 + Custom Controls Demo</p>
+    </div>
+    <div class="register-body">
+
+      <!-- Step indicator -->
+      <div class="step-indicator" id="step-indicator" role="progressbar" aria-valuenow="1" aria-valuemin="1" aria-valuemax="5">
+        <div class="step-dot active" id="dot-1" data-testid="step-1">1</div>
+        <div class="step-connector" id="con-1"></div>
+        <div class="step-dot" id="dot-2" data-testid="step-2">2</div>
+        <div class="step-connector" id="con-2"></div>
+        <div class="step-dot" id="dot-3" data-testid="step-3">3</div>
+        <div class="step-connector" id="con-3"></div>
+        <div class="step-dot" id="dot-4" data-testid="step-4">4</div>
+        <div class="step-connector" id="con-4"></div>
+        <div class="step-dot" id="dot-5" data-testid="step-5">5</div>
+      </div>
+      <div class="step-labels">
+        <div class="step-label active" id="lbl-1">Account</div>
+        <div class="step-label" id="lbl-2">Personal</div>
+        <div class="step-label" id="lbl-3">Employment</div>
+        <div class="step-label" id="lbl-4">Skills</div>
+        <div class="step-label" id="lbl-5">Advanced</div>
+      </div>
+
+      <form id="reg-form" novalidate>
+
+        <!-- ══ STEP 1: Account Info ══════════════════════════ -->
+        <div class="form-step active" id="step-panel-1" data-testid="step-panel-1">
+          <div class="section-title">Account Information <span class="section-badge">Basic HTML5 Controls</span></div>
+
+          <div class="form-grid">
+            <div class="form-group">
+              <label class="form-label" for="firstName">
+                First Name <span class="required">*</span>
+                <span class="control-type-label">text</span>
+              </label>
+              <input type="text" id="firstName" name="firstName" class="form-control"
+                placeholder="John" required minlength="2" maxlength="50"
+                autocomplete="given-name" data-testid="firstName">
+              <div class="form-error" id="err-firstName"></div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="lastName">
+                Last Name <span class="required">*</span>
+                <span class="control-type-label">text</span>
+              </label>
+              <input type="text" id="lastName" name="lastName" class="form-control"
+                placeholder="Smith" required minlength="2" maxlength="50"
+                autocomplete="family-name" data-testid="lastName">
+              <div class="form-error" id="err-lastName"></div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="username">
+              Username <span class="required">*</span>
+              <span class="control-type-label">text</span>
+            </label>
+            <input type="text" id="username" name="username" class="form-control"
+              placeholder="jsmith" required minlength="3" maxlength="30"
+              pattern="[a-zA-Z0-9_]+" autocomplete="username"
+              data-testid="username">
+            <div class="form-hint">Letters, numbers and underscores only.</div>
+            <div class="form-error" id="err-username"></div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="email">
+              Email Address <span class="required">*</span>
+              <span class="control-type-label">email</span>
+            </label>
+            <input type="email" id="email" name="email" class="form-control"
+              placeholder="john.smith@company.com" required autocomplete="email"
+              data-testid="email">
+            <div class="form-error" id="err-email"></div>
+          </div>
+
+          <div class="form-grid">
+            <div class="form-group">
+              <label class="form-label" for="password">
+                Password <span class="required">*</span>
+                <span class="control-type-label">password</span>
+              </label>
+              <input type="password" id="password" name="password" class="form-control"
+                placeholder="Min 8 characters" required minlength="8"
+                autocomplete="new-password" data-testid="password">
+              <div class="form-error" id="err-password"></div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="confirmPassword">
+                Confirm Password <span class="required">*</span>
+                <span class="control-type-label">password</span>
+              </label>
+              <input type="password" id="confirmPassword" name="confirmPassword" class="form-control"
+                placeholder="Repeat password" required autocomplete="new-password"
+                data-testid="confirmPassword">
+              <div class="form-error" id="err-confirmPassword"></div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="phone">
+              Phone Number
+              <span class="control-type-label">tel</span>
+            </label>
+            <input type="tel" id="phone" name="phone" class="form-control"
+              placeholder="+1-555-000-1234"
+              pattern="[\+]?[0-9\-\s\(\)]+" autocomplete="tel"
+              data-testid="phone">
+            <div class="form-error" id="err-phone"></div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="website">
+              LinkedIn / Website URL
+              <span class="control-type-label">url</span>
+            </label>
+            <input type="url" id="linkedinUrl" name="linkedinUrl" class="form-control"
+              placeholder="https://linkedin.com/in/your-profile"
+              data-testid="linkedinUrl">
+          </div>
+        </div>
+
+        <!-- ══ STEP 2: Personal Info ══════════════════════════ -->
+        <div class="form-step" id="step-panel-2" data-testid="step-panel-2">
+          <div class="section-title">Personal Information <span class="section-badge">Date · Range · Color · Radio</span></div>
+
+          <div class="form-grid">
+            <div class="form-group">
+              <label class="form-label" for="dateOfBirth">
+                Date of Birth
+                <span class="control-type-label">date</span>
+              </label>
+              <input type="date" id="dateOfBirth" name="dateOfBirth" class="form-control"
+                max="2005-01-01" data-testid="dateOfBirth">
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="age">
+                Age
+                <span class="control-type-label">number</span>
+              </label>
+              <input type="number" id="age" name="age" class="form-control"
+                placeholder="25" min="18" max="80" data-testid="age">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">
+              Gender
+              <span class="control-type-label">radio</span>
+            </label>
+            <div class="radio-group" id="gender-group" data-testid="gender-group">
+              <label class="radio-item"><input type="radio" name="gender" value="Male" data-testid="gender-male"> Male</label>
+              <label class="radio-item"><input type="radio" name="gender" value="Female" data-testid="gender-female"> Female</label>
+              <label class="radio-item"><input type="radio" name="gender" value="Non-binary" data-testid="gender-nonbinary"> Non-binary</label>
+              <label class="radio-item"><input type="radio" name="gender" value="Prefer not to say" data-testid="gender-prefer"> Prefer not to say</label>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="country">
+              Country
+              <span class="control-type-label">select</span>
+            </label>
+            <select id="country" name="country" class="form-control" data-testid="country">
+              <option value="">-- Select Country --</option>
+              <option value="USA">United States</option>
+              <option value="United Kingdom">United Kingdom</option>
+              <option value="Canada">Canada</option>
+              <option value="Australia">Australia</option>
+              <option value="Germany">Germany</option>
+              <option value="France">France</option>
+              <option value="India">India</option>
+              <option value="Singapore">Singapore</option>
+              <option value="Netherlands">Netherlands</option>
+              <option value="Spain">Spain</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="city">City</label>
+            <input type="text" id="city" name="city" class="form-control"
+              placeholder="San Francisco" list="city-list" data-testid="city">
+            <datalist id="city-list">
+              <option value="New York"><option value="San Francisco"><option value="Chicago">
+              <option value="Austin"><option value="Seattle"><option value="Boston">
+              <option value="London"><option value="Toronto"><option value="Sydney">
+              <option value="Berlin"><option value="Mumbai"><option value="Singapore">
+            </datalist>
+            <div class="form-hint">Type to search cities (uses &lt;datalist&gt; autocomplete)</div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="address">Address</label>
+            <textarea id="address" name="address" class="form-control"
+              placeholder="Street address, apartment, etc."
+              rows="3" data-testid="address"></textarea>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="experience">
+              Years of Experience: <span class="range-value" id="exp-val">0</span> yrs
+              <span class="control-type-label">range</span>
+            </label>
+            <input type="range" id="experience" name="experience" class="form-control"
+              min="0" max="30" value="0" step="1" data-testid="experience">
+            <div class="range-labels"><span>0</span><span>10</span><span>20</span><span>30</span></div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="profileColor">
+              Profile Color
+              <span class="control-type-label">color</span>
+            </label>
+            <div style="display:flex;align-items:center;gap:12px">
+              <input type="color" id="profileColor" name="profileColor" class="form-control"
+                value="#1976d2" style="width:80px;flex-shrink:0" data-testid="profileColor">
+              <span style="font-size:0.82rem;color:var(--text-secondary)">Choose a color for your profile avatar</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- ══ STEP 3: Employment Info ══════════════════════════ -->
+        <div class="form-step" id="step-panel-3" data-testid="step-panel-3">
+          <div class="section-title">Employment Details <span class="section-badge">Date · Time · Month · Checkbox</span></div>
+
+          <div class="form-group">
+            <label class="form-label" for="department">
+              Department <span class="required">*</span>
+              <span class="control-type-label">select</span>
+            </label>
+            <select id="department" name="department" class="form-control" data-testid="department" required>
+              <option value="">-- Select Department --</option>
+              <option>Engineering</option><option>Human Resources</option>
+              <option>Finance</option><option>Marketing</option><option>Sales</option>
+              <option>Operations</option><option>Legal</option><option>Design</option>
+              <option>Product</option><option>Customer Support</option>
+            </select>
+            <div class="form-error" id="err-department"></div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="jobTitle">Job Title</label>
+            <input type="text" id="jobTitle" name="jobTitle" class="form-control"
+              placeholder="Software Engineer" list="job-titles"
+              data-testid="jobTitle">
+            <datalist id="job-titles">
+              <option value="Software Engineer"><option value="Senior Engineer"><option value="Product Manager">
+              <option value="HR Specialist"><option value="Financial Analyst"><option value="Marketing Manager">
+              <option value="Sales Representative"><option value="Operations Manager"><option value="UX Designer">
+            </datalist>
+          </div>
+
+          <div class="form-grid">
+            <div class="form-group">
+              <label class="form-label" for="salary">
+                Annual Salary (USD)
+                <span class="control-type-label">number</span>
+              </label>
+              <input type="number" id="salary" name="salary" class="form-control"
+                placeholder="65000" min="0" max="1000000" step="1000"
+                data-testid="salary">
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="hireDate">
+                Hire Date
+                <span class="control-type-label">date</span>
+              </label>
+              <input type="date" id="hireDate" name="hireDate" class="form-control"
+                data-testid="hireDate">
+            </div>
+          </div>
+
+          <div class="form-grid">
+            <div class="form-group">
+              <label class="form-label" for="shiftStart">
+                Shift Start Time
+                <span class="control-type-label">time</span>
+              </label>
+              <input type="time" id="shiftStart" name="shiftStart" class="form-control"
+                value="09:00" data-testid="shiftStart">
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="startMonth">
+                Start Month
+                <span class="control-type-label">month</span>
+              </label>
+              <input type="month" id="startMonth" name="startMonth" class="form-control"
+                data-testid="startMonth">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="lastSeen">
+              Last Seen (Datetime)
+              <span class="control-type-label">datetime-local</span>
+            </label>
+            <input type="datetime-local" id="lastSeen" name="lastSeen" class="form-control"
+              data-testid="lastSeen">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">
+              Employment Type
+              <span class="control-type-label">radio</span>
+            </label>
+            <div class="radio-group" data-testid="employmentType-group">
+              <label class="radio-item"><input type="radio" name="employmentType" value="Full-time" checked data-testid="emptype-fulltime"> Full-time</label>
+              <label class="radio-item"><input type="radio" name="employmentType" value="Part-time" data-testid="emptype-parttime"> Part-time</label>
+              <label class="radio-item"><input type="radio" name="employmentType" value="Contract" data-testid="emptype-contract"> Contract</label>
+              <label class="radio-item"><input type="radio" name="employmentType" value="Intern" data-testid="emptype-intern"> Intern</label>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">
+              Benefits <span class="control-type-label">checkbox</span>
+            </label>
+            <div class="check-group" id="benefits-group" data-testid="benefits-group">
+              <label class="check-item"><input type="checkbox" name="benefits" value="Health Insurance" data-testid="benefit-health"> Health Insurance</label>
+              <label class="check-item"><input type="checkbox" name="benefits" value="Dental" data-testid="benefit-dental"> Dental</label>
+              <label class="check-item"><input type="checkbox" name="benefits" value="Vision" data-testid="benefit-vision"> Vision</label>
+              <label class="check-item"><input type="checkbox" name="benefits" value="401(k)" data-testid="benefit-401k"> 401(k)</label>
+              <label class="check-item"><input type="checkbox" name="benefits" value="Paid Time Off" data-testid="benefit-pto"> Paid Time Off</label>
+              <label class="check-item"><input type="checkbox" name="benefits" value="Remote Work" data-testid="benefit-remote"> Remote Work</label>
+              <label class="check-item"><input type="checkbox" name="benefits" value="Gym Membership" data-testid="benefit-gym"> Gym Membership</label>
+            </div>
+          </div>
+        </div>
+
+        <!-- ══ STEP 4: Skills & Profile ══════════════════════════ -->
+        <div class="form-step" id="step-panel-4" data-testid="step-panel-4">
+          <div class="section-title">Skills &amp; Profile <span class="section-badge">Multi-select · File · Search · Hidden</span></div>
+
+          <!-- Multi-select (native) -->
+          <div class="form-group">
+            <label class="form-label" for="skillsSelect">
+              Skills (Multi-select)
+              <span class="control-type-label">select multiple</span>
+            </label>
+            <select id="skillsSelect" name="skillsSelect" class="form-control"
+              multiple size="6" data-testid="skills-multi">
+              <option value="JavaScript">JavaScript</option>
+              <option value="TypeScript">TypeScript</option>
+              <option value="Python">Python</option>
+              <option value="Java">Java</option>
+              <option value="C#">C#</option>
+              <option value="React">React</option>
+              <option value="Angular">Angular</option>
+              <option value="Vue.js">Vue.js</option>
+              <option value="Node.js">Node.js</option>
+              <option value="SQL">SQL</option>
+              <option value="AWS">AWS</option>
+              <option value="Docker">Docker</option>
+              <option value="Git">Git</option>
+              <option value="Agile">Agile</option>
+              <option value="Machine Learning">Machine Learning</option>
+            </select>
+            <div class="form-hint">Ctrl+Click (Cmd+Click on Mac) to select multiple skills</div>
+          </div>
+
+          <!-- Profile photo upload -->
+          <div class="form-group">
+            <label class="form-label">
+              Profile Photo
+              <span class="control-type-label">file</span>
+            </label>
+            <div class="file-upload-area" data-testid="profile-photo-upload">
+              <input type="file" id="profilePhoto" name="profilePhoto"
+                accept="image/*" data-testid="profile-photo-input">
+              <div class="file-upload-icon">📷</div>
+              <div class="file-upload-text">Click or drag to upload a photo</div>
+              <div class="file-name" id="photo-name"></div>
+            </div>
+          </div>
+
+          <!-- Resume upload -->
+          <div class="form-group">
+            <label class="form-label">
+              Resume / CV
+              <span class="control-type-label">file</span>
+            </label>
+            <div class="file-upload-area" data-testid="resume-upload">
+              <input type="file" id="resume" name="resume"
+                accept=".pdf,.doc,.docx" data-testid="resume-input">
+              <div class="file-upload-icon">📄</div>
+              <div class="file-upload-text">PDF, DOC, DOCX accepted (max 5MB)</div>
+              <div class="file-name" id="resume-name"></div>
+            </div>
+          </div>
+
+          <!-- Hidden field (Playwright practice) -->
+          <input type="hidden" id="referralCode" name="referralCode" value="HRMS-PRACTICE-2024" data-testid="referral-code">
+          <input type="hidden" id="source" name="source" value="web-registration" data-testid="source">
+
+          <!-- Search type input -->
+          <div class="form-group">
+            <label class="form-label" for="managerSearch">
+              Search Manager
+              <span class="control-type-label">search</span>
+            </label>
+            <input type="search" id="managerSearch" name="managerSearch" class="form-control"
+              placeholder="Search for a manager name…"
+              list="manager-list" data-testid="managerSearch">
+            <datalist id="manager-list">
+              <option value="Alice Johnson"><option value="Bob Williams"><option value="Carol Davis">
+              <option value="David Martinez"><option value="Emma Wilson"><option value="Frank Lee">
+            </datalist>
+          </div>
+
+          <!-- Notes textarea -->
+          <div class="form-group">
+            <label class="form-label" for="notes">Additional Notes</label>
+            <textarea id="notes" name="notes" class="form-control"
+              placeholder="Any additional information about yourself…"
+              rows="4" maxlength="500" data-testid="notes"></textarea>
+            <div class="form-hint"><span id="notes-count">0</span>/500 characters</div>
+          </div>
+        </div>
+
+        <!-- ══ STEP 5: Advanced / Custom Controls ══════════════ -->
+        <div class="form-step" id="step-panel-5" data-testid="step-panel-5">
+          <div class="section-title">Advanced Controls <span class="section-badge">Custom · Shadow DOM · Frame</span></div>
+
+          <!-- Custom Toggle -->
+          <div class="form-group">
+            <label class="form-label">
+              Account Status
+              <span class="control-type-label">custom toggle</span>
+            </label>
+            <label class="toggle-switch" data-testid="status-toggle">
+              <input type="checkbox" id="isActive" name="isActive" checked>
+              <span class="toggle-track"></span>
+              <span class="toggle-label" id="toggle-label">Active</span>
+            </label>
+          </div>
+
+          <!-- Custom Shadow DOM Dropdown -->
+          <div class="form-group">
+            <label class="form-label">
+              Role (Shadow DOM Dropdown)
+              <span class="control-type-label">shadow dom</span>
+            </label>
+            <hrms-dropdown id="roleDropdown" placeholder="Select role…" data-testid="role-dropdown">
+              <option value="">Select role…</option>
+              <option value="employee">Employee</option>
+              <option value="manager">Manager</option>
+              <option value="admin">Admin</option>
+            </hrms-dropdown>
+            <input type="hidden" id="role" name="role" value="employee">
+          </div>
+
+          <!-- Shadow DOM Tag Input -->
+          <div class="form-group">
+            <label class="form-label">
+              Interest Tags (Shadow DOM)
+              <span class="control-type-label">shadow dom</span>
+            </label>
+            <hrms-tag-input id="tagsInput" name="tags"
+              suggestions="Technology,Finance,Marketing,HR,Operations,Design,Legal,Sales,Product,Support"
+              data-testid="tags-input">
+            </hrms-tag-input>
+            <div class="form-hint">Type a tag and press Enter, or pick a suggestion</div>
+            <input type="hidden" id="tags" name="tags">
+          </div>
+
+          <!-- Shadow DOM Star Rating -->
+          <div class="form-group">
+            <label class="form-label">
+              Self Performance Rating (Shadow DOM)
+              <span class="control-type-label">shadow dom</span>
+            </label>
+            <hrms-rating id="perfRating" value="0" data-testid="perf-rating"></hrms-rating>
+            <input type="hidden" id="performanceRating" name="performanceRating" value="0">
+          </div>
+
+          <!-- ── iframe: Custom Date Picker ───────────────── -->
+          <div class="form-group">
+            <label class="form-label">
+              Interview Date (iframe Calendar)
+              <span class="control-type-label">iframe</span>
+            </label>
+            <div class="iframe-section">
+              <div class="iframe-section-header">
+                📅 Custom Date Picker – embedded in an &lt;iframe&gt; for Playwright practice
+              </div>
+              <iframe src="frame-page.html" id="date-picker-frame"
+                height="260" title="Custom Date Picker"
+                data-testid="date-picker-frame"></iframe>
+            </div>
+            <input type="hidden" id="interviewDate" name="interviewDate" data-testid="interview-date">
+            <div class="form-hint mt-4">Selected: <span id="selected-date-display" style="font-weight:600;color:var(--primary)">None</span></div>
+          </div>
+
+          <!-- Agree to terms (checkbox) -->
+          <div class="form-group">
+            <div class="check-group" style="flex-direction:column;align-items:flex-start;gap:8px">
+              <label class="check-item" style="padding:10px 14px">
+                <input type="checkbox" id="agreeTerms" name="agreeTerms" required data-testid="agree-terms">
+                <span>I agree to the <a href="#" style="color:var(--primary)">Terms of Service</a> and <a href="#" style="color:var(--primary)">Privacy Policy</a></span>
+              </label>
+              <label class="check-item" style="padding:10px 14px">
+                <input type="checkbox" id="agreeMarketing" name="agreeMarketing" data-testid="agree-marketing">
+                <span>I'd like to receive updates and notifications</span>
+              </label>
+            </div>
+            <div class="form-error" id="err-terms"></div>
+          </div>
+
+          <!-- Profile Preview (Shadow DOM) -->
+          <div class="form-group">
+            <label class="form-label">Live Profile Preview <span class="section-badge">Shadow DOM</span></label>
+            <hrms-profile-card id="profile-preview"
+              first-name="First" last-name="Last"
+              job-title="Job Title" department=""
+              email="" status="Active" color="#1976d2" rating="0"
+              data-testid="profile-preview">
+            </hrms-profile-card>
+          </div>
+        </div>
+
+        <!-- Step Navigation -->
+        <div class="step-nav">
+          <button type="button" id="btn-prev" class="btn btn-ghost" style="display:none"
+            data-testid="btn-prev">← Previous</button>
+          <div style="margin-left:auto;display:flex;gap:10px">
+            <button type="button" id="btn-next" class="btn btn-primary"
+              data-testid="btn-next">Next →</button>
+            <button type="submit" id="btn-submit" class="btn btn-success" style="display:none"
+              data-testid="btn-submit">✓ Create Account</button>
+          </div>
+        </div>
+
+      </form>
+
+      <p class="text-center mt-16" style="font-size:0.82rem;color:var(--text-muted)">
+        Already have an account? <a href="login.html">Sign in</a>
+      </p>
+    </div><!-- /register-body -->
+  </div><!-- /register-card -->
+</div><!-- /register-wrap -->
+
+<div id="toast-container" class="toast-container"></div>
+
+<script src="js/hrms-data.js"></script>
+<script src="js/shadow-components.js"></script>
+<script src="js/hrms.js"></script>
+<script>
+(async () => {
+  await HRMS.init({ requireAuth: false });
+
+  let currentStep = 1;
+  const totalSteps = 5;
+
+  function goToStep(n) {
+    // Validate current step before advancing
+    if (n > currentStep && !validateStep(currentStep)) return;
+
+    document.getElementById(`step-panel-${currentStep}`).classList.remove('active');
+    document.getElementById(`dot-${currentStep}`).classList.remove('active');
+    if (n > currentStep) document.getElementById(`dot-${currentStep}`).classList.add('done');
+    if (n <= currentStep) document.getElementById(`dot-${currentStep}`).classList.remove('done');
+    for (let i = 1; i <= 5; i++) {
+      document.getElementById(`lbl-${i}`).classList.toggle('active', i === n);
+      const con = document.getElementById(`con-${i}`);
+      if (con) con.classList.toggle('done', i < n);
+    }
+    currentStep = n;
+    document.getElementById(`step-panel-${n}`).classList.add('active');
+    document.getElementById(`dot-${n}`).classList.add('active');
+    document.getElementById('step-indicator').setAttribute('aria-valuenow', n);
+    document.getElementById('btn-prev').style.display = n > 1 ? '' : 'none';
+    document.getElementById('btn-next').style.display = n < totalSteps ? '' : 'none';
+    document.getElementById('btn-submit').style.display = n === totalSteps ? '' : 'none';
+    updatePreview();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function validateStep(step) {
+    let valid = true;
+    if (step === 1) {
+      const fn = document.getElementById('firstName').value.trim();
+      const ln = document.getElementById('lastName').value.trim();
+      const un = document.getElementById('username').value.trim();
+      const em = document.getElementById('email').value.trim();
+      const pw = document.getElementById('password').value;
+      const cp = document.getElementById('confirmPassword').value;
+      if (!fn) { setErr('firstName', 'First name is required'); valid = false; } else clearErr('firstName');
+      if (!ln) { setErr('lastName', 'Last name is required'); valid = false; } else clearErr('lastName');
+      if (!un) { setErr('username', 'Username is required'); valid = false; }
+      else if (!/^[a-zA-Z0-9_]{3,30}$/.test(un)) { setErr('username', 'Letters, numbers, underscores (3-30 chars)'); valid = false; }
+      else clearErr('username');
+      if (!em || !em.includes('@')) { setErr('email', 'Valid email required'); valid = false; } else clearErr('email');
+      if (!pw || pw.length < 8) { setErr('password', 'Minimum 8 characters'); valid = false; } else clearErr('password');
+      if (pw !== cp) { setErr('confirmPassword', 'Passwords do not match'); valid = false; } else clearErr('confirmPassword');
+    }
+    if (step === 3) {
+      const dept = document.getElementById('department').value;
+      if (!dept) { setErr('department', 'Please select a department'); valid = false; } else clearErr('department');
+    }
+    if (step === 5) {
+      const agree = document.getElementById('agreeTerms').checked;
+      if (!agree) { document.getElementById('err-terms').textContent = 'You must agree to the terms'; valid = false; }
+      else document.getElementById('err-terms').textContent = '';
+    }
+    return valid;
+  }
+
+  function setErr(id, msg) { const e = document.getElementById('err-' + id); if (e) e.textContent = msg; }
+  function clearErr(id)    { const e = document.getElementById('err-' + id); if (e) e.textContent = ''; }
+
+  document.getElementById('btn-next').addEventListener('click', () => goToStep(currentStep + 1));
+  document.getElementById('btn-prev').addEventListener('click', () => goToStep(currentStep - 1));
+
+  // Range slider live value
+  const expRange = document.getElementById('experience');
+  expRange.addEventListener('input', () => {
+    document.getElementById('exp-val').textContent = expRange.value;
+    updatePreview();
+  });
+
+  // Notes character count
+  document.getElementById('notes').addEventListener('input', function() {
+    document.getElementById('notes-count').textContent = this.value.length;
+  });
+
+  // File upload display
+  function setupFile(inputId, nameId) {
+    document.getElementById(inputId).addEventListener('change', function() {
+      const el = document.getElementById(nameId);
+      el.textContent = this.files[0] ? '✅ ' + this.files[0].name : '';
+    });
+  }
+  setupFile('profilePhoto', 'photo-name');
+  setupFile('resume', 'resume-name');
+
+  // Toggle label
+  document.getElementById('isActive').addEventListener('change', function() {
+    document.getElementById('toggle-label').textContent = this.checked ? 'Active' : 'Inactive';
+    updatePreview();
+  });
+
+  // Shadow DOM role dropdown
+  document.getElementById('roleDropdown').addEventListener('change', e => {
+    document.getElementById('role').value = e.detail;
+  });
+
+  // Shadow DOM tags
+  document.getElementById('tagsInput').addEventListener('change', e => {
+    document.getElementById('tags').value = e.detail;
+  });
+
+  // Shadow DOM rating
+  document.getElementById('perfRating').addEventListener('change', e => {
+    document.getElementById('performanceRating').value = e.detail;
+    updatePreview();
+  });
+
+  // iframe date picker
+  window.addEventListener('message', e => {
+    if (e.data && e.data.type === 'dateSelected') {
+      document.getElementById('interviewDate').value = e.data.date;
+      document.getElementById('selected-date-display').textContent = e.data.displayDate;
+    }
+  });
+
+  // Live preview updates
+  function updatePreview() {
+    const card = document.getElementById('profile-preview');
+    if (!card) return;
+    card.setAttribute('first-name',  document.getElementById('firstName').value || 'First');
+    card.setAttribute('last-name',   document.getElementById('lastName').value  || 'Last');
+    card.setAttribute('job-title',   document.getElementById('jobTitle').value  || 'Job Title');
+    card.setAttribute('department',  document.getElementById('department').value || '');
+    card.setAttribute('email',       document.getElementById('email').value || '');
+    card.setAttribute('color',       document.getElementById('profileColor').value || '#1976d2');
+    card.setAttribute('rating',      document.getElementById('performanceRating').value || '0');
+    const active = document.getElementById('isActive').checked;
+    card.setAttribute('status', active ? 'Active' : 'Inactive');
+  }
+
+  // Update preview on any field change
+  ['firstName','lastName','email','department','profileColor','jobTitle'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.addEventListener('input', updatePreview);
+    if (el && el.tagName === 'SELECT') el.addEventListener('change', updatePreview);
+  });
+
+  // Form submit
+  document.getElementById('reg-form').addEventListener('submit', async e => {
+    e.preventDefault();
+    if (!validateStep(5)) return;
+
+    const benefits = Array.from(document.querySelectorAll('[name="benefits"]:checked')).map(cb => cb.value);
+    const skills   = Array.from(document.getElementById('skillsSelect').selectedOptions).map(o => o.value);
+    const gender   = document.querySelector('[name="gender"]:checked')?.value || '';
+    const empType  = document.querySelector('[name="employmentType"]:checked')?.value || 'Full-time';
+
+    const payload = {
+      username:     document.getElementById('username').value.trim(),
+      password:     document.getElementById('password').value,
+      email:        document.getElementById('email').value.trim(),
+      firstName:    document.getElementById('firstName').value.trim(),
+      lastName:     document.getElementById('lastName').value.trim(),
+      phone:        document.getElementById('phone').value.trim(),
+      dateOfBirth:  document.getElementById('dateOfBirth').value,
+      gender,
+      country:      document.getElementById('country').value,
+      city:         document.getElementById('city').value.trim(),
+      address:      document.getElementById('address').value.trim(),
+      linkedinUrl:  document.getElementById('linkedinUrl').value.trim(),
+      experience:   parseInt(document.getElementById('experience').value)||0,
+      profileColor: document.getElementById('profileColor').value,
+      department:   document.getElementById('department').value,
+      jobTitle:     document.getElementById('jobTitle').value.trim(),
+      salary:       parseFloat(document.getElementById('salary').value)||0,
+      hireDate:     document.getElementById('hireDate').value,
+      shiftStart:   document.getElementById('shiftStart').value,
+      startMonth:   document.getElementById('startMonth').value,
+      employmentType: empType,
+      benefits, skills,
+      notes:        document.getElementById('notes').value.trim(),
+      role:         document.getElementById('role').value || 'employee',
+      tags:         document.getElementById('tags').value.split(',').filter(Boolean),
+      performanceRating: parseInt(document.getElementById('performanceRating').value)||0
+    };
+
+    const btn = document.getElementById('btn-submit');
+    btn.disabled = true; btn.textContent = '⏳ Creating account…';
+
+    try {
+      await HRMS.Auth.register(payload);
+      HRMS.toast('Account created! Redirecting to login…', 'success');
+      setTimeout(() => window.location.href = './login.html', 1800);
+    } catch (err) {
+      HRMS.toast(err.message || 'Registration failed', 'error');
+      btn.disabled = false; btn.textContent = '✓ Create Account';
+    }
+  });
+
+  // Init first step
+  goToStep(1);
+})();
+</script>
+</body>
+</html>

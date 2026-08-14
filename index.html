@@ -1,0 +1,122 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Playwright/TypeScript Training Hub</title>
+    <link rel="stylesheet" href="assets/styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <a class="brand" href="index.html">Playwright/TypeScript Training Hub</a>
+      <button class="menu-toggle" data-menu-toggle aria-label="Open Menu">&#9776;</button>
+    </header>
+
+    <main class="home-wrap">
+      <section class="home-hero">
+        <h1>Build Automation Skills with Playwright and TypeScript</h1>
+        <p>
+          This single hub gives you complete access to TypeScript training, Playwright mastery modules, and the interactive practice app.
+          Follow the suggested route, complete quizzes, and use the labs to practice real UI automation scenarios.
+        </p>
+        <div class="home-meta">
+          <div class="home-pill">TypeScript Path: 10 lessons + capstone</div>
+          <div class="home-pill">Playwright Path: 24-page guided track + final 50 MCQ</div>
+          <div class="home-pill" style="display:none" aria-hidden="true">Cucumber BDD Path: 10 lessons from zero to CI/CD</div>
+          <div class="home-pill">Practice App: controls, grid, iframe, shadow DOM</div>
+        </div>
+      </section>
+
+      <section class="home-grid" aria-label="Learning categories">
+        <article class="home-card">
+          <h2>TypeScript Track</h2>
+          <p>Start from JavaScript basics, then move through beginner and advanced TypeScript modules.</p>
+          <ul>
+            <li><a href="lessons/typescript/00-javascript-basics.html">0. JavaScript Basics</a></li>
+            <li><a href="lessons/typescript/01-introduction.html">1. Introduction and Setup</a></li>
+            <li><a href="lessons/typescript/02-types-and-unions.html">2. Types and Unions</a></li>
+            <li><a href="lessons/typescript/03-functions-and-objects.html">3. Functions and Objects</a></li>
+            <li><a href="lessons/typescript/04-interfaces-and-type-aliases.html">4. Interfaces and Type Aliases</a></li>
+            <li><a href="lessons/type-script/05-classes-and-oop.html">5. Classes and OOP</a></li>
+            <li><a href="lessons/type-script/06-generics.html">6. Generics</a></li>
+            <li><a href="lessons/type-script/07-async-and-errors.html">7. Async and Error Handling</a></li>
+            <li><a href="lessons/type-script/08-conditions-and-loops.html">8. Conditions and Loops</a></li>
+            <li><a href="lessons/type-script/09-tsconfig-and-modules.html">9. tsconfig and Modules</a></li>
+          </ul>
+          <div class="home-cta-row">
+            <a class="home-cta" href="lessons/typescript/00-javascript-basics.html" aria-label="Start the TypeScript learning path">Start TypeScript</a>
+            <a class="home-cta secondary" href="lessons/capstone.html" aria-label="Open the TypeScript capstone assessment">Open Capstone</a>
+          </div>
+        </article>
+
+        <article class="home-card">
+          <h2>Playwright Track</h2>
+          <p>Learn browser automation step-by-step and finish with a capstone quiz to validate mastery.</p>
+          <ul>
+            <li><a href="lessons/playwright/00-playwright-for-absolutely-beginners.html">0. Absolute Beginner Start Here</a></li>
+            <li><a href="lessons/playwright/01-playwright-complete-guide.html">1. Playwright Mastery Roadmap</a></li>
+            <li><a href="lessons/playwright/modules/01-basics.html">2. Basics</a></li>
+            <li><a href="lessons/playwright/modules/02-setup.html">3. Setup</a></li>
+            <li><a href="lessons/playwright/modules/03-core-playwright.html">4. Core Playwright</a></li>
+            <li><a href="lessons/playwright/modules/04-locators.html">5. Locators</a></li>
+            <li><a href="lessons/playwright/modules/05-actions-elements.html">6. Actions and Elements</a></li>
+            <li><a href="lessons/playwright/modules/06-wait-handling.html">7. Wait Handling</a></li>
+            <li><a href="lessons/playwright/modules/07-browser-handling.html">8. Browser Handling</a></li>
+            <li><a href="lessons/playwright/modules/08-validation.html">9. Validation</a></li>
+            <li><a href="lessons/playwright/modules/09-test-data.html">10. Test Data</a></li>
+          </ul>
+          <p><a href="lessons/playwright/00-playwright-for-absolutely-beginners.html">Click here for more details</a></p>
+          <div class="home-cta-row">
+            <a class="home-cta" href="lessons/playwright/00-playwright-for-absolutely-beginners.html">Start Playwright</a>
+            <a class="home-cta secondary" href="lessons/playwright/99-playwright-capstone-50-mcq.html">Final 50 MCQ</a>
+          </div>
+        </article>
+
+        <article class="home-card">
+          <h2>Practice App Labs</h2>
+          <p>Use these pages for locator practice, iframe handling, custom controls, and shadow DOM training.</p>
+          <ul>
+            <li><a href="lessons/practice-app/index.html">Basic Controls Lab</a></li>
+            <li><a href="lessons/practice-app/grid-frame.html">Grid and Frame Lab</a></li>
+            <li><a href="lessons/practice-app/grid-controls.html">Grid with Embedded Controls</a></li>
+            <li><a href="lessons/practice-app/dynamic-object-repository.html">Dynamic Object Repository Lab</a></li>
+            <li><a href="lessons/practice-app/shadow.html">Shadow DOM Lab</a></li>
+            <li><a href="lessons/practice-app/hrms/login.html">HRMS App (Full Practice)</a></li>
+          </ul>
+          <div class="home-cta-row">
+            <a class="home-cta" href="lessons/practice-app/index.html" aria-label="Open the interactive Practice App">Open Practice App</a>
+            <a class="home-cta secondary" href="lessons/practice-app/hrms/login.html" aria-label="Open the HRMS Practice App">Open HRMS App</a>
+          </div>
+        </article>
+
+        <article class="home-card" style="display:block" aria-hidden="false">
+          <h2>Cucumber BDD Track</h2>
+          <p>Learn Behaviour Driven Development from scratch - Gherkin, step definitions, hooks, POM, reporting, and CI/CD.</p>
+          <ul>
+            <li><a href="lessons/cucumber/00-introduction.html">0. What Is BDD and Cucumber?</a></li>
+            <li><a href="lessons/cucumber/01-setup.html">1. Project Setup</a></li>
+            <li><a href="lessons/cucumber/02-gherkin-syntax.html">2. Gherkin Syntax</a></li>
+            <li><a href="lessons/cucumber/03-step-definitions.html">3. Step Definitions</a></li>
+            <li><a href="lessons/cucumber/04-hooks-and-tags.html">4. Hooks and Tags</a></li>
+            <li><a href="lessons/cucumber/05-data-tables-and-outlines.html">5. Data Tables and Outlines</a></li>
+            <li><a href="lessons/cucumber/06-playwright-integration.html">6. Playwright Integration</a></li>
+            <li><a href="lessons/cucumber/07-page-object-model.html">7. Page Object Model</a></li>
+            <li><a href="lessons/cucumber/08-reporting.html">8. Reporting</a></li>
+            <li><a href="lessons/cucumber/09-advanced-topics.html">9. Advanced Topics</a></li>
+          </ul>
+          <div class="home-cta-row">
+            <a class="home-cta" href="lessons/cucumber/00-introduction.html">Start Cucumber BDD</a>
+            <a class="home-cta secondary" href="pages/cucumber.html">BDD Track Menu</a>
+          </div>
+        </article>
+      </section>
+
+      <p class="home-footnote">
+        Suggested sequence: TypeScript track &rarr; Playwright modules &rarr; Practice app labs &rarr; Final capstones.
+      </p>
+    </main>
+
+    <script src="assets/app.js"></script>
+  </body>
+</html>
+
