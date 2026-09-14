@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Controls Hub - Practice App</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <nav>
+    <a href="index.html">Basic Controls</a> |
+    <a href="grid-frame.html">Grid &amp; Frame</a> |
+    <a href="grid-controls.html">Grid with Controls</a> |
+    <a href="shadow.html">Shadow DOM</a> |
+    <a href="dialogs.html">Dialogs &amp; Windows</a> |
+    <a href="dynamic-object-repository.html">Dynamic OR</a> |
+    <a href="controls-hub.html"><b>Controls Hub</b></a> |
+    <a href="hrms/login.html" style="color:#ffeb3b;font-weight:bold">🏢 HRMS App</a>
+  </nav>
+
+  <section class="home-hero" style="max-width:900px;margin:0 auto 1.5rem auto;padding:0 1em;">
+    <h1 style="font-size:2rem;margin-bottom:0.4rem;text-align:left;">Controls Hub</h1>
+    <div style="margin-bottom:1rem;">
+      <span class="badge badge-blue">Practice Lab</span>
+      <span class="badge badge-orange">UI Automation</span>
+    </div>
+    <p style="font-size:1.05rem;color:#444;">
+      One focused page per control type. Every action on every page updates a
+      <code>status-label</code> (with a <code>data-testid</code>) so you can assert the
+      operation succeeded from your Playwright tests.
+    </p>
+  </section>
+
+  <div class="hub-grid">
+    <a class="hub-card" href="controls/textbox.html">
+      <span class="hub-icon">⌨️</span>
+      <h3>Textbox</h3>
+      <p>Plain, disabled, readonly, autocomplete &amp; validated text inputs.</p>
+    </a>
+    <a class="hub-card" href="controls/dropdown.html">
+      <span class="hub-icon">🔽</span>
+      <h3>Dropdown</h3>
+      <p>Native select, jQuery-style searchable list, Bootstrap-style menu.</p>
+    </a>
+    <a class="hub-card" href="controls/checkbox.html">
+      <span class="hub-icon">☑️</span>
+      <h3>Checkbox</h3>
+      <p>Single, group, select-all/indeterminate &amp; nested tree checkboxes.</p>
+    </a>
+    <a class="hub-card" href="controls/radio-button.html">
+      <span class="hub-icon">🔘</span>
+      <h3>Radio Button</h3>
+      <p>Grouped radios, disabled options, and card-style radio selectors.</p>
+    </a>
+    <a class="hub-card" href="controls/webtable.html">
+      <span class="hub-icon">📋</span>
+      <h3>Web Table</h3>
+      <p>Static HTML table with add/edit/delete rows.</p>
+    </a>
+    <a class="hub-card" href="controls/webtable-custom-controls.html">
+      <span class="hub-icon">🧩</span>
+      <h3>Web Table with Custom Controls</h3>
+      <p>Table cells containing buttons, dropdowns &amp; checkboxes per row.</p>
+    </a>
+    <a class="hub-card" href="controls/unique-duplicate-elements.html">
+      <span class="hub-icon">🧭</span>
+      <h3>Unique &amp; Duplicate Controls</h3>
+      <p>Repeated ids/classes/text to practice precise, scoped locators.</p>
+    </a>
+    <a class="hub-card" href="controls/file-upload.html">
+      <span class="hub-icon">📤</span>
+      <h3>File Upload</h3>
+      <p>Single &amp; multiple file uploads with a preview list.</p>
+    </a>
+    <a class="hub-card" href="controls/file-download.html">
+      <span class="hub-icon">📥</span>
+      <h3>File Download</h3>
+      <p>Download generated text/CSV files and confirm completion.</p>
+    </a>
+    <a class="hub-card" href="controls/table-search.html">
+      <span class="hub-icon">🔍</span>
+      <h3>Table Data Search</h3>
+      <p>Free-text search box that filters table rows live.</p>
+    </a>
+    <a class="hub-card" href="controls/table-filter.html">
+      <span class="hub-icon">🧮</span>
+      <h3>Table Filter</h3>
+      <p>Per-column dropdown/range filters applied together.</p>
+    </a>
+    <a class="hub-card" href="controls/table-sort-search.html">
+      <span class="hub-icon">↕️</span>
+      <h3>Table Sort &amp; Search</h3>
+      <p>Click-to-sort column headers combined with a search box.</p>
+    </a>
+    <a class="hub-card" href="controls/drag-drop.html">
+      <span class="hub-icon">🖐️</span>
+      <h3>Drag &amp; Drop</h3>
+      <p>Drag items between lists/drop-zones using HTML5 DnD.</p>
+    </a>
+    <a class="hub-card" href="controls/mouse-hover.html">
+      <span class="hub-icon">🖱️</span>
+      <h3>Mouse Hover</h3>
+      <p>Hover-revealed menus, tooltips &amp; hidden action buttons.</p>
+    </a>
+    <a class="hub-card" href="controls/date-picker.html">
+      <span class="hub-icon">📅</span>
+      <h3>jQuery-style Date Picker</h3>
+      <p>Custom calendar widget styled like the classic jQuery UI picker.</p>
+    </a>
+    <a class="hub-card" href="controls/bootstrap-alert.html">
+      <span class="hub-icon">⚠️</span>
+      <h3>Bootstrap Alert</h3>
+      <p>Dismissible alert/toast banners styled like Bootstrap alerts.</p>
+    </a>
+    <a class="hub-card" href="controls/context-menu.html">
+      <span class="hub-icon">🖱️</span>
+      <h3>Context Menu</h3>
+      <p>Custom right-click menu with selectable actions.</p>
+    </a>
+    <a class="hub-card" href="controls/window-popup-modal.html">
+      <span class="hub-icon">🪟</span>
+      <h3>Window Popup / Modal</h3>
+      <p>In-page modal dialog and a real <code>window.open()</code> popup.</p>
+    </a>
+  </div>
+
+  <a href="../../index.html" class="home-btn floating-home-btn" title="Back to Home">&#8962; Home</a>
+  <script src="../../assets/app.js"></script>
+</body>
+</html>

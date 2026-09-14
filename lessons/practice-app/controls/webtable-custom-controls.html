@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Web Table with Custom Controls - Controls Practice</title>
+  <link rel="stylesheet" href="../style.css">
+  <style>
+    .table-wrap { max-width: 860px; margin: 0 auto; }
+    table.data-table { background: #fff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 16px rgba(25,118,210,0.10); }
+    table.data-table th { background: #1976d2; color: #fff; }
+    table.data-table select { width: auto; margin: 0; padding: 0.3em; }
+    .status-pill { padding: 0.2em 0.6em; border-radius: 12px; font-size: 0.85em; font-weight: bold; }
+    .status-active { background: #e8f5e9; color: #2e7d32; }
+    .status-inactive { background: #fce4ec; color: #b71c1c; }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a href="../index.html">Basic Controls</a> |
+    <a href="../controls-hub.html"><b>Controls Hub</b></a> |
+    <a href="../dialogs.html">Dialogs &amp; Windows</a> |
+    <a href="../hrms/login.html" style="color:#ffeb3b;font-weight:bold">🏢 HRMS App</a>
+  </nav>
+
+  <section class="home-hero" style="max-width:860px;margin:0 auto 1rem auto;padding:0 1em;">
+    <h1 style="font-size:2rem;margin-bottom:0.4rem;text-align:left;">Web Table with Custom Controls</h1>
+    <div style="margin-bottom:1rem;">
+      <span class="badge badge-blue">Practice Lab</span>
+      <span class="badge badge-orange">UI Automation</span>
+    </div>
+    <p style="font-size:1.05rem;color:#444;">Each row has its own checkbox, status dropdown and toggle button &mdash; practice scoping locators to a single row.</p>
+  </section>
+
+  <section class="practice-section table-wrap">
+    <h2>Tasks</h2>
+    <table class="data-table" id="task-table" data-testid="task-table">
+      <thead>
+        <tr><th><input type="checkbox" id="task-select-all" data-testid="task-select-all"></th><th>Task</th><th>Status</th><th>Toggle</th></tr>
+      </thead>
+      <tbody id="task-tbody" data-testid="task-tbody">
+        <tr data-id="1">
+          <td><input type="checkbox" class="task-cb" data-testid="task-cb-1"></td>
+          <td>Write test plan</td>
+          <td>
+            <select class="task-status" data-testid="task-status-1">
+              <option value="active">Active</option>
+              <option value="inactive">Inactive</option>
+              <option value="done">Done</option>
+            </select>
+          </td>
+          <td><button class="mini-btn toggle-btn" data-testid="task-toggle-1">Mark Done</button></td>
+        </tr>
+        <tr data-id="2">
+          <td><input type="checkbox" class="task-cb" data-testid="task-cb-2"></td>
+          <td>Automate login flow</td>
+          <td>
+            <select class="task-status" data-testid="task-status-2">
+              <option value="active">Active</option>
+              <option value="inactive">Inactive</option>
+              <option value="done">Done</option>
+            </select>
+          </td>
+          <td><button class="mini-btn toggle-btn" data-testid="task-toggle-2">Mark Done</button></td>
+        </tr>
+        <tr data-id="3">
+          <td><input type="checkbox" class="task-cb" data-testid="task-cb-3"></td>
+          <td>Review pull request</td>
+          <td>
+            <select class="task-status" data-testid="task-status-3">
+              <option value="active">Active</option>
+              <option value="inactive">Inactive</option>
+              <option value="done">Done</option>
+            </select>
+          </td>
+          <td><button class="mini-btn toggle-btn" data-testid="task-toggle-3">Mark Done</button></td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="btn-group" style="margin-top:1em;">
+      <button id="btn-bulk-action" data-testid="btn-bulk-action">Apply to Selected</button>
+    </div>
+    <div class="status-label" id="status-tasks" data-testid="status-tasks"></div>
+  </section>
+
+  <a href="../../../index.html" class="home-btn floating-home-btn" title="Back to Home">&#8962; Home</a>
+  <script src="../../../assets/app.js"></script>
+  <script src="../practice-common.js"></script>
+  <script>
+    const selectAll = document.getElementById('task-select-all');
+    const rowCbs = document.querySelectorAll('.task-cb');
+
+    selectAll.addEventListener('change', () => {
+      rowCbs.forEach(cb => cb.checked = selectAll.checked);
+    });
+
+    document.querySelectorAll('.task-status').forEach(select => {
+      select.addEventListener('change', () => {
+        const id = select.closest('tr').getAttribute('data-id');
+        showStatus('status-tasks', `Status updated successfully for task ${id}: ${select.value}`);
+      });
+    });
+
+    document.querySelectorAll('.toggle-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const row = btn.closest('tr');
+        const id = row.getAttribute('data-id');
+        const isDone = btn.textContent.trim() === 'Mark Done';
+        btn.textContent = isDone ? 'Reopen' : 'Mark Done';
+        row.querySelector('.task-status').value = isDone ? 'done' : 'active';
+        showStatus('status-tasks', `Task ${id} ${isDone ? 'marked done' : 'reopened'} successfully.`);
+      });
+    });
+
+    document.getElementById('btn-bulk-action').addEventListener('click', () => {
+      const selectedIds = Array.from(rowCbs).filter(cb => cb.checked).map(cb => cb.closest('tr').getAttribute('data-id'));
+      if (selectedIds.length === 0) {
+        showStatus('status-tasks', 'No tasks selected.', true);
+        return;
+      }
+      showStatus('status-tasks', `Bulk action applied successfully to tasks: ${selectedIds.join(', ')}`);
+    });
+  </script>
+</body>
+</html>

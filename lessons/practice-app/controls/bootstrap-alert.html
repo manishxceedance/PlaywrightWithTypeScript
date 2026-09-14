@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bootstrap Alert - Controls Practice</title>
+  <link rel="stylesheet" href="../style.css">
+  <style>
+    /* Bootstrap-style alert classes, hand-built (no CDN dependency) */
+    .alert {
+      position: relative; padding: 0.9em 1.2em; margin-bottom: 1em; border: 1px solid transparent;
+      border-radius: 8px; font-size: 0.98rem;
+    }
+    .alert-success { color: #0f5132; background: #d1e7dd; border-color: #badbcc; }
+    .alert-danger  { color: #842029; background: #f8d7da; border-color: #f5c2c7; }
+    .alert-warning { color: #664d03; background: #fff3cd; border-color: #ffecb5; }
+    .alert-info    { color: #055160; background: #cff4fc; border-color: #b6effb; }
+    .alert-dismissible { padding-right: 3em; }
+    .btn-close {
+      position: absolute; top: 0.7em; right: 0.9em; background: transparent; border: none;
+      font-size: 1.1em; cursor: pointer; color: inherit; opacity: 0.6;
+    }
+    .btn-close:hover { opacity: 1; }
+
+    .toast-container { position: fixed; bottom: 1.5em; right: 1.5em; z-index: 50; display: flex; flex-direction: column; gap: 0.6em; }
+    .toast {
+      background: #212529; color: #fff; padding: 0.8em 1.2em; border-radius: 8px; min-width: 220px;
+      box-shadow: 0 6px 16px rgba(0,0,0,0.25);
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a href="../index.html">Basic Controls</a> |
+    <a href="../controls-hub.html"><b>Controls Hub</b></a> |
+    <a href="../dialogs.html">Dialogs &amp; Windows</a> |
+    <a href="../hrms/login.html" style="color:#ffeb3b;font-weight:bold">🏢 HRMS App</a>
+  </nav>
+
+  <section class="home-hero" style="max-width:760px;margin:0 auto 1rem auto;padding:0 1em;">
+    <h1 style="font-size:2rem;margin-bottom:0.4rem;text-align:left;">Bootstrap Alert</h1>
+    <div style="margin-bottom:1rem;">
+      <span class="badge badge-blue">Practice Lab</span>
+      <span class="badge badge-orange">UI Automation</span>
+    </div>
+    <p style="font-size:1.05rem;color:#444;">Trigger dismissible alerts using Bootstrap's familiar <code>.alert</code> classes, and a toast notification.</p>
+  </section>
+
+  <section class="practice-section">
+    <h2>1. Trigger an Alert</h2>
+    <div class="btn-group">
+      <button id="btn-alert-success" data-testid="btn-alert-success">Show Success</button>
+      <button id="btn-alert-danger" data-testid="btn-alert-danger">Show Error</button>
+      <button id="btn-alert-warning" data-testid="btn-alert-warning">Show Warning</button>
+      <button id="btn-alert-info" data-testid="btn-alert-info">Show Info</button>
+    </div>
+    <div id="alert-container" data-testid="alert-container" style="margin-top:1.2em;"></div>
+    <div class="status-label" id="status-alert" data-testid="status-alert"></div>
+  </section>
+
+  <section class="practice-section">
+    <h2>2. Toast Notification</h2>
+    <div class="btn-group">
+      <button id="btn-show-toast" data-testid="btn-show-toast">Show Toast</button>
+    </div>
+    <div class="status-label" id="status-toast" data-testid="status-toast"></div>
+  </section>
+
+  <div class="toast-container" id="toast-container" data-testid="toast-container"></div>
+
+  <a href="../../../index.html" class="home-btn floating-home-btn" title="Back to Home">&#8962; Home</a>
+  <script src="../../../assets/app.js"></script>
+  <script src="../practice-common.js"></script>
+  <script>
+    const alertConfigs = {
+      success: { text: 'Operation completed successfully!', testid: 'alert-success-msg' },
+      danger:  { text: 'Something went wrong. Please try again.', testid: 'alert-danger-msg' },
+      warning: { text: 'This action may have side effects.', testid: 'alert-warning-msg' },
+      info:    { text: 'Here is something useful to know.', testid: 'alert-info-msg' },
+    };
+
+    function showAlert(type) {
+      const container = document.getElementById('alert-container');
+      const config = alertConfigs[type];
+      const div = document.createElement('div');
+      div.className = `alert alert-${type} alert-dismissible`;
+      div.setAttribute('data-testid', config.testid);
+      div.innerHTML = `${config.text} <button type="button" class="btn-close" data-testid="close-${type}">&times;</button>`;
+      div.querySelector('.btn-close').addEventListener('click', () => {
+        div.remove();
+        showStatus('status-alert', `Alert dismissed successfully: ${type}`);
+      });
+      container.appendChild(div);
+      showStatus('status-alert', `Alert shown successfully: ${type}`);
+    }
+
+    document.getElementById('btn-alert-success').addEventListener('click', () => showAlert('success'));
+    document.getElementById('btn-alert-danger').addEventListener('click', () => showAlert('danger'));
+    document.getElementById('btn-alert-warning').addEventListener('click', () => showAlert('warning'));
+    document.getElementById('btn-alert-info').addEventListener('click', () => showAlert('info'));
+
+    document.getElementById('btn-show-toast').addEventListener('click', () => {
+      const container = document.getElementById('toast-container');
+      const toast = document.createElement('div');
+      toast.className = 'toast';
+      toast.setAttribute('data-testid', 'toast-message');
+      toast.textContent = 'Saved successfully!';
+      container.appendChild(toast);
+      showStatus('status-toast', 'Toast displayed successfully.');
+      setTimeout(() => toast.remove(), 3500);
+    });
+  </script>
+</body>
+</html>

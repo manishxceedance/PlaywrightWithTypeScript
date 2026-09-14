@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Table Filter - Controls Practice</title>
+  <link rel="stylesheet" href="../style.css">
+  <style>
+    .table-wrap { max-width: 800px; margin: 0 auto; }
+    table.data-table { background: #fff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 16px rgba(25,118,210,0.10); }
+    table.data-table th { background: #1976d2; color: #fff; }
+    table.data-table tr.hidden-row { display: none; }
+    .filter-row { display: flex; gap: 1em; flex-wrap: wrap; margin-bottom: 1em; }
+    .filter-row > div { flex: 1; min-width: 160px; }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a href="../index.html">Basic Controls</a> |
+    <a href="../controls-hub.html"><b>Controls Hub</b></a> |
+    <a href="../dialogs.html">Dialogs &amp; Windows</a> |
+    <a href="../hrms/login.html" style="color:#ffeb3b;font-weight:bold">🏢 HRMS App</a>
+  </nav>
+
+  <section class="home-hero" style="max-width:800px;margin:0 auto 1rem auto;padding:0 1em;">
+    <h1 style="font-size:2rem;margin-bottom:0.4rem;text-align:left;">Table Filter</h1>
+    <div style="margin-bottom:1rem;">
+      <span class="badge badge-blue">Practice Lab</span>
+      <span class="badge badge-orange">UI Automation</span>
+    </div>
+    <p style="font-size:1.05rem;color:#444;">Combine a category dropdown filter and a max-price filter, then click Apply.</p>
+  </section>
+
+  <section class="practice-section table-wrap">
+    <h2>Orders</h2>
+    <div class="filter-row">
+      <div>
+        <label for="filter-category">Category</label>
+        <select id="filter-category" data-testid="filter-category">
+          <option value="">All Categories</option>
+          <option value="Electronics">Electronics</option>
+          <option value="Furniture">Furniture</option>
+          <option value="Stationery">Stationery</option>
+        </select>
+      </div>
+      <div>
+        <label for="filter-status">Status</label>
+        <select id="filter-status" data-testid="filter-status">
+          <option value="">All Statuses</option>
+          <option value="Pending">Pending</option>
+          <option value="Shipped">Shipped</option>
+          <option value="Delivered">Delivered</option>
+        </select>
+      </div>
+      <div>
+        <label for="filter-max-price">Max Price</label>
+        <input type="number" id="filter-max-price" data-testid="filter-max-price" placeholder="e.g. 100">
+      </div>
+    </div>
+    <div class="btn-group">
+      <button id="btn-apply-filter" data-testid="btn-apply-filter">Apply Filters</button>
+      <button id="btn-clear-filter" data-testid="btn-clear-filter">Clear Filters</button>
+    </div>
+
+    <table class="data-table" id="orders-table" data-testid="orders-table" style="margin-top:1em;">
+      <thead>
+        <tr><th>Order</th><th>Category</th><th>Price</th><th>Status</th></tr>
+      </thead>
+      <tbody id="orders-tbody" data-testid="orders-tbody">
+        <tr data-category="Electronics" data-status="Pending"><td>ORD-1001</td><td>Electronics</td><td>25</td><td>Pending</td></tr>
+        <tr data-category="Electronics" data-status="Shipped"><td>ORD-1002</td><td>Electronics</td><td>85</td><td>Shipped</td></tr>
+        <tr data-category="Furniture" data-status="Delivered"><td>ORD-1003</td><td>Furniture</td><td>150</td><td>Delivered</td></tr>
+        <tr data-category="Furniture" data-status="Pending"><td>ORD-1004</td><td>Furniture</td><td>320</td><td>Pending</td></tr>
+        <tr data-category="Stationery" data-status="Shipped"><td>ORD-1005</td><td>Stationery</td><td>10</td><td>Shipped</td></tr>
+        <tr data-category="Stationery" data-status="Delivered"><td>ORD-1006</td><td>Stationery</td><td>5</td><td>Delivered</td></tr>
+      </tbody>
+    </table>
+    <div class="status-label" id="status-filter" data-testid="status-filter"></div>
+  </section>
+
+  <a href="../../../index.html" class="home-btn floating-home-btn" title="Back to Home">&#8962; Home</a>
+  <script src="../../../assets/app.js"></script>
+  <script src="../practice-common.js"></script>
+  <script>
+    const rows = Array.from(document.querySelectorAll('#orders-tbody tr'));
+
+    document.getElementById('btn-apply-filter').addEventListener('click', () => {
+      const category = document.getElementById('filter-category').value;
+      const status = document.getElementById('filter-status').value;
+      const maxPriceRaw = document.getElementById('filter-max-price').value;
+      const maxPrice = maxPriceRaw ? parseFloat(maxPriceRaw) : null;
+
+      let visibleCount = 0;
+      rows.forEach(row => {
+        const price = parseFloat(row.children[2].textContent);
+        const matches =
+          (!category || row.getAttribute('data-category') === category) &&
+          (!status || row.getAttribute('data-status') === status) &&
+          (maxPrice === null || price <= maxPrice);
+        row.classList.toggle('hidden-row', !matches);
+        if (matches) visibleCount++;
+      });
+
+      if (visibleCount === 0) {
+        showStatus('status-filter', 'No orders match the selected filters.', true);
+      } else {
+        showStatus('status-filter', `Filters applied successfully: ${visibleCount} order(s) shown.`);
+      }
+    });
+
+    document.getElementById('btn-clear-filter').addEventListener('click', () => {
+      document.getElementById('filter-category').value = '';
+      document.getElementById('filter-status').value = '';
+      document.getElementById('filter-max-price').value = '';
+      rows.forEach(row => row.classList.remove('hidden-row'));
+      showStatus('status-filter', `Filters cleared successfully: showing all ${rows.length} order(s).`);
+    });
+  </script>
+</body>
+</html>

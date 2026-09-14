@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Checkbox - Controls Practice</title>
+  <link rel="stylesheet" href="../style.css">
+  <style>
+    .tree { list-style: none; padding-left: 0; }
+    .tree ul { list-style: none; padding-left: 1.6em; }
+    .tree li { margin: 0.3em 0; }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a href="../index.html">Basic Controls</a> |
+    <a href="../controls-hub.html"><b>Controls Hub</b></a> |
+    <a href="../dialogs.html">Dialogs &amp; Windows</a> |
+    <a href="../hrms/login.html" style="color:#ffeb3b;font-weight:bold">🏢 HRMS App</a>
+  </nav>
+
+  <section class="home-hero" style="max-width:760px;margin:0 auto 1rem auto;padding:0 1em;">
+    <h1 style="font-size:2rem;margin-bottom:0.4rem;text-align:left;">Checkbox Controls</h1>
+    <div style="margin-bottom:1rem;">
+      <span class="badge badge-blue">Practice Lab</span>
+      <span class="badge badge-orange">UI Automation</span>
+    </div>
+    <p style="font-size:1.05rem;color:#444;">Single checkbox, a group, a select-all/indeterminate parent, and a nested tree.</p>
+  </section>
+
+  <!-- 1. Single checkbox -->
+  <section class="practice-section">
+    <h2>1. Single Checkbox</h2>
+    <label>
+      <input type="checkbox" id="single-cb" data-testid="single-cb">
+      I agree to the terms and conditions
+    </label>
+    <div class="btn-group" style="margin-top:1em;">
+      <button id="btn-single-confirm" data-testid="btn-single-confirm">Confirm</button>
+    </div>
+    <div class="status-label" id="status-single" data-testid="status-single"></div>
+  </section>
+
+  <!-- 2. Select-all / indeterminate group -->
+  <section class="practice-section">
+    <h2>2. Select-All with Indeterminate State</h2>
+    <label>
+      <input type="checkbox" id="select-all-cb" data-testid="select-all-cb">
+      <b>Select All Fruits</b>
+    </label>
+    <div style="margin-left:1.5em;">
+      <label><input type="checkbox" class="fruit-cb" value="Apple" data-testid="fruit-apple"> Apple</label><br>
+      <label><input type="checkbox" class="fruit-cb" value="Banana" data-testid="fruit-banana"> Banana</label><br>
+      <label><input type="checkbox" class="fruit-cb" value="Mango" data-testid="fruit-mango"> Mango</label><br>
+      <label><input type="checkbox" class="fruit-cb" value="Grape" data-testid="fruit-grape"> Grape</label>
+    </div>
+    <div class="status-label" id="status-group" data-testid="status-group"></div>
+  </section>
+
+  <!-- 3. Nested tree checkboxes -->
+  <section class="practice-section">
+    <h2>3. Nested Tree Checkboxes</h2>
+    <p class="desc">Checking a parent checks all its children; a child can be unchecked independently.</p>
+    <ul class="tree" id="tree" data-testid="tree">
+      <li>
+        <label><input type="checkbox" class="tree-parent" data-testid="tree-frontend"> Frontend</label>
+        <ul>
+          <li><label><input type="checkbox" class="tree-child" data-parent="tree-frontend" value="HTML" data-testid="tree-html"> HTML</label></li>
+          <li><label><input type="checkbox" class="tree-child" data-parent="tree-frontend" value="CSS" data-testid="tree-css"> CSS</label></li>
+          <li><label><input type="checkbox" class="tree-child" data-parent="tree-frontend" value="JavaScript" data-testid="tree-js"> JavaScript</label></li>
+        </ul>
+      </li>
+      <li>
+        <label><input type="checkbox" class="tree-parent" data-testid="tree-backend"> Backend</label>
+        <ul>
+          <li><label><input type="checkbox" class="tree-child" data-parent="tree-backend" value="Node.js" data-testid="tree-node"> Node.js</label></li>
+          <li><label><input type="checkbox" class="tree-child" data-parent="tree-backend" value="Java" data-testid="tree-java"> Java</label></li>
+        </ul>
+      </li>
+    </ul>
+    <div class="btn-group" style="margin-top:1em;">
+      <button id="btn-tree-confirm" data-testid="btn-tree-confirm">Save Selections</button>
+    </div>
+    <div class="status-label" id="status-tree" data-testid="status-tree"></div>
+  </section>
+
+  <a href="../../../index.html" class="home-btn floating-home-btn" title="Back to Home">&#8962; Home</a>
+  <script src="../../../assets/app.js"></script>
+  <script src="../practice-common.js"></script>
+  <script>
+    // 1. Single checkbox
+    document.getElementById('btn-single-confirm').addEventListener('click', () => {
+      const checked = document.getElementById('single-cb').checked;
+      if (checked) showStatus('status-single', 'Confirmed successfully: terms accepted.');
+      else showStatus('status-single', 'Please check the box to accept terms.', true);
+    });
+
+    // 2. Select-all group
+    const selectAll = document.getElementById('select-all-cb');
+    const fruitCbs = document.querySelectorAll('.fruit-cb');
+
+    selectAll.addEventListener('change', () => {
+      fruitCbs.forEach(cb => cb.checked = selectAll.checked);
+      updateGroupStatus();
+    });
+
+    fruitCbs.forEach(cb => cb.addEventListener('change', () => {
+      const checkedCount = Array.from(fruitCbs).filter(c => c.checked).length;
+      selectAll.checked = checkedCount === fruitCbs.length;
+      selectAll.indeterminate = checkedCount > 0 && checkedCount < fruitCbs.length;
+      updateGroupStatus();
+    }));
+
+    function updateGroupStatus() {
+      const selected = Array.from(fruitCbs).filter(c => c.checked).map(c => c.value);
+      if (selected.length === 0) {
+        showStatus('status-group', 'No fruits selected.', true);
+      } else {
+        showStatus('status-group', `Selected successfully: ${selected.join(', ')}`);
+      }
+    }
+
+    // 3. Nested tree
+    document.querySelectorAll('.tree-parent').forEach(parent => {
+      parent.addEventListener('change', () => {
+        document.querySelectorAll(`.tree-child[data-parent="${parent.getAttribute('data-testid')}"]`)
+          .forEach(child => child.checked = parent.checked);
+      });
+    });
+
+    document.querySelectorAll('.tree-child').forEach(child => {
+      child.addEventListener('change', () => {
+        const parentTestId = child.getAttribute('data-parent');
+        const parent = document.querySelector(`.tree-parent[data-testid="${parentTestId}"]`);
+        const siblings = document.querySelectorAll(`.tree-child[data-parent="${parentTestId}"]`);
+        const checkedCount = Array.from(siblings).filter(c => c.checked).length;
+        parent.checked = checkedCount === siblings.length;
+        parent.indeterminate = checkedCount > 0 && checkedCount < siblings.length;
+      });
+    });
+
+    document.getElementById('btn-tree-confirm').addEventListener('click', () => {
+      const selected = Array.from(document.querySelectorAll('.tree-child:checked')).map(c => c.value);
+      if (selected.length === 0) {
+        showStatus('status-tree', 'No items selected.', true);
+      } else {
+        showStatus('status-tree', `Saved successfully: ${selected.join(', ')}`);
+      }
+    });
+  </script>
+</body>
+</html>

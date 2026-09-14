@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Radio Button - Controls Practice</title>
+  <link rel="stylesheet" href="../style.css">
+  <style>
+    .radio-card-group { display: flex; gap: 1em; flex-wrap: wrap; }
+    .radio-card {
+      border: 1.5px solid #bdbdbd; border-radius: 10px; padding: 0.9em 1.2em;
+      cursor: pointer; min-width: 140px; text-align: center;
+    }
+    .radio-card input { display: none; }
+    .radio-card.selected { border-color: #388e3c; background: #e8f5e9; }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a href="../index.html">Basic Controls</a> |
+    <a href="../controls-hub.html"><b>Controls Hub</b></a> |
+    <a href="../dialogs.html">Dialogs &amp; Windows</a> |
+    <a href="../hrms/login.html" style="color:#ffeb3b;font-weight:bold">🏢 HRMS App</a>
+  </nav>
+
+  <section class="home-hero" style="max-width:760px;margin:0 auto 1rem auto;padding:0 1em;">
+    <h1 style="font-size:2rem;margin-bottom:0.4rem;text-align:left;">Radio Button Controls</h1>
+    <div style="margin-bottom:1rem;">
+      <span class="badge badge-blue">Practice Lab</span>
+      <span class="badge badge-orange">UI Automation</span>
+    </div>
+    <p style="font-size:1.05rem;color:#444;">A grouped radio set (with a disabled option) and a card-style radio selector.</p>
+  </section>
+
+  <!-- 1. Grouped radios -->
+  <section class="practice-section">
+    <h2>1. Payment Method <span class="badge badge-blue">radio group</span></h2>
+    <fieldset>
+      <legend>Choose one</legend>
+      <label><input type="radio" name="payment" value="card" data-testid="payment-card"> Credit/Debit Card</label><br>
+      <label><input type="radio" name="payment" value="upi" data-testid="payment-upi"> UPI</label><br>
+      <label><input type="radio" name="payment" value="cod" data-testid="payment-cod"> Cash on Delivery</label><br>
+      <label><input type="radio" name="payment" value="crypto" data-testid="payment-crypto" disabled> Crypto (disabled)</label>
+    </fieldset>
+    <div class="btn-group" style="margin-top:1em;">
+      <button id="btn-payment-confirm" data-testid="btn-payment-confirm">Confirm Payment Method</button>
+    </div>
+    <div class="status-label" id="status-payment" data-testid="status-payment"></div>
+  </section>
+
+  <!-- 2. Card-style radio selector -->
+  <section class="practice-section">
+    <h2>2. Subscription Plan <span class="badge badge-green">card selector</span></h2>
+    <div class="radio-card-group" id="plan-group" data-testid="plan-group">
+      <label class="radio-card" data-testid="plan-basic">
+        <input type="radio" name="plan" value="basic">
+        <div><b>Basic</b><br>$0/mo</div>
+      </label>
+      <label class="radio-card" data-testid="plan-pro">
+        <input type="radio" name="plan" value="pro">
+        <div><b>Pro</b><br>$9/mo</div>
+      </label>
+      <label class="radio-card" data-testid="plan-enterprise">
+        <input type="radio" name="plan" value="enterprise">
+        <div><b>Enterprise</b><br>$29/mo</div>
+      </label>
+    </div>
+    <div class="status-label" id="status-plan" data-testid="status-plan"></div>
+  </section>
+
+  <a href="../../../index.html" class="home-btn floating-home-btn" title="Back to Home">&#8962; Home</a>
+  <script src="../../../assets/app.js"></script>
+  <script src="../practice-common.js"></script>
+  <script>
+    document.getElementById('btn-payment-confirm').addEventListener('click', () => {
+      const selected = document.querySelector('input[name="payment"]:checked');
+      if (!selected) {
+        showStatus('status-payment', 'Please select a payment method.', true);
+        return;
+      }
+      showStatus('status-payment', `Payment method confirmed successfully: ${selected.value}`);
+    });
+
+    document.querySelectorAll('.radio-card').forEach(card => {
+      card.addEventListener('click', () => {
+        document.querySelectorAll('.radio-card').forEach(c => c.classList.remove('selected'));
+        card.classList.add('selected');
+        card.querySelector('input').checked = true;
+        const value = card.querySelector('input').value;
+        showStatus('status-plan', `Plan selected successfully: ${value}`);
+      });
+    });
+  </script>
+</body>
+</html>

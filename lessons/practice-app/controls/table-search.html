@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Table Data Search - Controls Practice</title>
+  <link rel="stylesheet" href="../style.css">
+  <style>
+    .table-wrap { max-width: 800px; margin: 0 auto; }
+    table.data-table { background: #fff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 16px rgba(25,118,210,0.10); }
+    table.data-table th { background: #1976d2; color: #fff; }
+    table.data-table tr.hidden-row { display: none; }
+    mark { background: #fff59d; padding: 0 0.1em; }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a href="../index.html">Basic Controls</a> |
+    <a href="../controls-hub.html"><b>Controls Hub</b></a> |
+    <a href="../dialogs.html">Dialogs &amp; Windows</a> |
+    <a href="../hrms/login.html" style="color:#ffeb3b;font-weight:bold">🏢 HRMS App</a>
+  </nav>
+
+  <section class="home-hero" style="max-width:800px;margin:0 auto 1rem auto;padding:0 1em;">
+    <h1 style="font-size:2rem;margin-bottom:0.4rem;text-align:left;">Table Data Search</h1>
+    <div style="margin-bottom:1rem;">
+      <span class="badge badge-blue">Practice Lab</span>
+      <span class="badge badge-orange">UI Automation</span>
+    </div>
+    <p style="font-size:1.05rem;color:#444;">A free-text search box filters table rows live across all columns.</p>
+  </section>
+
+  <section class="practice-section table-wrap">
+    <h2>Products</h2>
+    <input type="text" id="table-search" data-testid="table-search" placeholder="Search products...">
+    <table class="data-table" id="products-table" data-testid="products-table" style="margin-top:1em;">
+      <thead>
+        <tr><th>Name</th><th>Category</th><th>Price</th><th>Stock</th></tr>
+      </thead>
+      <tbody id="products-tbody" data-testid="products-tbody">
+        <tr><td>Wireless Mouse</td><td>Electronics</td><td>25</td><td>120</td></tr>
+        <tr><td>Mechanical Keyboard</td><td>Electronics</td><td>85</td><td>45</td></tr>
+        <tr><td>Office Chair</td><td>Furniture</td><td>150</td><td>15</td></tr>
+        <tr><td>Standing Desk</td><td>Furniture</td><td>320</td><td>8</td></tr>
+        <tr><td>Notebook Set</td><td>Stationery</td><td>10</td><td>300</td></tr>
+        <tr><td>Gel Pen Pack</td><td>Stationery</td><td>5</td><td>500</td></tr>
+        <tr><td>USB-C Hub</td><td>Electronics</td><td>35</td><td>60</td></tr>
+      </tbody>
+    </table>
+    <div class="status-label" id="status-search" data-testid="status-search"></div>
+  </section>
+
+  <a href="../../../index.html" class="home-btn floating-home-btn" title="Back to Home">&#8962; Home</a>
+  <script src="../../../assets/app.js"></script>
+  <script src="../practice-common.js"></script>
+  <script>
+    const searchInput = document.getElementById('table-search');
+    const rows = Array.from(document.querySelectorAll('#products-tbody tr'));
+
+    searchInput.addEventListener('input', () => {
+      const term = searchInput.value.trim().toLowerCase();
+      let visibleCount = 0;
+      rows.forEach(row => {
+        const text = row.textContent.toLowerCase();
+        const matches = !term || text.includes(term);
+        row.classList.toggle('hidden-row', !matches);
+        if (matches) visibleCount++;
+      });
+      if (!term) {
+        showStatus('status-search', `Showing all ${rows.length} rows.`);
+      } else if (visibleCount === 0) {
+        showStatus('status-search', `No rows match "${term}".`, true);
+      } else {
+        showStatus('status-search', `Search successful: ${visibleCount} row(s) match "${term}".`);
+      }
+    });
+  </script>
+</body>
+</html>

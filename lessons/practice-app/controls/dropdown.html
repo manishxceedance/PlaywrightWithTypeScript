@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dropdown - Controls Practice</title>
+  <link rel="stylesheet" href="../style.css">
+  <style>
+    /* jQuery-style dropdown */
+    .jq-select { position: relative; max-width: 320px; }
+    .jq-select-box {
+      border: 1.5px solid #bdbdbd; border-radius: 7px; padding: 0.6em;
+      background: #f9f9f9; cursor: pointer; user-select: none;
+    }
+    .jq-select-box.open { border-color: #1976d2; }
+    .jq-options {
+      list-style: none; margin: 0.3em 0 0 0; padding: 0.3em 0;
+      border: 1.5px solid #bdbdbd; border-radius: 7px; background: #fff;
+      max-height: 180px; overflow-y: auto; position: absolute; width: 100%;
+      z-index: 5; display: none; box-shadow: 0 6px 16px rgba(0,0,0,0.12);
+    }
+    .jq-options.show { display: block; }
+    .jq-option { padding: 0.5em 0.8em; cursor: pointer; }
+    .jq-option:hover, .jq-option.active { background: #e3f2fd; }
+    .jq-search { width: 100%; box-sizing: border-box; border: none; border-bottom: 1px solid #eee; padding: 0.5em 0.8em; }
+
+    /* Bootstrap-style dropdown */
+    .btn-bootstrap {
+      background: #0d6efd; color: #fff; border: none; border-radius: 6px;
+      padding: 0.55em 1.2em; font-weight: 600; cursor: pointer; width: auto;
+    }
+    .dropdown { position: relative; display: inline-block; }
+    .dropdown-menu {
+      display: none; position: absolute; left: 0; top: 110%; min-width: 180px;
+      background: #fff; border: 1px solid rgba(0,0,0,0.15); border-radius: 8px;
+      box-shadow: 0 6px 16px rgba(0,0,0,0.15); padding: 0.4em 0; z-index: 5;
+    }
+    .dropdown-menu.show { display: block; }
+    .dropdown-item { padding: 0.5em 1em; cursor: pointer; color: #212529; }
+    .dropdown-item:hover, .dropdown-item.active { background: #e9ecef; }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a href="../index.html">Basic Controls</a> |
+    <a href="../controls-hub.html"><b>Controls Hub</b></a> |
+    <a href="../dialogs.html">Dialogs &amp; Windows</a> |
+    <a href="../hrms/login.html" style="color:#ffeb3b;font-weight:bold">🏢 HRMS App</a>
+  </nav>
+
+  <section class="home-hero" style="max-width:760px;margin:0 auto 1rem auto;padding:0 1em;">
+    <h1 style="font-size:2rem;margin-bottom:0.4rem;text-align:left;">Dropdown Controls</h1>
+    <div style="margin-bottom:1rem;">
+      <span class="badge badge-blue">Practice Lab</span>
+      <span class="badge badge-orange">UI Automation</span>
+    </div>
+    <p style="font-size:1.05rem;color:#444;">Practice a native <code>&lt;select&gt;</code>, a searchable jQuery-style custom dropdown, and a Bootstrap-style menu.</p>
+  </section>
+
+  <!-- 1. Native select -->
+  <section class="practice-section">
+    <h2>1. Native Dropdown <span class="badge badge-blue">&lt;select&gt;</span></h2>
+    <p class="desc">Standard HTML select element.</p>
+    <select id="native-select" data-testid="native-select">
+      <option value="">-- Choose a country --</option>
+      <option value="in">India</option>
+      <option value="us">United States</option>
+      <option value="uk">United Kingdom</option>
+      <option value="ca">Canada</option>
+      <option value="au">Australia</option>
+    </select>
+    <div class="btn-group" style="margin-top:1em;">
+      <button id="btn-native-confirm" data-testid="btn-native-confirm">Confirm</button>
+    </div>
+    <div class="status-label" id="status-native" data-testid="status-native"></div>
+  </section>
+
+  <!-- 2. jQuery-style searchable dropdown -->
+  <section class="practice-section">
+    <h2>2. jQuery-style Searchable Dropdown</h2>
+    <p class="desc">Custom widget: click to open, type to filter, click an option to select.</p>
+    <div class="jq-select" id="jq-select" data-testid="jq-select">
+      <div class="jq-select-box" id="jq-select-box" data-testid="jq-select-box">-- Choose a framework --</div>
+      <ul class="jq-options" id="jq-options" data-testid="jq-options">
+        <li><input type="text" class="jq-search" id="jq-search" data-testid="jq-search" placeholder="Search..."></li>
+      </ul>
+    </div>
+    <div class="status-label" id="status-jq" data-testid="status-jq"></div>
+  </section>
+
+  <!-- 3. Bootstrap-style dropdown -->
+  <section class="practice-section">
+    <h2>3. Bootstrap-style Dropdown</h2>
+    <p class="desc">Toggle button reveals a menu, matching Bootstrap's <code>dropdown-menu</code> classes.</p>
+    <div class="dropdown" id="bs-dropdown" data-testid="bs-dropdown">
+      <button class="btn-bootstrap dropdown-toggle" id="bs-dropdown-toggle" data-testid="bs-dropdown-toggle">Select Action &#9662;</button>
+      <ul class="dropdown-menu" id="bs-dropdown-menu" data-testid="bs-dropdown-menu">
+        <li class="dropdown-item" data-value="edit" data-testid="bs-item-edit">Edit</li>
+        <li class="dropdown-item" data-value="duplicate" data-testid="bs-item-duplicate">Duplicate</li>
+        <li class="dropdown-item" data-value="archive" data-testid="bs-item-archive">Archive</li>
+        <li class="dropdown-item" data-value="delete" data-testid="bs-item-delete">Delete</li>
+      </ul>
+    </div>
+    <div class="status-label" id="status-bs" data-testid="status-bs"></div>
+  </section>
+
+  <a href="../../../index.html" class="home-btn floating-home-btn" title="Back to Home">&#8962; Home</a>
+  <script src="../../../assets/app.js"></script>
+  <script src="../practice-common.js"></script>
+  <script>
+    // 1. Native select
+    document.getElementById('btn-native-confirm').addEventListener('click', () => {
+      const select = document.getElementById('native-select');
+      if (!select.value) {
+        showStatus('status-native', 'Please choose an option first.', true);
+        return;
+      }
+      showStatus('status-native', `Selected successfully: ${select.options[select.selectedIndex].text}`);
+    });
+
+    // 2. jQuery-style dropdown
+    const frameworks = ['Playwright', 'Cypress', 'Selenium', 'WebdriverIO', 'Puppeteer', 'TestCafe'];
+    const jqBox = document.getElementById('jq-select-box');
+    const jqOptions = document.getElementById('jq-options');
+    const jqSearch = document.getElementById('jq-search');
+
+    function renderJqOptions(filter) {
+      jqOptions.querySelectorAll('.jq-option').forEach(el => el.remove());
+      frameworks
+        .filter(f => f.toLowerCase().includes((filter || '').toLowerCase()))
+        .forEach(f => {
+          const li = document.createElement('li');
+          li.textContent = f;
+          li.className = 'jq-option';
+          li.setAttribute('data-testid', `jq-option-${f.toLowerCase()}`);
+          li.addEventListener('click', () => {
+            jqBox.textContent = f;
+            jqOptions.classList.remove('show');
+            jqBox.classList.remove('open');
+            showStatus('status-jq', `Selected successfully: ${f}`);
+          });
+          jqOptions.appendChild(li);
+        });
+    }
+    renderJqOptions('');
+
+    jqBox.addEventListener('click', () => {
+      const isOpen = jqOptions.classList.toggle('show');
+      jqBox.classList.toggle('open', isOpen);
+      if (isOpen) { jqSearch.value = ''; renderJqOptions(''); jqSearch.focus(); }
+    });
+    jqSearch.addEventListener('input', () => renderJqOptions(jqSearch.value));
+    document.addEventListener('click', (e) => {
+      if (!document.getElementById('jq-select').contains(e.target)) {
+        jqOptions.classList.remove('show');
+        jqBox.classList.remove('open');
+      }
+    });
+
+    // 3. Bootstrap-style dropdown
+    const bsToggle = document.getElementById('bs-dropdown-toggle');
+    const bsMenu = document.getElementById('bs-dropdown-menu');
+    bsToggle.addEventListener('click', () => bsMenu.classList.toggle('show'));
+    bsMenu.querySelectorAll('.dropdown-item').forEach(item => {
+      item.addEventListener('click', () => {
+        bsMenu.classList.remove('show');
+        showStatus('status-bs', `Action performed successfully: ${item.textContent.trim()}`);
+      });
+    });
+    document.addEventListener('click', (e) => {
+      if (!document.getElementById('bs-dropdown').contains(e.target)) bsMenu.classList.remove('show');
+    });
+  </script>
+</body>
+</html>

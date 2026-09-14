@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>File Upload - Controls Practice</title>
+  <link rel="stylesheet" href="../style.css">
+  <style>
+    #upload-list { list-style: none; padding: 0; margin-top: 0.8em; }
+    #upload-list li { padding: 0.4em 0.7em; background: #f1f8e9; border-radius: 6px; margin-bottom: 0.4em; }
+    .drop-zone {
+      border: 2px dashed #90caf9; border-radius: 12px; padding: 2em; text-align: center;
+      color: #1976d2; background: #f5faff; cursor: pointer;
+    }
+    .drop-zone.drag-over { background: #e3f2fd; border-color: #1976d2; }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a href="../index.html">Basic Controls</a> |
+    <a href="../controls-hub.html"><b>Controls Hub</b></a> |
+    <a href="../dialogs.html">Dialogs &amp; Windows</a> |
+    <a href="../hrms/login.html" style="color:#ffeb3b;font-weight:bold">🏢 HRMS App</a>
+  </nav>
+
+  <section class="home-hero" style="max-width:760px;margin:0 auto 1rem auto;padding:0 1em;">
+    <h1 style="font-size:2rem;margin-bottom:0.4rem;text-align:left;">File Upload</h1>
+    <div style="margin-bottom:1rem;">
+      <span class="badge badge-blue">Practice Lab</span>
+      <span class="badge badge-orange">UI Automation</span>
+    </div>
+    <p style="font-size:1.05rem;color:#444;">Practice <code>setInputFiles()</code> with a single-file input, a multi-file input, and a drag-and-drop zone.</p>
+  </section>
+
+  <!-- 1. Single file -->
+  <section class="practice-section">
+    <h2>1. Single File Upload</h2>
+    <input type="file" id="single-file" data-testid="single-file">
+    <div class="status-label" id="status-single-file" data-testid="status-single-file"></div>
+  </section>
+
+  <!-- 2. Multiple files -->
+  <section class="practice-section">
+    <h2>2. Multiple File Upload</h2>
+    <input type="file" id="multi-file" data-testid="multi-file" multiple>
+    <ul id="upload-list" data-testid="upload-list"></ul>
+    <div class="status-label" id="status-multi-file" data-testid="status-multi-file"></div>
+  </section>
+
+  <!-- 3. Drop zone -->
+  <section class="practice-section">
+    <h2>3. Drag &amp; Drop Zone</h2>
+    <p class="desc">Playwright can't do a native OS drag, but can dispatch a <code>drop</code> event with a <code>DataTransfer</code>, or simply click to open the file picker below.</p>
+    <label class="drop-zone" for="dropzone-file" id="dropzone" data-testid="dropzone">
+      &#128193; Drag a file here or click to browse
+      <input type="file" id="dropzone-file" data-testid="dropzone-file" style="display:none;">
+    </label>
+    <div class="status-label" id="status-dropzone" data-testid="status-dropzone"></div>
+  </section>
+
+  <a href="../../../index.html" class="home-btn floating-home-btn" title="Back to Home">&#8962; Home</a>
+  <script src="../../../assets/app.js"></script>
+  <script src="../practice-common.js"></script>
+  <script>
+    document.getElementById('single-file').addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (file) showStatus('status-single-file', `Uploaded successfully: ${file.name} (${file.size} bytes)`);
+      else showStatus('status-single-file', 'No file selected.', true);
+    });
+
+    document.getElementById('multi-file').addEventListener('change', (e) => {
+      const list = document.getElementById('upload-list');
+      list.innerHTML = '';
+      const files = Array.from(e.target.files);
+      files.forEach(f => {
+        const li = document.createElement('li');
+        li.textContent = `${f.name} (${f.size} bytes)`;
+        list.appendChild(li);
+      });
+      if (files.length) showStatus('status-multi-file', `Uploaded successfully: ${files.length} file(s)`);
+      else showStatus('status-multi-file', 'No files selected.', true);
+    });
+
+    const dropzone = document.getElementById('dropzone');
+    const dropzoneInput = document.getElementById('dropzone-file');
+
+    ['dragenter', 'dragover'].forEach(evt => dropzone.addEventListener(evt, (e) => {
+      e.preventDefault();
+      dropzone.classList.add('drag-over');
+    }));
+    ['dragleave', 'drop'].forEach(evt => dropzone.addEventListener(evt, (e) => {
+      e.preventDefault();
+      dropzone.classList.remove('drag-over');
+    }));
+    dropzone.addEventListener('drop', (e) => {
+      const file = e.dataTransfer.files[0];
+      if (file) showStatus('status-dropzone', `Dropped successfully: ${file.name}`);
+    });
+    dropzoneInput.addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (file) showStatus('status-dropzone', `Uploaded successfully: ${file.name}`);
+    });
+  </script>
+</body>
+</html>

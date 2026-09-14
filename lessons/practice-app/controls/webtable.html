@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Web Table - Controls Practice</title>
+  <link rel="stylesheet" href="../style.css">
+  <style>
+    .table-wrap { max-width: 760px; margin: 0 auto; }
+    table.data-table { background: #fff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 16px rgba(25,118,210,0.10); }
+    table.data-table th { background: #1976d2; color: #fff; }
+    table.data-table tr.removed { display: none; }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a href="../index.html">Basic Controls</a> |
+    <a href="../controls-hub.html"><b>Controls Hub</b></a> |
+    <a href="../dialogs.html">Dialogs &amp; Windows</a> |
+    <a href="../hrms/login.html" style="color:#ffeb3b;font-weight:bold">🏢 HRMS App</a>
+  </nav>
+
+  <section class="home-hero" style="max-width:760px;margin:0 auto 1rem auto;padding:0 1em;">
+    <h1 style="font-size:2rem;margin-bottom:0.4rem;text-align:left;">Web Table</h1>
+    <div style="margin-bottom:1rem;">
+      <span class="badge badge-blue">Practice Lab</span>
+      <span class="badge badge-orange">UI Automation</span>
+    </div>
+    <p style="font-size:1.05rem;color:#444;">A static employee table with add/edit/delete row actions.</p>
+  </section>
+
+  <section class="practice-section table-wrap">
+    <h2>Employees</h2>
+    <table class="data-table" id="employee-table" data-testid="employee-table">
+      <thead>
+        <tr><th>ID</th><th>Name</th><th>Department</th><th>Salary</th><th>Actions</th></tr>
+      </thead>
+      <tbody id="employee-tbody" data-testid="employee-tbody">
+        <tr data-id="1"><td>1</td><td>Aditi Sharma</td><td>Engineering</td><td>75000</td>
+          <td><button class="mini-btn edit-btn" data-testid="edit-1">Edit</button> <button class="mini-btn delete-btn" data-testid="delete-1">Delete</button></td></tr>
+        <tr data-id="2"><td>2</td><td>Rahul Verma</td><td>Sales</td><td>62000</td>
+          <td><button class="mini-btn edit-btn" data-testid="edit-2">Edit</button> <button class="mini-btn delete-btn" data-testid="delete-2">Delete</button></td></tr>
+        <tr data-id="3"><td>3</td><td>Priya Nair</td><td>HR</td><td>58000</td>
+          <td><button class="mini-btn edit-btn" data-testid="edit-3">Edit</button> <button class="mini-btn delete-btn" data-testid="delete-3">Delete</button></td></tr>
+      </tbody>
+    </table>
+
+    <h2 style="margin-top:1.5em;">Add New Employee</h2>
+    <input type="text" id="new-name" data-testid="new-name" placeholder="Name">
+    <input type="text" id="new-dept" data-testid="new-dept" placeholder="Department">
+    <input type="number" id="new-salary" data-testid="new-salary" placeholder="Salary">
+    <div class="btn-group" style="margin-top:1em;">
+      <button id="btn-add-row" data-testid="btn-add-row">Add Row</button>
+    </div>
+    <div class="status-label" id="status-table" data-testid="status-table"></div>
+  </section>
+
+  <a href="../../../index.html" class="home-btn floating-home-btn" title="Back to Home">&#8962; Home</a>
+  <script src="../../../assets/app.js"></script>
+  <script src="../practice-common.js"></script>
+  <script>
+    let nextId = 4;
+    const tbody = document.getElementById('employee-tbody');
+
+    document.getElementById('btn-add-row').addEventListener('click', () => {
+      const name = document.getElementById('new-name').value.trim();
+      const dept = document.getElementById('new-dept').value.trim();
+      const salary = document.getElementById('new-salary').value.trim();
+      if (!name || !dept || !salary) {
+        showStatus('status-table', 'Please fill Name, Department and Salary.', true);
+        return;
+      }
+      const id = nextId++;
+      const row = document.createElement('tr');
+      row.setAttribute('data-id', id);
+      row.innerHTML = `<td>${id}</td><td>${name}</td><td>${dept}</td><td>${salary}</td>
+        <td><button class="mini-btn edit-btn" data-testid="edit-${id}">Edit</button> <button class="mini-btn delete-btn" data-testid="delete-${id}">Delete</button></td>`;
+      tbody.appendChild(row);
+      wireRowButtons(row);
+      document.getElementById('new-name').value = '';
+      document.getElementById('new-dept').value = '';
+      document.getElementById('new-salary').value = '';
+      showStatus('status-table', `Row added successfully: ${name} (ID ${id})`);
+    });
+
+    function wireRowButtons(row) {
+      const id = row.getAttribute('data-id');
+      row.querySelector('.edit-btn').addEventListener('click', () => {
+        const nameCell = row.children[1];
+        const current = nameCell.textContent;
+        const updated = prompt('Edit employee name:', current);
+        if (updated && updated.trim()) {
+          nameCell.textContent = updated.trim();
+          showStatus('status-table', `Row updated successfully: ID ${id} -> ${updated.trim()}`);
+        }
+      });
+      row.querySelector('.delete-btn').addEventListener('click', () => {
+        const name = row.children[1].textContent;
+        row.remove();
+        showStatus('status-table', `Row deleted successfully: ${name} (ID ${id})`);
+      });
+    }
+
+    document.querySelectorAll('#employee-tbody tr').forEach(wireRowButtons);
+  </script>
+</body>
+</html>

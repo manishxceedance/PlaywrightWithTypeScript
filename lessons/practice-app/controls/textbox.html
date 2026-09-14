@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Textbox - Controls Practice</title>
+  <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+
+  <nav>
+    <a href="../index.html">Basic Controls</a> |
+    <a href="../controls-hub.html"><b>Controls Hub</b></a> |
+    <a href="../dialogs.html">Dialogs &amp; Windows</a> |
+    <a href="../hrms/login.html" style="color:#ffeb3b;font-weight:bold">🏢 HRMS App</a>
+  </nav>
+
+  <section class="home-hero" style="max-width:760px;margin:0 auto 1rem auto;padding:0 1em;">
+    <h1 style="font-size:2rem;margin-bottom:0.4rem;text-align:left;">Textbox Controls</h1>
+    <div style="margin-bottom:1rem;">
+      <span class="badge badge-blue">Practice Lab</span>
+      <span class="badge badge-orange">UI Automation</span>
+    </div>
+    <p style="font-size:1.05rem;color:#444;">Various textbox flavours: plain, disabled, readonly, required/validated and an autocomplete-style input.</p>
+  </section>
+
+  <!-- 1. Plain textbox -->
+  <section class="practice-section">
+    <h2>1. Plain Textbox</h2>
+    <p class="desc">Type a value and click Save to confirm it was captured.</p>
+    <input type="text" id="plain-text" data-testid="plain-text" placeholder="Enter any text">
+    <div class="btn-group" style="margin-top:1em;">
+      <button id="btn-plain-save" data-testid="btn-plain-save">Save</button>
+    </div>
+    <div class="status-label" id="status-plain" data-testid="status-plain"></div>
+  </section>
+
+  <!-- 2. Disabled / Readonly -->
+  <section class="practice-section">
+    <h2>2. Disabled &amp; Readonly Textboxes</h2>
+    <p class="desc">These cannot be edited &mdash; useful for asserting negative behaviour.</p>
+    <label for="disabled-text">Disabled</label>
+    <input type="text" id="disabled-text" data-testid="disabled-text" value="Cannot edit me" disabled>
+    <label for="readonly-text">Readonly</label>
+    <input type="text" id="readonly-text" data-testid="readonly-text" value="Read only value" readonly>
+  </section>
+
+  <!-- 3. Required / validated -->
+  <section class="practice-section">
+    <h2>3. Required &amp; Validated Textbox</h2>
+    <p class="desc">Must be a valid email; submit to see validation feedback.</p>
+    <input type="email" id="email-text" data-testid="email-text" placeholder="name@example.com" required>
+    <div class="btn-group" style="margin-top:1em;">
+      <button id="btn-email-submit" data-testid="btn-email-submit">Submit</button>
+    </div>
+    <div class="status-label" id="status-email" data-testid="status-email"></div>
+  </section>
+
+  <!-- 4. Autocomplete-style textbox -->
+  <section class="practice-section" style="position:relative;">
+    <h2>4. Autocomplete Textbox</h2>
+    <p class="desc">Start typing a fruit name and pick a suggestion.</p>
+    <input type="text" id="autocomplete-text" data-testid="autocomplete-text" placeholder="Type a fruit..." autocomplete="off">
+    <ul id="autocomplete-list" data-testid="autocomplete-list" style="list-style:none;margin:0;padding:0;border:1px solid #bdbdbd;border-radius:8px;max-width:400px;display:none;position:absolute;background:#fff;z-index:5;"></ul>
+    <div class="status-label" id="status-autocomplete" data-testid="status-autocomplete"></div>
+  </section>
+
+  <a href="../../../index.html" class="home-btn floating-home-btn" title="Back to Home">&#8962; Home</a>
+  <script src="../../../assets/app.js"></script>
+  <script src="../practice-common.js"></script>
+  <script>
+    document.getElementById('btn-plain-save').addEventListener('click', () => {
+      const val = document.getElementById('plain-text').value.trim();
+      if (!val) {
+        showStatus('status-plain', 'Please enter some text before saving.', true);
+        return;
+      }
+      showStatus('status-plain', `Saved successfully: "${val}"`);
+    });
+
+    document.getElementById('btn-email-submit').addEventListener('click', () => {
+      const input = document.getElementById('email-text');
+      const val = input.value.trim();
+      const isValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val);
+      if (isValid) {
+        showStatus('status-email', `Email submitted successfully: ${val}`);
+      } else {
+        showStatus('status-email', 'Invalid email format. Please correct and resubmit.', true);
+      }
+    });
+
+    const fruits = ['Apple', 'Apricot', 'Banana', 'Blueberry', 'Cherry', 'Grape', 'Guava', 'Mango', 'Orange', 'Papaya', 'Pineapple', 'Watermelon'];
+    const acInput = document.getElementById('autocomplete-text');
+    const acList = document.getElementById('autocomplete-list');
+
+    acInput.addEventListener('input', () => {
+      const query = acInput.value.trim().toLowerCase();
+      acList.innerHTML = '';
+      if (!query) {
+        acList.style.display = 'none';
+        return;
+      }
+      const matches = fruits.filter(f => f.toLowerCase().includes(query));
+      if (matches.length === 0) {
+        acList.style.display = 'none';
+        return;
+      }
+      matches.forEach(fruit => {
+        const li = document.createElement('li');
+        li.textContent = fruit;
+        li.className = 'autocomplete-item';
+        li.setAttribute('data-testid', `autocomplete-item-${fruit.toLowerCase()}`);
+        li.style.padding = '0.5em 0.8em';
+        li.style.cursor = 'pointer';
+        li.addEventListener('click', () => {
+          acInput.value = fruit;
+          acList.style.display = 'none';
+          showStatus('status-autocomplete', `Selected successfully: ${fruit}`);
+        });
+        li.addEventListener('mouseenter', () => li.style.background = '#e3f2fd');
+        li.addEventListener('mouseleave', () => li.style.background = '#fff');
+        acList.appendChild(li);
+      });
+      acList.style.display = 'block';
+    });
+
+    document.addEventListener('click', (e) => {
+      if (e.target !== acInput) acList.style.display = 'none';
+    });
+  </script>
+</body>
+</html>

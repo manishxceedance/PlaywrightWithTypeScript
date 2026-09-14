@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Drag &amp; Drop - Controls Practice</title>
+  <link rel="stylesheet" href="../style.css">
+  <style>
+    .dnd-wrap { display: flex; gap: 1.5em; flex-wrap: wrap; }
+    .dnd-col { flex: 1; min-width: 220px; }
+    .dnd-list {
+      list-style: none; margin: 0; padding: 0.7em; min-height: 180px;
+      border: 2px dashed #90caf9; border-radius: 10px; background: #f5faff;
+    }
+    .dnd-list.drag-over { background: #e3f2fd; border-color: #1976d2; }
+    .dnd-item {
+      background: #fff; border: 1px solid #bdbdbd; border-radius: 8px;
+      padding: 0.6em 0.8em; margin-bottom: 0.5em; cursor: grab;
+    }
+    .dnd-item.dragging { opacity: 0.4; }
+
+    .sortable-list { list-style: none; padding: 0; margin: 0; max-width: 400px; }
+    .sortable-item {
+      background: #fff; border: 1px solid #bdbdbd; border-radius: 8px;
+      padding: 0.6em 0.8em; margin-bottom: 0.5em; cursor: grab;
+    }
+    .sortable-item.dragging { opacity: 0.4; }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a href="../index.html">Basic Controls</a> |
+    <a href="../controls-hub.html"><b>Controls Hub</b></a> |
+    <a href="../dialogs.html">Dialogs &amp; Windows</a> |
+    <a href="../hrms/login.html" style="color:#ffeb3b;font-weight:bold">🏢 HRMS App</a>
+  </nav>
+
+  <section class="home-hero" style="max-width:800px;margin:0 auto 1rem auto;padding:0 1em;">
+    <h1 style="font-size:2rem;margin-bottom:0.4rem;text-align:left;">Drag &amp; Drop</h1>
+    <div style="margin-bottom:1rem;">
+      <span class="badge badge-blue">Practice Lab</span>
+      <span class="badge badge-orange">UI Automation</span>
+    </div>
+    <p style="font-size:1.05rem;color:#444;">HTML5 drag-and-drop between two lists, and a reorderable single list.</p>
+  </section>
+
+  <!-- 1. Drag between lists -->
+  <section class="practice-section" style="max-width:700px;">
+    <h2>1. Drag Items Between Lists</h2>
+    <div class="dnd-wrap">
+      <div class="dnd-col">
+        <h3 style="text-align:left;">Available</h3>
+        <ul class="dnd-list" id="source-list" data-testid="source-list">
+          <li class="dnd-item" draggable="true" data-testid="dnd-item-1">Item 1</li>
+          <li class="dnd-item" draggable="true" data-testid="dnd-item-2">Item 2</li>
+          <li class="dnd-item" draggable="true" data-testid="dnd-item-3">Item 3</li>
+        </ul>
+      </div>
+      <div class="dnd-col">
+        <h3 style="text-align:left;">Selected</h3>
+        <ul class="dnd-list" id="target-list" data-testid="target-list"></ul>
+      </div>
+    </div>
+    <div class="status-label" id="status-dnd" data-testid="status-dnd"></div>
+  </section>
+
+  <!-- 2. Reorderable list -->
+  <section class="practice-section" style="max-width:700px;">
+    <h2>2. Reorder a List (drag up/down)</h2>
+    <ul class="sortable-list" id="sortable-list" data-testid="sortable-list">
+      <li class="sortable-item" draggable="true" data-testid="sortable-first">First Task</li>
+      <li class="sortable-item" draggable="true" data-testid="sortable-second">Second Task</li>
+      <li class="sortable-item" draggable="true" data-testid="sortable-third">Third Task</li>
+      <li class="sortable-item" draggable="true" data-testid="sortable-fourth">Fourth Task</li>
+    </ul>
+    <div class="status-label" id="status-reorder" data-testid="status-reorder"></div>
+  </section>
+
+  <a href="../../../index.html" class="home-btn floating-home-btn" title="Back to Home">&#8962; Home</a>
+  <script src="../../../assets/app.js"></script>
+  <script src="../practice-common.js"></script>
+  <script>
+    // 1. Drag between lists
+    function wireDndItem(item) {
+      item.addEventListener('dragstart', () => item.classList.add('dragging'));
+      item.addEventListener('dragend', () => item.classList.remove('dragging'));
+    }
+    document.querySelectorAll('.dnd-item').forEach(wireDndItem);
+
+    [document.getElementById('source-list'), document.getElementById('target-list')].forEach(list => {
+      list.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        list.classList.add('drag-over');
+      });
+      list.addEventListener('dragleave', () => list.classList.remove('drag-over'));
+      list.addEventListener('drop', (e) => {
+        e.preventDefault();
+        list.classList.remove('drag-over');
+        const dragging = document.querySelector('.dnd-item.dragging');
+        if (dragging) {
+          list.appendChild(dragging);
+          showStatus('status-dnd', `Moved successfully: "${dragging.textContent}" to ${list.id === 'target-list' ? 'Selected' : 'Available'} list.`);
+        }
+      });
+    });
+
+    // 2. Reorderable list
+    const sortableList = document.getElementById('sortable-list');
+    document.querySelectorAll('.sortable-item').forEach(item => {
+      item.addEventListener('dragstart', () => item.classList.add('dragging'));
+      item.addEventListener('dragend', () => {
+        item.classList.remove('dragging');
+        const order = Array.from(sortableList.children).map(li => li.textContent).join(' > ');
+        showStatus('status-reorder', `Reordered successfully: ${order}`);
+      });
+    });
+    sortableList.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      const dragging = sortableList.querySelector('.dragging');
+      const after = Array.from(sortableList.querySelectorAll('.sortable-item:not(.dragging)')).find(item => {
+        const rect = item.getBoundingClientRect();
+        return e.clientY < rect.top + rect.height / 2;
+      });
+      if (after) sortableList.insertBefore(dragging, after);
+      else sortableList.appendChild(dragging);
+    });
+  </script>
+</body>
+</html>

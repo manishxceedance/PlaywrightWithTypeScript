@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Unique &amp; Duplicate Controls - Controls Practice</title>
+  <link rel="stylesheet" href="../style.css">
+  <style>
+    .dup-row { display: flex; gap: 0.7em; flex-wrap: wrap; margin-bottom: 0.8em; }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a href="../index.html">Basic Controls</a> |
+    <a href="../controls-hub.html"><b>Controls Hub</b></a> |
+    <a href="../dialogs.html">Dialogs &amp; Windows</a> |
+    <a href="../hrms/login.html" style="color:#ffeb3b;font-weight:bold">🏢 HRMS App</a>
+  </nav>
+
+  <section class="home-hero" style="max-width:760px;margin:0 auto 1rem auto;padding:0 1em;">
+    <h1 style="font-size:2rem;margin-bottom:0.4rem;text-align:left;">Unique &amp; Duplicate Controls</h1>
+    <div style="margin-bottom:1rem;">
+      <span class="badge badge-blue">Practice Lab</span>
+      <span class="badge badge-orange">UI Automation</span>
+    </div>
+    <p style="font-size:1.05rem;color:#444;">These buttons intentionally share ids, classes and even text so you must practice
+      <code>nth</code>, <code>data-testid</code>, and scoped/text-exact locators.</p>
+  </section>
+
+  <!-- 1. Duplicate id (invalid HTML, common in the wild) -->
+  <section class="practice-section">
+    <h2>1. Duplicate <code>id</code> Attribute</h2>
+    <p class="desc">All three buttons below use <code>id="submitBtn"</code>. Use <code>data-testid</code> or position to disambiguate.</p>
+    <div class="dup-row">
+      <button id="submitBtn" data-testid="submit-btn-1" data-row="1">Submit</button>
+      <button id="submitBtn" data-testid="submit-btn-2" data-row="2">Submit</button>
+      <button id="submitBtn" data-testid="submit-btn-3" data-row="3">Submit</button>
+    </div>
+    <div class="status-label" id="status-dup-id" data-testid="status-dup-id"></div>
+  </section>
+
+  <!-- 2. Duplicate class + duplicate visible text -->
+  <section class="practice-section">
+    <h2>2. Duplicate Class &amp; Text</h2>
+    <p class="desc">Same class, same visible label ("View") &mdash; only the row context differs.</p>
+    <table class="data-table" data-testid="dup-table" style="width:100%;">
+      <thead><tr><th>Product</th><th>Action</th></tr></thead>
+      <tbody>
+        <tr data-testid="dup-row-widget"><td>Widget</td><td><button class="view-btn" data-testid="view-widget">View</button></td></tr>
+        <tr data-testid="dup-row-gadget"><td>Gadget</td><td><button class="view-btn" data-testid="view-gadget">View</button></td></tr>
+        <tr data-testid="dup-row-gizmo"><td>Gizmo</td><td><button class="view-btn" data-testid="view-gizmo">View</button></td></tr>
+      </tbody>
+    </table>
+    <div class="status-label" id="status-dup-class" data-testid="status-dup-class"></div>
+  </section>
+
+  <!-- 3. One truly unique control among lookalikes -->
+  <section class="practice-section">
+    <h2>3. Find the Unique Control</h2>
+    <p class="desc">All look identical except one has a unique <code>data-testid="target-button"</code>.</p>
+    <div class="dup-row" id="lookalikes" data-testid="lookalikes"></div>
+    <div class="status-label" id="status-unique" data-testid="status-unique"></div>
+  </section>
+
+  <a href="../../../index.html" class="home-btn floating-home-btn" title="Back to Home">&#8962; Home</a>
+  <script src="../../../assets/app.js"></script>
+  <script src="../practice-common.js"></script>
+  <script>
+    document.querySelectorAll('#submitBtn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        showStatus('status-dup-id', `Submit clicked successfully on row ${btn.getAttribute('data-row')}`);
+      });
+    });
+
+    document.querySelectorAll('.view-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const product = btn.closest('tr').children[0].textContent;
+        showStatus('status-dup-class', `Viewed successfully: ${product}`);
+      });
+    });
+
+    const container = document.getElementById('lookalikes');
+    const total = 6;
+    const targetIndex = Math.floor(Math.random() * total);
+    for (let i = 0; i < total; i++) {
+      const btn = document.createElement('button');
+      btn.className = 'mini-btn lookalike-btn';
+      btn.textContent = 'Click Me';
+      if (i === targetIndex) btn.setAttribute('data-testid', 'target-button');
+      btn.addEventListener('click', () => {
+        if (i === targetIndex) showStatus('status-unique', 'Correct! You clicked the unique target button.');
+        else showStatus('status-unique', 'That was a lookalike, not the unique target. Try again.', true);
+      });
+      container.appendChild(btn);
+    }
+  </script>
+</body>
+</html>

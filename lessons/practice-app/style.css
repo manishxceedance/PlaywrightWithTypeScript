@@ -163,3 +163,109 @@ legend {
 	border: 1.5px solid #388e3c;
 	box-shadow: 0 0 0 2px #c8e6c9;
 }
+
+/* Shared: Controls Practice Pages (textbox, dropdown, table, etc.) */
+.practice-section {
+	background: #fff;
+	max-width: 760px;
+	margin: 2em auto;
+	padding: 2em 2em 1.5em 2em;
+	border-radius: 16px;
+	box-shadow: 0 4px 16px rgba(25,118,210,0.10);
+	border: 1.5px solid #e3f2fd;
+}
+
+.practice-section h2 {
+	margin-top: 0;
+	text-align: left;
+	font-size: 1.2rem;
+	color: #1976d2;
+}
+
+.practice-section p.desc {
+	color: #444;
+	font-size: 0.97rem;
+	margin-bottom: 1em;
+}
+
+.status-label {
+	margin-top: 1em;
+	padding: 0.7em 1em;
+	border-radius: 8px;
+	background: #f1f8e9;
+	border: 1.5px solid #aed581;
+	color: #33691e;
+	font-size: 1rem;
+	min-height: 2em;
+	display: none;
+}
+
+.status-label.error {
+	background: #fce4ec;
+	border-color: #ef9a9a;
+	color: #b71c1c;
+}
+
+.badge {
+	display: inline-block;
+	font-size: 0.78rem;
+	font-weight: bold;
+	padding: 0.2em 0.7em;
+	border-radius: 20px;
+	margin-left: 0.5em;
+	vertical-align: middle;
+}
+
+.badge-blue   { background: #e3f2fd; color: #1565c0; }
+.badge-green  { background: #e8f5e9; color: #2e7d32; }
+.badge-orange { background: #fff3e0; color: #e65100; }
+.badge-red    { background: #fce4ec; color: #b71c1c; }
+.badge-purple { background: #f3e5f5; color: #6a1b9a; }
+
+.btn-group { display: flex; flex-wrap: wrap; gap: 0.7em; }
+.btn-group button, .btn-group a.btn { margin-top: 0; width: auto; padding: 0.55em 1.3em; font-size: 0.98rem; }
+
+a.btn {
+	display: inline-block;
+	background: linear-gradient(90deg, #1976d2 70%, #388e3c 100%);
+	color: #fff;
+	text-decoration: none;
+	border-radius: 7px;
+	font-weight: bold;
+	box-shadow: 0 2px 8px rgba(56,142,60,0.08);
+}
+
+a.btn:hover {
+	background: linear-gradient(90deg, #388e3c 70%, #1976d2 100%);
+}
+
+/* Controls hub card grid */
+.hub-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+	gap: 1.2em;
+	max-width: 1200px;
+	margin: 0 auto 3em auto;
+	padding: 0 1em;
+}
+
+.hub-card {
+	background: #fff;
+	border: 1.5px solid #e3f2fd;
+	border-radius: 14px;
+	padding: 1.2em 1.3em;
+	box-shadow: 0 4px 14px rgba(25,118,210,0.08);
+	text-decoration: none;
+	color: inherit;
+	display: block;
+	transition: transform 0.15s, box-shadow 0.15s;
+}
+
+.hub-card:hover {
+	transform: translateY(-3px);
+	box-shadow: 0 8px 22px rgba(25,118,210,0.16);
+}
+
+.hub-card .hub-icon { font-size: 1.6em; margin-bottom: 0.3em; display: block; }
+.hub-card h3 { margin: 0 0 0.3em 0; color: #1259a7; font-size: 1.05rem; text-align: left; }
+.hub-card p { margin: 0; color: #555; font-size: 0.88rem; }

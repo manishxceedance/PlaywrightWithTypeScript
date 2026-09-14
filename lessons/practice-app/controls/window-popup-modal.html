@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Window Popup / Modal - Controls Practice</title>
+  <link rel="stylesheet" href="../style.css">
+  <style>
+    .modal-overlay {
+      display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 100;
+      align-items: center; justify-content: center;
+    }
+    .modal-overlay.show { display: flex; }
+    .modal-box {
+      background: #fff; border-radius: 12px; padding: 1.6em 1.8em; width: 380px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+    }
+    .modal-box h3 { margin-top: 0; color: #1976d2; }
+    .modal-actions { display: flex; gap: 0.8em; margin-top: 1.2em; }
+    .modal-actions button { flex: 1; margin-top: 0; }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a href="../index.html">Basic Controls</a> |
+    <a href="../controls-hub.html"><b>Controls Hub</b></a> |
+    <a href="../dialogs.html">Dialogs &amp; Windows</a> |
+    <a href="../hrms/login.html" style="color:#ffeb3b;font-weight:bold">🏢 HRMS App</a>
+  </nav>
+
+  <section class="home-hero" style="max-width:760px;margin:0 auto 1rem auto;padding:0 1em;">
+    <h1 style="font-size:2rem;margin-bottom:0.4rem;text-align:left;">Window Popup / Modal</h1>
+    <div style="margin-bottom:1rem;">
+      <span class="badge badge-blue">Practice Lab</span>
+      <span class="badge badge-orange">UI Automation</span>
+    </div>
+    <p style="font-size:1.05rem;color:#444;">An in-page modal dialog and a real <code>window.open()</code> popup window.</p>
+  </section>
+
+  <!-- 1. In-page modal -->
+  <section class="practice-section">
+    <h2>1. In-page Modal</h2>
+    <div class="btn-group">
+      <button id="btn-open-modal" data-testid="btn-open-modal">Open Modal</button>
+    </div>
+    <div class="status-label" id="status-modal" data-testid="status-modal"></div>
+  </section>
+
+  <!-- 2. Real popup window -->
+  <section class="practice-section">
+    <h2>2. Popup Window <span class="badge badge-purple">window.open()</span></h2>
+    <p class="desc">Playwright: use <code>page.context().waitForEvent('page')</code> before clicking.</p>
+    <div class="btn-group">
+      <button id="btn-open-popup" data-testid="btn-open-popup">Open Popup Window</button>
+    </div>
+    <div class="status-label" id="status-popup" data-testid="status-popup"></div>
+  </section>
+
+  <div class="modal-overlay" id="modal-overlay" data-testid="modal-overlay">
+    <div class="modal-box" data-testid="modal-box">
+      <h3>Confirm Action</h3>
+      <p>Are you sure you want to proceed with this operation?</p>
+      <div class="modal-actions">
+        <button id="modal-confirm" data-testid="modal-confirm">Confirm</button>
+        <button id="modal-cancel" data-testid="modal-cancel">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <a href="../../../index.html" class="home-btn floating-home-btn" title="Back to Home">&#8962; Home</a>
+  <script src="../../../assets/app.js"></script>
+  <script src="../practice-common.js"></script>
+  <script>
+    const overlay = document.getElementById('modal-overlay');
+
+    document.getElementById('btn-open-modal').addEventListener('click', () => {
+      overlay.classList.add('show');
+      showStatus('status-modal', 'Modal opened successfully.');
+    });
+
+    document.getElementById('modal-confirm').addEventListener('click', () => {
+      overlay.classList.remove('show');
+      showStatus('status-modal', 'Modal confirmed successfully.');
+    });
+
+    document.getElementById('modal-cancel').addEventListener('click', () => {
+      overlay.classList.remove('show');
+      showStatus('status-modal', 'Modal cancelled.', true);
+    });
+
+    document.getElementById('btn-open-popup').addEventListener('click', () => {
+      const popup = window.open('', 'practicePopup', 'width=420,height=320');
+      if (popup) {
+        popup.document.write(`
+          <html><head><title>Popup Window</title></head>
+          <body style="font-family:sans-serif;padding:1.5em;">
+            <h2>Hello from the popup!</h2>
+            <p>This window was opened via <code>window.open()</code>.</p>
+            <button onclick="window.close()">Close</button>
+          </body></html>
+        `);
+        showStatus('status-popup', 'Popup window opened successfully.');
+      } else {
+        showStatus('status-popup', 'Popup was blocked by the browser.', true);
+      }
+    });
+  </script>
+</body>
+</html>

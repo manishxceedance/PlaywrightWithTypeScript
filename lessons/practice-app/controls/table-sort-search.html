@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Table Sort &amp; Search - Controls Practice</title>
+  <link rel="stylesheet" href="../style.css">
+  <style>
+    .table-wrap { max-width: 800px; margin: 0 auto; }
+    table.data-table { background: #fff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 16px rgba(25,118,210,0.10); }
+    table.data-table th { background: #1976d2; color: #fff; cursor: pointer; user-select: none; }
+    table.data-table th .arrow { font-size: 0.8em; margin-left: 0.3em; }
+    table.data-table tr.hidden-row { display: none; }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a href="../index.html">Basic Controls</a> |
+    <a href="../controls-hub.html"><b>Controls Hub</b></a> |
+    <a href="../dialogs.html">Dialogs &amp; Windows</a> |
+    <a href="../hrms/login.html" style="color:#ffeb3b;font-weight:bold">🏢 HRMS App</a>
+  </nav>
+
+  <section class="home-hero" style="max-width:800px;margin:0 auto 1rem auto;padding:0 1em;">
+    <h1 style="font-size:2rem;margin-bottom:0.4rem;text-align:left;">Table Sort &amp; Search</h1>
+    <div style="margin-bottom:1rem;">
+      <span class="badge badge-blue">Practice Lab</span>
+      <span class="badge badge-orange">UI Automation</span>
+    </div>
+    <p style="font-size:1.05rem;color:#444;">Click a column header to sort (toggles ascending/descending); use the search box alongside it.</p>
+  </section>
+
+  <section class="practice-section table-wrap">
+    <h2>Students</h2>
+    <input type="text" id="student-search" data-testid="student-search" placeholder="Search students...">
+    <table class="data-table" id="students-table" data-testid="students-table" style="margin-top:1em;">
+      <thead>
+        <tr>
+          <th data-key="name" data-testid="th-name">Name <span class="arrow"></span></th>
+          <th data-key="grade" data-testid="th-grade">Grade <span class="arrow"></span></th>
+          <th data-key="score" data-testid="th-score">Score <span class="arrow"></span></th>
+        </tr>
+      </thead>
+      <tbody id="students-tbody" data-testid="students-tbody">
+        <tr data-name="Aditi Sharma" data-grade="A" data-score="92"><td>Aditi Sharma</td><td>A</td><td>92</td></tr>
+        <tr data-name="Rahul Verma" data-grade="B" data-score="78"><td>Rahul Verma</td><td>B</td><td>78</td></tr>
+        <tr data-name="Priya Nair" data-grade="A" data-score="88"><td>Priya Nair</td><td>A</td><td>88</td></tr>
+        <tr data-name="Karan Singh" data-grade="C" data-score="65"><td>Karan Singh</td><td>C</td><td>65</td></tr>
+        <tr data-name="Neha Gupta" data-grade="B" data-score="81"><td>Neha Gupta</td><td>B</td><td>81</td></tr>
+      </tbody>
+    </table>
+    <div class="status-label" id="status-sort" data-testid="status-sort"></div>
+  </section>
+
+  <a href="../../../index.html" class="home-btn floating-home-btn" title="Back to Home">&#8962; Home</a>
+  <script src="../../../assets/app.js"></script>
+  <script src="../practice-common.js"></script>
+  <script>
+    const tbody = document.getElementById('students-tbody');
+    const searchInput = document.getElementById('student-search');
+    let sortState = { key: null, asc: true };
+
+    function applySearch() {
+      const term = searchInput.value.trim().toLowerCase();
+      let visibleCount = 0;
+      Array.from(tbody.querySelectorAll('tr')).forEach(row => {
+        const matches = !term || row.textContent.toLowerCase().includes(term);
+        row.classList.toggle('hidden-row', !matches);
+        if (matches) visibleCount++;
+      });
+      showStatus('status-sort', term
+        ? `Search successful: ${visibleCount} student(s) match "${term}".`
+        : `Showing all ${tbody.querySelectorAll('tr').length} students.`);
+    }
+
+    searchInput.addEventListener('input', applySearch);
+
+    document.querySelectorAll('th[data-key]').forEach(th => {
+      th.addEventListener('click', () => {
+        const key = th.getAttribute('data-key');
+        const asc = sortState.key === key ? !sortState.asc : true;
+        sortState = { key, asc };
+
+        const rows = Array.from(tbody.querySelectorAll('tr'));
+        rows.sort((a, b) => {
+          const av = a.getAttribute(`data-${key}`);
+          const bv = b.getAttribute(`data-${key}`);
+          const an = parseFloat(av), bn = parseFloat(bv);
+          const cmp = (!isNaN(an) && !isNaN(bn)) ? an - bn : av.localeCompare(bv);
+          return asc ? cmp : -cmp;
+        });
+        rows.forEach(row => tbody.appendChild(row));
+
+        document.querySelectorAll('th[data-key] .arrow').forEach(a => a.textContent = '');
+        th.querySelector('.arrow').textContent = asc ? '▲' : '▼';
+
+        showStatus('status-sort', `Sorted successfully by "${key}" (${asc ? 'ascending' : 'descending'}).`);
+      });
+    });
+  </script>
+</body>
+</html>

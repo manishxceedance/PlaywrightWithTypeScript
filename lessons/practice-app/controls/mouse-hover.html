@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mouse Hover - Controls Practice</title>
+  <link rel="stylesheet" href="../style.css">
+  <style>
+    .hover-row { display: flex; gap: 1.5em; flex-wrap: wrap; }
+
+    /* Hover menu */
+    .hover-menu { position: relative; display: inline-block; }
+    .hover-menu-trigger {
+      background: #1976d2; color: #fff; border: none; border-radius: 6px;
+      padding: 0.6em 1.2em; cursor: default;
+    }
+    .hover-menu-panel {
+      display: none; position: absolute; top: 100%; left: 0; background: #fff;
+      border: 1px solid #bdbdbd; border-radius: 8px; box-shadow: 0 6px 16px rgba(0,0,0,0.15);
+      min-width: 160px; z-index: 5;
+    }
+    .hover-menu:hover .hover-menu-panel { display: block; }
+    .hover-menu-item { padding: 0.6em 1em; cursor: pointer; }
+    .hover-menu-item:hover { background: #e3f2fd; }
+
+    /* Tooltip */
+    .tooltip-wrap { position: relative; display: inline-block; }
+    .tooltip-box {
+      display: none; position: absolute; bottom: 120%; left: 50%; transform: translateX(-50%);
+      background: #333; color: #fff; padding: 0.4em 0.8em; border-radius: 6px;
+      font-size: 0.85em; white-space: nowrap; z-index: 5;
+    }
+    .tooltip-wrap:hover .tooltip-box { display: block; }
+
+    /* Reveal-on-hover row */
+    .reveal-card {
+      border: 1.5px solid #bdbdbd; border-radius: 10px; padding: 1em; min-width: 220px;
+      position: relative;
+    }
+    .reveal-actions { display: none; margin-top: 0.6em; }
+    .reveal-card:hover .reveal-actions { display: flex; gap: 0.5em; }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a href="../index.html">Basic Controls</a> |
+    <a href="../controls-hub.html"><b>Controls Hub</b></a> |
+    <a href="../dialogs.html">Dialogs &amp; Windows</a> |
+    <a href="../hrms/login.html" style="color:#ffeb3b;font-weight:bold">🏢 HRMS App</a>
+  </nav>
+
+  <section class="home-hero" style="max-width:800px;margin:0 auto 1rem auto;padding:0 1em;">
+    <h1 style="font-size:2rem;margin-bottom:0.4rem;text-align:left;">Mouse Hover</h1>
+    <div style="margin-bottom:1rem;">
+      <span class="badge badge-blue">Practice Lab</span>
+      <span class="badge badge-orange">UI Automation</span>
+    </div>
+    <p style="font-size:1.05rem;color:#444;">Use Playwright's <code>locator.hover()</code> to reveal a menu, a tooltip, and hidden row actions.</p>
+  </section>
+
+  <section class="practice-section" style="max-width:800px;">
+    <div class="hover-row">
+      <!-- 1. Hover menu -->
+      <div>
+        <h2>1. Hover Menu</h2>
+        <div class="hover-menu" data-testid="hover-menu">
+          <button class="hover-menu-trigger" data-testid="hover-menu-trigger">Hover Me &#9662;</button>
+          <div class="hover-menu-panel" data-testid="hover-menu-panel">
+            <div class="hover-menu-item" data-testid="hover-menu-profile">Profile</div>
+            <div class="hover-menu-item" data-testid="hover-menu-settings">Settings</div>
+            <div class="hover-menu-item" data-testid="hover-menu-logout">Logout</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2. Tooltip -->
+      <div>
+        <h2>2. Tooltip</h2>
+        <span class="tooltip-wrap" data-testid="tooltip-wrap">
+          <button data-testid="tooltip-trigger">Hover for Info</button>
+          <span class="tooltip-box" data-testid="tooltip-box">This is a helpful tooltip!</span>
+        </span>
+      </div>
+    </div>
+
+    <!-- 3. Reveal-on-hover card -->
+    <h2 style="margin-top:1.5em;">3. Reveal Actions on Hover</h2>
+    <div class="reveal-card" data-testid="reveal-card">
+      <b>Project Alpha</b>
+      <div class="reveal-actions" data-testid="reveal-actions">
+        <button class="mini-btn" id="btn-reveal-edit" data-testid="btn-reveal-edit">Edit</button>
+        <button class="mini-btn" id="btn-reveal-archive" data-testid="btn-reveal-archive">Archive</button>
+      </div>
+    </div>
+
+    <div class="status-label" id="status-hover" data-testid="status-hover"></div>
+  </section>
+
+  <a href="../../../index.html" class="home-btn floating-home-btn" title="Back to Home">&#8962; Home</a>
+  <script src="../../../assets/app.js"></script>
+  <script src="../practice-common.js"></script>
+  <script>
+    document.querySelectorAll('.hover-menu-item').forEach(item => {
+      item.addEventListener('click', () => {
+        showStatus('status-hover', `Menu action performed successfully: ${item.textContent.trim()}`);
+      });
+    });
+
+    document.getElementById('btn-reveal-edit').addEventListener('click', () => {
+      showStatus('status-hover', 'Edit performed successfully on Project Alpha.');
+    });
+    document.getElementById('btn-reveal-archive').addEventListener('click', () => {
+      showStatus('status-hover', 'Archive performed successfully on Project Alpha.');
+    });
+
+    document.getElementById('tooltip-trigger').addEventListener('mouseenter', () => {
+      showStatus('status-hover', 'Tooltip revealed successfully.');
+    });
+  </script>
+</body>
+</html>

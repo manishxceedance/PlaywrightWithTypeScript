@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>File Download - Controls Practice</title>
+  <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+
+  <nav>
+    <a href="../index.html">Basic Controls</a> |
+    <a href="../controls-hub.html"><b>Controls Hub</b></a> |
+    <a href="../dialogs.html">Dialogs &amp; Windows</a> |
+    <a href="../hrms/login.html" style="color:#ffeb3b;font-weight:bold">🏢 HRMS App</a>
+  </nav>
+
+  <section class="home-hero" style="max-width:760px;margin:0 auto 1rem auto;padding:0 1em;">
+    <h1 style="font-size:2rem;margin-bottom:0.4rem;text-align:left;">File Download</h1>
+    <div style="margin-bottom:1rem;">
+      <span class="badge badge-blue">Practice Lab</span>
+      <span class="badge badge-orange">UI Automation</span>
+    </div>
+    <p style="font-size:1.05rem;color:#444;">Practice Playwright's <code>page.waitForEvent('download')</code> against generated
+      text, CSV and JSON files.</p>
+  </section>
+
+  <section class="practice-section">
+    <h2>Download Files</h2>
+    <div class="btn-group">
+      <a class="btn" id="dl-text" data-testid="dl-text" download="notes.txt">Download notes.txt</a>
+      <a class="btn" id="dl-csv" data-testid="dl-csv" download="employees.csv">Download employees.csv</a>
+      <a class="btn" id="dl-json" data-testid="dl-json" download="config.json">Download config.json</a>
+    </div>
+    <div class="status-label" id="status-download" data-testid="status-download"></div>
+  </section>
+
+  <a href="../../../index.html" class="home-btn floating-home-btn" title="Back to Home">&#8962; Home</a>
+  <script src="../../../assets/app.js"></script>
+  <script src="../practice-common.js"></script>
+  <script>
+    function makeDownloadLink(anchorId, filename, content, mime) {
+      const anchor = document.getElementById(anchorId);
+      const blob = new Blob([content], { type: mime });
+      anchor.href = URL.createObjectURL(blob);
+      anchor.addEventListener('click', () => {
+        showStatus('status-download', `Download started successfully: ${filename}`);
+      });
+    }
+
+    makeDownloadLink('dl-text', 'notes.txt', 'These are sample notes for download practice.\nLine two of the file.', 'text/plain');
+    makeDownloadLink('dl-csv', 'employees.csv', 'id,name,department\n1,Aditi Sharma,Engineering\n2,Rahul Verma,Sales', 'text/csv');
+    makeDownloadLink('dl-json', 'config.json', JSON.stringify({ env: 'practice', version: '1.0.0' }, null, 2), 'application/json');
+  </script>
+</body>
+</html>

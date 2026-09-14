@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Date Picker - Controls Practice</title>
+  <link rel="stylesheet" href="../style.css">
+  <style>
+    .datepicker-wrap { position: relative; max-width: 260px; }
+    /* Classic jQuery UI datepicker look & class names, hand-built (no external library needed) */
+    .ui-datepicker {
+      display: none; position: absolute; z-index: 10; width: 240px; background: #fff;
+      border: 1px solid #bdbdbd; border-radius: 8px; box-shadow: 0 6px 18px rgba(0,0,0,0.18);
+      padding: 0.6em; font-size: 0.9em;
+    }
+    .ui-datepicker.show { display: block; }
+    .ui-datepicker-header {
+      display: flex; align-items: center; justify-content: space-between;
+      background: #1976d2; color: #fff; border-radius: 6px; padding: 0.4em 0.6em; margin-bottom: 0.5em;
+    }
+    .ui-datepicker-prev, .ui-datepicker-next { cursor: pointer; padding: 0.1em 0.5em; border-radius: 4px; }
+    .ui-datepicker-prev:hover, .ui-datepicker-next:hover { background: rgba(255,255,255,0.25); }
+    .ui-datepicker-title { font-weight: bold; }
+    .ui-datepicker-calendar { width: 100%; border-collapse: collapse; }
+    .ui-datepicker-calendar th { color: #1976d2; font-size: 0.85em; padding: 0.2em; }
+    .ui-datepicker-calendar td { text-align: center; padding: 0.15em; }
+    .ui-datepicker-calendar a {
+      display: block; padding: 0.35em; border-radius: 5px; text-decoration: none; color: #333; cursor: pointer;
+    }
+    .ui-datepicker-calendar a:hover { background: #e3f2fd; }
+    .ui-datepicker-calendar a.ui-datepicker-today { background: #fff3e0; }
+    .ui-datepicker-calendar a.ui-state-active { background: #1976d2; color: #fff; }
+    .ui-datepicker-calendar td.ui-datepicker-other-month a { color: #ccc; }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a href="../index.html">Basic Controls</a> |
+    <a href="../controls-hub.html"><b>Controls Hub</b></a> |
+    <a href="../dialogs.html">Dialogs &amp; Windows</a> |
+    <a href="../hrms/login.html" style="color:#ffeb3b;font-weight:bold">🏢 HRMS App</a>
+  </nav>
+
+  <section class="home-hero" style="max-width:760px;margin:0 auto 1rem auto;padding:0 1em;">
+    <h1 style="font-size:2rem;margin-bottom:0.4rem;text-align:left;">jQuery-style Date Picker</h1>
+    <div style="margin-bottom:1rem;">
+      <span class="badge badge-blue">Practice Lab</span>
+      <span class="badge badge-orange">UI Automation</span>
+    </div>
+    <p style="font-size:1.05rem;color:#444;">A hand-built calendar styled with classic <code>.ui-datepicker</code> class names for
+      familiar locator practice, with month navigation and day selection.</p>
+  </section>
+
+  <section class="practice-section">
+    <h2>Pick a Date</h2>
+    <div class="datepicker-wrap">
+      <input type="text" id="date-input" data-testid="date-input" placeholder="Click to choose a date" readonly>
+      <div class="ui-datepicker" id="datepicker" data-testid="datepicker">
+        <div class="ui-datepicker-header">
+          <span class="ui-datepicker-prev" id="dp-prev" data-testid="dp-prev">&#8592;</span>
+          <span class="ui-datepicker-title" id="dp-title" data-testid="dp-title"></span>
+          <span class="ui-datepicker-next" id="dp-next" data-testid="dp-next">&#8594;</span>
+        </div>
+        <table class="ui-datepicker-calendar" id="dp-calendar" data-testid="dp-calendar">
+          <thead><tr><th>Su</th><th>Mo</th><th>Tu</th><th>We</th><th>Th</th><th>Fr</th><th>Sa</th></tr></thead>
+          <tbody id="dp-body" data-testid="dp-body"></tbody>
+        </table>
+      </div>
+    </div>
+    <div class="status-label" id="status-date" data-testid="status-date"></div>
+  </section>
+
+  <a href="../../../index.html" class="home-btn floating-home-btn" title="Back to Home">&#8962; Home</a>
+  <script src="../../../assets/app.js"></script>
+  <script src="../practice-common.js"></script>
+  <script>
+    const dateInput = document.getElementById('date-input');
+    const datepicker = document.getElementById('datepicker');
+    const dpTitle = document.getElementById('dp-title');
+    const dpBody = document.getElementById('dp-body');
+    const monthNames = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+
+    const today = new Date();
+    let viewYear = today.getFullYear();
+    let viewMonth = today.getMonth();
+    let selectedDate = null;
+
+    function renderCalendar() {
+      dpTitle.textContent = `${monthNames[viewMonth]} ${viewYear}`;
+      dpBody.innerHTML = '';
+      const firstDay = new Date(viewYear, viewMonth, 1).getDay();
+      const daysInMonth = new Date(viewYear, viewMonth + 1, 0).getDate();
+
+      let row = document.createElement('tr');
+      for (let i = 0; i < firstDay; i++) row.appendChild(document.createElement('td'));
+
+      for (let day = 1; day <= daysInMonth; day++) {
+        if (row.children.length === 7) { dpBody.appendChild(row); row = document.createElement('tr'); }
+        const td = document.createElement('td');
+        const a = document.createElement('a');
+        a.textContent = day;
+        a.setAttribute('data-testid', `dp-day-${viewYear}-${viewMonth + 1}-${day}`);
+        const isToday = day === today.getDate() && viewMonth === today.getMonth() && viewYear === today.getFullYear();
+        if (isToday) a.classList.add('ui-datepicker-today');
+        if (selectedDate && selectedDate.getFullYear() === viewYear && selectedDate.getMonth() === viewMonth && selectedDate.getDate() === day) {
+          a.classList.add('ui-state-active');
+        }
+        a.addEventListener('click', () => {
+          selectedDate = new Date(viewYear, viewMonth, day);
+          const formatted = `${monthNames[viewMonth]} ${day}, ${viewYear}`;
+          dateInput.value = formatted;
+          datepicker.classList.remove('show');
+          showStatus('status-date', `Date selected successfully: ${formatted}`);
+        });
+        td.appendChild(a);
+        row.appendChild(td);
+      }
+      while (row.children.length < 7 && row.children.length > 0) row.appendChild(document.createElement('td'));
+      if (row.children.length) dpBody.appendChild(row);
+    }
+
+    dateInput.addEventListener('click', () => {
+      datepicker.classList.toggle('show');
+      renderCalendar();
+    });
+
+    document.getElementById('dp-prev').addEventListener('click', () => {
+      viewMonth--; if (viewMonth < 0) { viewMonth = 11; viewYear--; }
+      renderCalendar();
+    });
+    document.getElementById('dp-next').addEventListener('click', () => {
+      viewMonth++; if (viewMonth > 11) { viewMonth = 0; viewYear++; }
+      renderCalendar();
+    });
+
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('.datepicker-wrap')) datepicker.classList.remove('show');
+    });
+
+    renderCalendar();
+  </script>
+</body>
+</html>
