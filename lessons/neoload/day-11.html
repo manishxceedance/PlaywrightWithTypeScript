@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>NeoLoad Day 11 - Authentication and Request Chaining</title>
+		<link rel="stylesheet" href="../../assets/styles.css" />
+	</head>
+	<body>
+		<header class="topbar">
+			<a class="brand" href="../../index.html">Playwright/TypeScript Training Hub</a>
+			<button class="menu-toggle" data-menu-toggle>Open Menu</button>
+		</header>
+		<main class="content lesson">
+			<h1>Week 4, Day 11: Authentication and Request Chaining</h1>
+			<p class="lesson-meta"><span class="difficulty-badge">Intermediate</span>Build realistic API flows where one response unlocks the next request.</p>
+
+			<section class="exercise">
+				<h2>Session outcome</h2>
+				<p>Modern APIs are rarely a single isolated call. Most user journeys begin with authentication, then fetch data, then create or update an entity, then validate the final state. This day focuses on chaining: using a value from one response as the input to a later request.</p>
+			</section>
+
+			<h2>1. Why chains matter</h2>
+			<p>A performance test is only realistic if it models real dependencies. In a real application, a login call usually returns a session token, a user collection, a user profile, or an auth context. The next request often depends on that value. If the script does not chain values correctly, it will not represent the application’s real behavior.</p>
+			<p>Examples include:</p>
+			<ul>
+				<li>Login returns a token, which is then sent as an Authorization header.</li>
+				<li>Search or list API returns an ID, which is then used to fetch the item details.</li>
+				<li>Resource creation returns an ID, which is then used to verify retrieval or update the created object.</li>
+				<li>Session creation and user state validation ensure the user is proceeding in a valid context.</li>
+			</ul>
+
+			<h2>2. Authentication patterns</h2>
+			<p>Different applications use different auth patterns. The most common include:</p>
+			<ul>
+				<li><strong>Session cookie:</strong> the server issues a session identifier after login; later requests send the cookie.</li>
+				<li><strong>Bearer token:</strong> login returns a token, and later requests send <code>Authorization: Bearer ...</code>.</li>
+				<li><strong>API key or custom header:</strong> some systems send a key or signature in headers.</li>
+				<li><strong>Signed request body or nonce:</strong> highly secured systems use nonce or encrypted values in each request.</li>
+			</ul>
+			<p>Whatever the mechanism, the same principle applies: capture the value from the correct response and reuse it in subsequent requests without hard-coding or reusing a stale value.</p>
+
+			<h2>3. The flow of a chained API journey</h2>
+			<p>A realistic API flow often looks like this:</p>
+			<ol>
+				<li>Authenticate with approved credentials.</li>
+				<li>Capture the returned token or session identifier.</li>
+				<li>Call a protected endpoint using the captured value.</li>
+				<li>Capture a returned record ID or business value from the response.</li>
+				<li>Use that ID in a subsequent read or update request.</li>
+				<li>Validate the final state and then complete the transaction.</li>
+			</ol>
+			<p>This is where many scripts fail. The test engineer knows the endpoints, but not the dependency chain. The script reaches the login step but sends an old token or an empty ID, causing downstream failures.</p>
+
+			<h2>4. Request chaining in NeoLoad</h2>
+			<p>Request chaining means the value from one request becomes the input for another. NeoLoad makes this possible through extractors, variables, and parameterization. In a typical setup:</p>
+			<ul>
+				<li>Login request extracts <code>authToken</code>.</li>
+				<li>Protected GET request uses <code>${authToken}</code> in the Authorization header.</li>
+				<li>List or create response extracts <code>employeeId</code>.</li>
+				<li>Update request sends <code>${employeeId}</code> in the path or body.</li>
+			</ul>
+			<p>A well-designed chain should be easy to read. If a tester cannot tell where the ID came from and which request consumed it, the script is not maintainable.</p>
+
+			<h2>5. Authentication security rules</h2>
+			<p>Do not hard-code production secrets or tokens into your performance scripts or project notes. Use approved test users and environment-specific credentials only. Keep configuration values in secure, managed locations and mask sensitive details in logs and reports.</p>
+			<p>Even in non-production or training environments, the same practice matters. A script that leaks credentials is a security risk and can create a false sense of protection around personal data.</p>
+
+			<h2>6. Debugging chain failures</h2>
+			<p>When a chain fails, the fix usually sits in one of three places:</p>
+			<ul>
+				<li>The token was not extracted at all.</li>
+				<li>The wrong value was extracted from the wrong response.</li>
+				<li>The value was extracted correctly but used in the wrong field, header, or later stage.</li>
+			</ul>
+			<p>Always inspect the response order. Make a quick map of “request A creates value X, request B requires value X.” If the chain breaks anywhere in between, the script will fail at a later stage.</p>
+
+			<h2>7. Practical exercise</h2>
+			<ol>
+				<li>Choose one authenticated workflow, such as login + fetch employee + update employee.</li>
+				<li>Document each request and the value it creates or consumes.</li>
+				<li>Extract the auth token or session value from the login response.</li>
+				<li>Use that value in the protected request and verify the response succeeds.</li>
+				<li>Capture a returned entity ID and use it in the next request.</li>
+				<li>Validate the final state and record the chain in a dependency diagram.</li>
+			</ol>
+
+			<section class="exercise">
+				<h2>Day 11 deliverable</h2>
+				<p>Submit a request-chain diagram that maps the full flow from authentication to the final validated state, including which values were extracted and which later requests use them.</p>
+			</section>
+
+			<div class="footer-note"><strong>Previous:</strong> <a href="day-10.html">&larr; Day 10</a> &nbsp;|&nbsp; <strong>Next:</strong> <a href="day-12.html">Day 12: JSON extraction and positive/negative checks &rarr;</a></div>
+		</main>
+		<script src="../../assets/app.js"></script>
+	</body>
+</html>

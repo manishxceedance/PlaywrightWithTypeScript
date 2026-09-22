@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>NeoLoad Day 21 - Time Correlation and Bottleneck Hypotheses</title>
+		<link rel="stylesheet" href="../../assets/styles.css" />
+	</head>
+	<body>
+		<header class="topbar">
+			<a class="brand" href="../../index.html">Playwright/TypeScript Training Hub</a>
+			<button class="menu-toggle" data-menu-toggle>Open Menu</button>
+		</header>
+		<main class="content lesson">
+			<h1>Week 7, Day 21: Time Correlation and Bottleneck Hypotheses</h1>
+			<p class="lesson-meta"><span class="difficulty-badge">Intermediate</span>Turn measurements into testable explanations tied to the system’s behavior over time.</p>
+
+			<section class="exercise">
+				<h2>Session outcome</h2>
+				<p>Performance analysis is not about naming the first suspected cause. It is about connecting time-series evidence to a hypothesis that can be tested. This day teaches how to correlate load, transaction response time, errors, and server metrics so the conclusion is evidence-based rather than guess-based.</p>
+			</section>
+
+			<h2>1. The difference between a symptom and a bottleneck</h2>
+			<p>A symptom is something you observe in the results, such as high response time or a rising error rate. A bottleneck is a system constraint that plausibly explains the observed behavior. A well-written bottleneck hypothesis is a structured explanation, not a casual guess.</p>
+			<p>Example: “The login transaction begins to fail under peak load while database CPU rises sharply and error messages indicate connection exhaustion” is a stronger statement than “the database is slow.” The first is evidence-based and tied to the time window.</p>
+
+			<h2>2. Time correlation process</h2>
+			<p>To test a bottleneck hypothesis, compare the relevant metrics across the same time range:</p>
+			<ul>
+				<li>When did the business transaction start to degrade?</li>
+				<li>Did user count or arrival rate increase at the same time?</li>
+				<li>Did server CPU, memory, or database latency rise around the same moment?</li>
+				<li>Did logs or errors appear in the same phase?</li>
+			</ul>
+			<p>If these metrics align in time, the hypothesis has more evidence. If they do not, the explanation should be treated as weaker or discarded.</p>
+
+			<h2>3. Typical bottleneck categories</h2>
+			<ul>
+				<li><strong>Database saturation:</strong> database CPU, lock waits, query latency, or queue buildup.</li>
+				<li><strong>Connection exhaustion:</strong> thread pools, connection pools, or request limits reached.</li>
+				<li><strong>Downstream dependency latency:</strong> API or service calls becoming slower or timing out.</li>
+				<li><strong>Memory or garbage-collection pressure:</strong> rising memory use and slower processing.</li>
+				<li><strong>Network or infrastructure saturation:</strong> throughput or latency growth at a platform layer.</li>
+			</ul>
+			<p>These are not always mutually exclusive. In real systems, a bottleneck may surface in one layer and trigger a second problem elsewhere. The analysis should remain disciplined and evidence-first.</p>
+
+			<h2>4. How to write a bottleneck hypothesis</h2>
+			<p>A strong hypothesis includes:</p>
+			<ul>
+				<li><strong>Suspected constraint:</strong> database, thread pool, app server, network, or dependency.</li>
+				<li><strong>Evidence:</strong> metrics or logs showing the issue aligns with performance change.</li>
+				<li><strong>Confirming signal:</strong> what would confirm the hypothesis?</li>
+				<li><strong>Disconfirming signal:</strong> what would weaken or disprove it?</li>
+			</ul>
+			<p>Example: “The update employee flow slows as database CPU climbs during peak load. A confirming signal would be rising DB wait times and query latency. A disconfirming signal would be stable DB metrics while app-server CPU and queue depth climb.”</p>
+
+			<h2>5. Practical exercise</h2>
+			<ol>
+				<li>Choose one slow transaction from the result set.</li>
+				<li>Write three bottleneck hypotheses related to different system layers.</li>
+				<li>List one confirming metric and one disconfirming metric for each.</li>
+				<li>Mark which hypothesis is strongest based on the current evidence.</li>
+			</ol>
+
+			<section class="exercise">
+				<h2>Day 21 deliverable</h2>
+				<p>Submit a bottleneck hypothesis log with the transaction under review, three hypotheses, evidence used to support each, and the confirming/disconfirming signal you would use to validate or reject each hypothesis.</p>
+			</section>
+
+			<div class="footer-note"><strong>Previous:</strong> <a href="day-20.html">&larr; Day 20</a> &nbsp;|&nbsp; <strong>Next:</strong> <a href="day-22.html">Day 22: Capstone scope, objectives, assumptions, and risks &rarr;</a></div>
+		</main>
+		<script src="../../assets/app.js"></script>
+	</body>
+</html>

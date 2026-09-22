@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>NeoLoad Day 13 - Concurrency, Arrival Rate, Pacing, and Throughput</title>
+		<link rel="stylesheet" href="../../assets/styles.css" />
+	</head>
+	<body>
+		<header class="topbar">
+			<a class="brand" href="../../index.html">Playwright/TypeScript Training Hub</a>
+			<button class="menu-toggle" data-menu-toggle>Open Menu</button>
+		</header>
+		<main class="content lesson">
+			<h1>Week 5, Day 13: Concurrency, Arrival Rate, Pacing, and Throughput</h1>
+			<p class="lesson-meta"><span class="difficulty-badge">Intermediate</span>Turn business demand into a workload that can be measured, repeated, and justified.</p>
+
+			<section class="exercise">
+				<h2>Session outcome</h2>
+				<p>On this day, you learn how to translate a business expectation such as “we expect 500 users during peak hour” into a performance test design. The key point is that concurrency, arrival rate, pacing, and throughput are related but not the same metric.</p>
+			</section>
+
+			<h2>1. Concurrency</h2>
+			<p>Concurrency is the number of users or requests active at the same time. It describes system load at a specific moment, not just a total number of users in the test. A test may have many users over a long duration but only a subset active at the same time if they are paced or staggered.</p>
+			<p>Example: a system can support 1,000 registered users but only 250 of them are active at once during the peak interval. Concurrency tells you how many are simultaneously exercising the system.</p>
+			<p>Why it matters: high concurrency can reveal limits in connection pools, server threads, database sessions, CPU, or queue depth. It is one of the easiest ways to connect user behavior with system strain.</p>
+
+			<h2>2. Arrival rate</h2>
+			<p>Arrival rate describes how often new users or requests begin over time. It is typically expressed as users per second or requests per second. Arrival rate is often used for spike, stress, or production-like demand modeling.</p>
+			<p>This is not the same as active concurrency. A test may have a low arrival rate but a long hold time, or a high arrival rate but short test duration. Arrival rate tells you how quickly demand is introduced into the system.</p>
+			<p>In NeoLoad, a workload model can start users gradually or at a faster rate, depending on the scenario. The purpose is to match the expected business pattern rather than artificially create a simpler or simpler-looking workload.</p>
+
+			<h2>3. Pacing</h2>
+			<p>Pacing is the delay between one iteration and the next. It models how often a virtual user starts a new cycle after finishing the previous one. This controls the repetition rate of the business journey without mixing it with user think time within the flow.</p>
+			<p>Think time is inside a single journey. Pacing is between iterations. A script can have both. One models user decision time; the other models business revisit frequency.</p>
+			<p>Good pacing keeps the workload realistic. Too much pacing makes the test too slow to reveal capacity issues. Too little pacing creates unrealistic demand that does not represent real customer behavior.</p>
+
+			<h2>4. Throughput</h2>
+			<p>Throughput measures completed work over time. It is often reported as transactions per second, requests per second, or orders processed per minute. It tells you how much work the system completes while under load.</p>
+			<p>Throughput is a result metric, not just a design input. You can calculate it after execution from the amount of successful work completed in a given period. A test may have certain concurrency and arrival rates, but throughput tells you how effectively the system converts that pressure into actual business work.</p>
+
+			<h2>5. How these metrics relate</h2>
+			<p>These concepts interact:</p>
+			<ul>
+				<li>Concurrency tells you how many users overlap.</li>
+				<li>Arrival rate tells you how quickly the workload ramps up.</li>
+				<li>Pacing tells you the repeat frequency between iterations.</li>
+				<li>Throughput tells you the actual work completed per time unit.</li>
+			</ul>
+			<p>If throughput falls while concurrency and arrival rate rise, the system may be slowing down or becoming saturated. If concurrency increases but throughput remains flat, the system may be bottlenecked or unable to convert user load into successful work.</p>
+
+			<h2>6. Calculating an initial workload</h2>
+			<p>Start with business assumptions, not arbitrary numbers. Typical inputs include:</p>
+			<ul>
+				<li>Expected peak users.</li>
+				<li>Business transaction frequency.</li>
+				<li>How long each user stays in the flow.</li>
+				<li>How many scenarios are active in the same test.</li>
+				<li>Approved test environment assumptions.</li>
+			</ul>
+			<p>Example: if an employee-maintenance flow is expected to run by 100 users in a peak hour, and each user completes one flow every 5 minutes, then the arrival rate and pacing can be modeled accordingly.</p>
+			<p>Do not guess abstract “high load” values without recording business assumptions. The workload should be defendable and reproducible.</p>
+
+			<h2>7. Common mistakes</h2>
+			<ul>
+				<li><strong>Using concurrency as a replacement for arrival rate:</strong> they describe different things.</li>
+				<li><strong>Setting pacing without a reason:</strong> a random pace is not a valid business model.</li>
+				<li><strong>Confusing throughput with concurrency:</strong> throughput is output, not demand.</li>
+				<li><strong>Ignoring the business duration:</strong> a flow that takes 15 minutes should not be modeled as a one-second cycle unless the business truly works that way.</li>
+			</ul>
+
+			<section class="exercise">
+				<h2>Day 13 deliverable</h2>
+				<p>Write a workload calculation sheet for your target journey with the following: expected peak users, concurrency assumption, pacing assumption, average flow duration, throughput goal, and each assumption that justifies the workload model.</p>
+			</section>
+
+			<div class="footer-note"><strong>Previous:</strong> <a href="day-12.html">&larr; Day 12</a> &nbsp;|&nbsp; <strong>Next:</strong> <a href="day-14.html">Day 14: Populations and user-path weighting &rarr;</a></div>
+		</main>
+		<script src="../../assets/app.js"></script>
+	</body>
+</html>

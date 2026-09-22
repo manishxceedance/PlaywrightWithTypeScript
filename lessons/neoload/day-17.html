@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>NeoLoad Day 17 - Runtime Health, Errors, and Server Metrics</title>
+		<link rel="stylesheet" href="../../assets/styles.css" />
+	</head>
+	<body>
+		<header class="topbar">
+			<a class="brand" href="../../index.html">Playwright/TypeScript Training Hub</a>
+			<button class="menu-toggle" data-menu-toggle>Open Menu</button>
+		</header>
+		<main class="content lesson">
+			<h1>Week 6, Day 17: Runtime Health, Errors, and Server Metrics</h1>
+			<p class="lesson-meta"><span class="difficulty-badge">Intermediate</span>Watch the live system as load changes and keep evidence grounded in observed behavior.</p>
+
+			<section class="exercise">
+				<h2>Session outcome</h2>
+				<p>During execution, NeoLoad provides response time and transaction data, but the server and application health also matter. This day focuses on runtime observation: how to read the system while it is under load and how to avoid jumping to conclusions before the evidence is connected.</p>
+			</section>
+
+			<h2>1. What to monitor during a run</h2>
+			<p>When the workload is active, monitor the variables that describe user experience and environment health. The most common areas are:</p>
+			<ul>
+				<li><strong>Response time and transaction timing:</strong> are key business operations growing slower?</li>
+				<li><strong>Error rate:</strong> are failures beginning to appear or rising sharply?</li>
+				<li><strong>CPU utilization:</strong> is a tier saturating or becoming overloaded?</li>
+				<li><strong>Memory usage:</strong> is the application leaking memory or approaching a dangerous threshold?</li>
+				<li><strong>Network and database latency:</strong> are backend dependencies becoming the constraint?</li>
+				<li><strong>Application logs:</strong> are there warnings, retries, or exceptions around the same time as a slowdown?</li>
+			</ul>
+			<p>Monitoring is most valuable when it is connected to the time window of the workload. You need timestamps and run phases to align user behavior and system behavior.</p>
+
+			<h2>2. The value of time correlation</h2>
+			<p>One of the most common mistakes in performance analysis is to say, “The database looks high, so it must be the cause,” without checking whether the same time window has production traffic, increased error rate, or higher concurrency. The correct approach is time correlation.</p>
+			<p>Look across the same timeline:</p>
+			<ul>
+				<li>When did transaction response time begin to rise?</li>
+				<li>When did the error rate climb?</li>
+				<li>When did CPU or memory peak?</li>
+				<li>What happened in the app logs at the same moment?</li>
+			</ul>
+			<p>This makes the analysis defensible. It creates a chain of evidence rather than a single suspicious metric.</p>
+
+			<h2>3. Runtime health signals</h2>
+			<p>During runtime, several signals deserve attention:</p>
+			<ul>
+				<li>Rising p95 or p99 values on critical transactions.</li>
+				<li>Rising error count or error rate over a sustained period.</li>
+				<li>Queue buildup, thread exhaustion, or saturation.</li>
+				<li>GC or memory pressure in application server logs.</li>
+				<li>Database lock, deadlock, or increasing latency patterns.</li>
+			</ul>
+			<p>A single rising metric is not enough to prove a bottleneck. It is only a clue. The complete analysis requires more context and a clear comparison against baseline or expected operating behavior.</p>
+
+			<h2>4. Monitoring snapshot approach</h2>
+			<p>Capture a monitoring snapshot at multiple phases of the run:</p>
+			<ol>
+				<li>Start of the run.</li>
+				<li>Steady state or early hold period.</li>
+				<li>At the point where the system is under increasing load.</li>
+				<li>At the end or near stop condition.</li>
+			</ol>
+			<p>This makes it easier to compare “normal” to “under stress” and prevents the run from being described with only a single peak or one generic screenshot.</p>
+
+			<h2>5. Example runtime observation log</h2>
+			<table>
+				<thead>
+					<tr><th>Time</th><th>Load</th><th>Transaction behavior</th><th>Server health</th><th>Observation</th></tr>
+				</thead>
+				<tbody>
+					<tr><td>10:00</td><td>Low load</td><td>Baseline stable</td><td>CPU moderate</td><td>System healthy; start metrics captured.</td></tr>
+					<tr><td>10:05</td><td>Medium load</td><td>Response time rising</td><td>Database latency increases</td><td>Potential backend pressure; timing aligned.</td></tr>
+					<tr><td>10:12</td><td>Peak load</td><td>Error rate rises</td><td>Memory high</td><td>Likely saturation or capacity limit; collect evidence.</td></tr>
+				</tbody>
+			</table>
+			<p>Even with this evidence, the conclusion remains a hypothesis until supported by logs, config review, or additional targeted checks.</p>
+
+			<h2>6. Common mistakes</h2>
+			<ul>
+				<li><strong>Claiming a bottleneck without matching timestamps:</strong> correlation is essential.</li>
+				<li><strong>Ignoring logs:</strong> application logs often explain why the server slowed or rejected work.</li>
+				<li><strong>Looking only at averages:</strong> percentiles and outliers often reveal tail problems.</li>
+				<li><strong>Reporting a single metric as the cause:</strong> system health must be reviewed as a set.</li>
+			</ul>
+
+			<section class="exercise">
+				<h2>Day 17 deliverable</h2>
+				<p>Capture a runtime observation sheet with timestamps for at least three phases of the run: start, steady state, and peak or near-stop state. Include key response-time signs, error observations, and at least two server-health indicators.</p>
+			</section>
+
+			<div class="footer-note"><strong>Previous:</strong> <a href="day-16.html">&larr; Day 16</a> &nbsp;|&nbsp; <strong>Next:</strong> <a href="day-18.html">Day 18: Controlled aborts and result retention &rarr;</a></div>
+		</main>
+		<script src="../../assets/app.js"></script>
+	</body>
+</html>

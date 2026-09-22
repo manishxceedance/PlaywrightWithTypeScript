@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>NeoLoad Day 15 - Ramp Patterns, Zones, and Stop Conditions</title>
+		<link rel="stylesheet" href="../../assets/styles.css" />
+	</head>
+	<body>
+		<header class="topbar">
+			<a class="brand" href="../../index.html">Playwright/TypeScript Training Hub</a>
+			<button class="menu-toggle" data-menu-toggle>Open Menu</button>
+		</header>
+		<main class="content lesson">
+			<h1>Week 5, Day 15: Ramp Patterns, Zones, and Stop Conditions</h1>
+			<p class="lesson-meta"><span class="difficulty-badge">Intermediate</span>Grow load in a way that reveals capacity without creating chaotic or invalid execution.</p>
+
+			<section class="exercise">
+				<h2>Session outcome</h2>
+				<p>A load test should not begin at the business peak without studying the system under lower pressure. Ramp patterns help you observe behavior at increasing load. Zones help you organize the run. Stop conditions help you end the test safely when the environment is no longer valid or the results are no longer informative.</p>
+			</section>
+
+			<h2>1. Ramp patterns</h2>
+			<p>A ramp pattern defines how quickly load is increased over time. It helps answer questions like: “At what point does the system begin to degrade?” or “How much load can the system sustain before a candidate bottleneck appears?”</p>
+			<p>Common patterns include:</p>
+			<ul>
+				<li><strong>Linear ramp:</strong> steady increase in user count or arrival rate.</li>
+				<li><strong>Step ramp:</strong> load increases in discrete levels, often with a hold at each level.</li>
+				<li><strong>Spike ramp:</strong> sudden and short-lived increase in demand.</li>
+				<li><strong>Gradual hold then increase:</strong> useful when you want to observe stability before pushing to the next stage.</li>
+			</ul>
+			<p>The right pattern depends on the risk. If the problem is a sudden event, a spike pattern may be appropriate. If the problem is gradual degradation, a step or linear ramp may be more informative.</p>
+
+			<h2>2. Why zones matter</h2>
+			<p>Zones are logical segments of the workload or execution environment. They help organize the load and can represent different application tiers, load generators, regions, or traffic classes. In a test design, zones clarify where the load is coming from and how it is being distributed.</p>
+			<p>For example, a test may use a small validation zone, a medium engineering zone, and a target production-like zone. This helps you isolate issues such as region degradation, load-generator saturation, or capacity changes in one tier while other components remain steady.</p>
+			<p>Zones are also useful because they make execution more understandable. A result set can be explained by “the application responded normally in the small zone, degraded in the medium zone, and failed under the target zone,” which is much easier to review.</p>
+
+			<h2>3. Stop conditions</h2>
+			<p>Stop conditions define when a test should end because it is no longer valid or informative. They should be planned before the test starts and then applied consistently during execution.</p>
+			<p>Examples include:</p>
+			<ul>
+				<li>Error rate exceeds the agreed threshold.</li>
+				<li>Critical business transaction fails for too many users.</li>
+				<li>Target infrastructure or environment is near failing conditions.</li>
+				<li>Monitoring evidence shows resource exhaustion, unsafe load, or data corruption risk.</li>
+			</ul>
+			<p>Stop conditions are not optional. Without them, the run may continue into a noisy or unsafe state, which weakens the usefulness of the results.</p>
+
+			<h2>4. Planning a test schedule</h2>
+			<p>A good schedule often has these stages:</p>
+			<ol>
+				<li>Warm-up or minimal validation.</li>
+				<li>Ramp to the first test zone.</li>
+				<li>Hold at that load for observation.</li>
+				<li>Increase to the next zone.</li>
+				<li>Hold again and continue until the target or stop condition is reached.</li>
+				<li>Ramp down cleanly.</li>
+			</ol>
+			<p>A clean ramp-down matters because it prevents abrupt termination that could distort results or leave the system in an unstable state. This is especially useful when load is being dropped after a peak or when resources are being released abruptly.</p>
+
+			<h2>5. Example zone plan</h2>
+			<table>
+				<thead>
+					<tr><th>Zone</th><th>Load</th><th>Purpose</th><th>Typical decision</th></tr>
+				</thead>
+				<tbody>
+					<tr><td>Small</td><td>Low user count</td><td>Smoke and stabilization</td><td>Confirm the script works and the environment remains healthy.</td></tr>
+					<tr><td>Medium</td><td>Moderate load</td><td>Observe throughput and stability</td><td>Check for early bottlenecks and error thresholds.</td></tr>
+					<tr><td>Target</td><td>Business-expected peak</td><td>Measure realistic user demand</td><td>Compare to SLA or baseline.</td></tr>
+				</tbody>
+			</table>
+			<p>Each zone should be explicitly named and justified. If you cannot explain the reason for a zone, it is likely not a useful part of the test model.</p>
+
+			<h2>6. Common mistakes</h2>
+			<ul>
+				<li><strong>Starting at peak load without a warm-up:</strong> hides early script or infrastructure issues.</li>
+				<li><strong>Using vague stop conditions:</strong> “when it feels slow” is not a valid criterion.</li>
+				<li><strong>Ramp-down without observation:</strong> makes it hard to understand what happened during the final stage.</li>
+				<li><strong>Changing the schedule mid-run:</strong> weakens comparability and analysis.</li>
+			</ul>
+
+			<section class="exercise">
+				<h2>Day 15 deliverable</h2>
+				<p>Build a workload schedule with at least three zones: small, medium, and target. For each zone, define user count or load level, duration, entry condition, exit condition, and stop condition. List the responsible owner for any abort decision.</p>
+			</section>
+
+			<div class="footer-note"><strong>Previous:</strong> <a href="day-14.html">&larr; Day 14</a> &nbsp;|&nbsp; <strong>Next:</strong> <a href="day-16.html">Day 16: Readiness checks and execution process &rarr;</a></div>
+		</main>
+		<script src="../../assets/app.js"></script>
+	</body>
+</html>

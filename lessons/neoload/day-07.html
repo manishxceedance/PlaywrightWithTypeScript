@@ -1,0 +1,92 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>NeoLoad Day 7 - Variables, Scopes, and Data Parameterization</title><link rel="stylesheet" href="../../assets/styles.css"></head><body><header class="topbar"><a class="brand" href="../../index.html">Playwright/TypeScript Training Hub</a><button class="menu-toggle" data-menu-toggle>Open Menu</button></header><main class="content lesson"><h1>Week 3, Day 7: Variables, Scopes, and Data Parameterization</h1><p class="lesson-meta"><span class="difficulty-badge">Intermediate</span>Replace static constants with controlled, reusable data.</p>
+
+<h2>Learn</h2>
+<p>In real performance tests, hard-coded values break quickly. A login, search, order, or API request often needs values that change by user, iteration, or environment. Variables let you store and reuse these values safely. Scope decides where a variable is valid, and parameterization decides how it is populated across virtual users and test runs.</p>
+
+<div class="concept-grid">
+  <div class="concept-card">
+    <h3>Variables</h3>
+    <p>Variables hold values such as usernames, search terms, product IDs, session tokens, or dates. They should have clear names and a single purpose. Example: <code>userName</code>, <code>searchText</code>, <code>orderId</code>.</p>
+  </div>
+  <div class="concept-card">
+    <h3>Scopes</h3>
+    <p>Scope controls the lifetime and visibility of a variable. A value may be unique per virtual user, shared across a transaction, reused for all users in a test, or set from a runtime context. Choosing the correct scope avoids accidental data leakage and makes debugging easier.</p>
+  </div>
+  <div class="concept-card">
+    <h3>Parameterization</h3>
+    <p>Parameterization feeds one scenario with many realistic values from a data file or variable source. This lets you test multiple users, search terms, account types, or product catalogs without changing the script itself.</p>
+  </div>
+</div>
+
+<h3>Typical scope choices</h3>
+<ul>
+  <li><strong>Per user / virtual user:</strong> username, password, customer ID, session-specific state.</li>
+  <li><strong>Per transaction:</strong> request-specific values like order quantity, selected product, or dynamic filter value.</li>
+  <li><strong>Global:</strong> environment URL, test run name, or shared configuration.</li>
+  <li><strong>Runtime-derived:</strong> values extracted from a response such as tokens, page IDs, or form IDs.</li>
+</ul>
+
+<p>Good practice: keep variables descriptive, avoid mixing responsibilities, and do not store secrets in plain text if logs or reports are exposed. Mask sensitive fields and restrict access to approved data sets.</p>
+
+<pre><code>// Example: variable names and usage
+userName = ${userData.username}
+searchTerm = ${data.searchTerm}
+productId = ${product.id}
+
+// Scope examples
+- User scope: login credentials
+- Transaction scope: order quantity
+- Global scope: base URL</code></pre>
+
+<h2>Do</h2>
+<ol>
+  <li>Create a small data file with at least five rows of realistic test data.</li>
+  <li>Parameterize at least three values in your script, such as username, search term, and product ID.</li>
+  <li>Run the scenario with more than one record and confirm the requests change per data row.</li>
+  <li>Document the variable name, source, scope, lifetime, and masking rule in a short data dictionary.</li>
+</ol>
+
+<section class="exercise">
+  <h2>Deliverable</h2>
+  <p>A parameterized test script plus a data dictionary with columns for <strong>Variable</strong>, <strong>Source</strong>, <strong>Scope</strong>, <strong>Lifetime</strong>, and <strong>Masking / Security Rule</strong>.</p>
+</section>
+
+<h3>Example data dictionary</h3>
+<table>
+  <thead>
+    <tr>
+      <th>Variable</th>
+      <th>Source</th>
+      <th>Scope</th>
+      <th>Lifetime</th>
+      <th>Masking Rule</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>userName</td>
+      <td>CSV file</td>
+      <td>Per user</td>
+      <td>One user session</td>
+      <td>Use approved test account only</td>
+    </tr>
+    <tr>
+      <td>searchTerm</td>
+      <td>CSV file</td>
+      <td>Transaction</td>
+      <td>Single request</td>
+      <td>Log safe values only</td>
+    </tr>
+    <tr>
+      <td>baseUrl</td>
+      <td>Global variable</td>
+      <td>All users</td>
+      <td>Whole test run</td>
+      <td>No secrets; environment-specific</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>Checkpoint:</strong> If a value changes across users, it should usually be parameterized. If it stays constant for the entire run, it can stay global. If it is created during the run, it should likely be captured as a runtime variable.</p>
+
+<div class="footer-note"><strong>Previous:</strong> <a href="day-06.html">&larr; Day 6</a> &nbsp;|&nbsp; <strong>Next:</strong> <a href="day-08.html">Day 8: Extractors and correlation &rarr;</a></div></main><script src="../../assets/app.js"></script></body></html>

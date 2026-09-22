@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>NeoLoad Day 12 - JSON Extraction and Positive/Negative Checks</title>
+		<link rel="stylesheet" href="../../assets/styles.css" />
+	</head>
+	<body>
+		<header class="topbar">
+			<a class="brand" href="../../index.html">Playwright/TypeScript Training Hub</a>
+			<button class="menu-toggle" data-menu-toggle>Open Menu</button>
+		</header>
+		<main class="content lesson">
+			<h1>Week 4, Day 12: JSON Extraction and Positive/Negative Checks</h1>
+			<p class="lesson-meta"><span class="difficulty-badge">Intermediate</span>Validate both the data contract and the error behavior behind the API.</p>
+
+			<section class="exercise">
+				<h2>Session outcome</h2>
+				<p>This day is about correctness under both success and failure conditions. You will learn to read JSON responses precisely, extract the right values, and write checks that prove the API handles valid and invalid requests according to its contract.</p>
+			</section>
+
+			<h2>1. Why JSON extraction matters</h2>
+			<p>Many modern APIs return structured JSON. A response may include metadata, a token, a list of objects, a created record ID, or an error object. If you only inspect the status code, you may miss the most important business fact: did the server return the correct data, or did it return a generic success with the wrong payload?</p>
+			<p>Stable JSON extraction is the foundation of chained, data-driven API testing. For example:</p>
+			<ul>
+				<li>Login response includes <code>token</code> or <code>sessionId</code>.</li>
+				<li>Employee create response includes the new <code>id</code>.</li>
+				<li>Get employee response includes <code>status</code> or <code>name</code>.</li>
+				<li>Error response includes <code>message</code> or <code>errorCode</code>.</li>
+			</ul>
+			<p>In NeoLoad, extraction gives you a reusable variable that can be fed into later requests. This is what makes an API flow realistic and maintainable.</p>
+
+			<h2>2. JSON path discipline</h2>
+			<p>When extracting from a JSON response, you need a path that is stable and specific. Common examples include:</p>
+			<ul>
+				<li><code>$.token</code></li>
+				<li><code>$.data.id</code></li>
+				<li><code>$.user.name</code></li>
+				<li><code>$.items[0].employeeId</code></li>
+			</ul>
+			<p>If the structure is nested or the response contains arrays, be precise. A broad extractor can capture the wrong value. A good extractor is specific to the real contract and easy to reason about.</p>
+			<p>Also consider that JSON field names may change or not always be present. A response may include <code>data</code>, <code>results</code>, or a top-level object with a nested list. You must validate the structure before writing the final assertions.</p>
+
+			<h2>3. Positive checks</h2>
+			<p>Positive checks confirm that a valid request behaves as expected. This is where you prove that the script is not just making a call, but demonstrating the business outcome. Examples:</p>
+			<ul>
+				<li>Valid login returns 200 and a valid token.</li>
+				<li>Employee lookup returns the correct employee name.</li>
+				<li>Update request returns 200 and the changed field value matches the request.</li>
+				<li>Create request returns 201 and the ID is not null.</li>
+			</ul>
+			<p>These checks should be tied to the business requirement. A record’s response must be meaningful, not just non-empty.</p>
+
+			<h2>4. Negative checks</h2>
+			<p>Negative checks confirm that invalid input fails in a controlled and documented way. This is especially important for API behavior because real users make mistakes and systems must react predictably.</p>
+			<p>Typical negative scenarios include:</p>
+			<ul>
+				<li>Invalid credentials return 401 or a failure message.</li>
+				<li>Missing required field returns 400 with a validation message.</li>
+				<li>Unauthorized access returns 403 or equivalent.</li>
+				<li>Unknown ID returns 404 and does not create or mutate a record.</li>
+			</ul>
+			<p>A negative check does not just “show an error.” It proves the API responds consistently and does not produce a wrong side effect.</p>
+
+			<h2>5. The validation matrix</h2>
+			<p>Before running your script, write a small table with each request, success check, negative check, and evidence. Example:</p>
+			<table>
+				<thead>
+					<tr><th>Request</th><th>Valid case</th><th>Invalid case</th><th>Expected result</th></tr>
+				</thead>
+				<tbody>
+					<tr><td>Login</td><td>Valid user</td><td>Wrong password</td><td>200 OK vs 401/invalid credentials</td></tr>
+					<tr><td>Create employee</td><td>Valid payload</td><td>Missing required field</td><td>201 Created vs 400 validation error</td></tr>
+					<tr><td>Get employee</td><td>Existing ID</td><td>Unknown ID</td><td>200 OK vs 404 Not Found</td></tr>
+				</tbody>
+			</table>
+			<p>The matrix makes your load test more trustworthy. It also helps when failures occur: if a script fails only on the invalid scenario, you know the problem is in validation or request handling rather than the general workflow.</p>
+
+			<h2>6. Practical exercise</h2>
+			<ol>
+				<li>Pick one authenticated API flow with at least one success and one error path.</li>
+				<li>Inspect the JSON response for the data fields needed to build a later request.</li>
+				<li>Extract a value such as token, id, or status using a stable JSON path.</li>
+				<li>Write one positive assertion and one negative assertion for the same business action.</li>
+				<li>Replay both scenarios and save the evidence showing the expected behavior.</li>
+			</ol>
+
+			<h2>7. Common mistakes</h2>
+			<ul>
+				<li><strong>Matching text instead of values:</strong> free text messages change often and make tests brittle.</li>
+				<li><strong>Only checking one part of the JSON structure:</strong> a nested object may still be wrong.</li>
+				<li><strong>Not checking failure states:</strong> the script looks green while invalid input is silently accepted.</li>
+				<li><strong>Using a stale token or ID in later requests:</strong> the chain is broken but the status code may still look valid for the wrong reason.</li>
+				<li><strong>Ignoring the difference between business and technical success:</strong> not every 200 indicates a correct business action.</li>
+			</ul>
+
+			<section class="exercise">
+				<h2>Day 12 deliverable</h2>
+				<p>Submit an API validation sheet with one successful request path, one extracted JSON value, one positive assertion, and one negative assertion with the expected response and evidence. Include the exact value source and the JSON path used for extraction.</p>
+			</section>
+
+			<div class="footer-note"><strong>Previous:</strong> <a href="day-11.html">&larr; Day 11</a> &nbsp;|&nbsp; <strong>Next:</strong> <a href="day-13.html">Day 13: Concurrency, arrival rate, pacing, and throughput &rarr;</a></div>
+		</main>
+		<script src="../../assets/app.js"></script>
+	</body>
+</html>

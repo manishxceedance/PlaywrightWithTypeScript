@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>NeoLoad Day 19 - Percentiles, Throughput, Errors, and User Count</title>
+		<link rel="stylesheet" href="../../assets/styles.css" />
+	</head>
+	<body>
+		<header class="topbar">
+			<a class="brand" href="../../index.html">Playwright/TypeScript Training Hub</a>
+			<button class="menu-toggle" data-menu-toggle>Open Menu</button>
+		</header>
+		<main class="content lesson">
+			<h1>Week 7, Day 19: Percentiles, Throughput, Errors, and User Count</h1>
+			<p class="lesson-meta"><span class="difficulty-badge">Intermediate</span>Read the actual experience of the system, not just the average measurement.</p>
+
+			<section class="exercise">
+				<h2>Session outcome</h2>
+				<p>Many teams look at a single average response time and think they understand the result. This day teaches the important metrics that explain the shape of a run: percentiles, throughput, error behavior, and active user count. These are far more informative when judging whether the system met the workload objective.</p>
+			</section>
+
+			<h2>1. Percentiles</h2>
+			<p>Percentiles show how the response times distribute across all measured transactions. They are especially important because averages can hide poor tail performance.</p>
+			<ul>
+				<li><strong>p50:</strong> median response time, where half of the requests are faster and half are slower.</li>
+				<li><strong>p90:</strong> 90% of requests are faster than this value; the tail starts to appear.</li>
+				<li><strong>p95:</strong> widely used in service-level analysis because it reflects the slower experience of a substantial group of users.</li>
+				<li><strong>p99:</strong> extreme slow responses; useful for understanding tail latency or rare but severe issues.</li>
+			</ul>
+			<p>If p95 rises sharply while p50 stays stable, the problem may be concentrated in the slower tail rather than the “typical user” experience. This is why a single average can be misleading.</p>
+
+			<h2>2. Throughput</h2>
+			<p>Throughput tells you how much work the system completed during the run. It is often measured as transactions per second or requests per second. This metric answers, “How much useful work was the system able to complete under the applied load?”</p>
+			<p>Throughput and response time are connected: a system may handle high load but with increased latency, or it may remain fast but process less work. Both can be true at the same time depending on the bottleneck.</p>
+
+			<h2>3. Error rate</h2>
+			<p>Errors show whether the system remained valid under the applied workload. An error rate can directly affect application trust and user value. It is often more important than a low average response time if the system is returning incorrect results or rejecting too many requests.</p>
+			<p>When reviewing errors, always ask:</p>
+			<ul>
+				<li>Which transactions failed?</li>
+				<li>When did the failures start?</li>
+				<li>What was the error type or message?</li>
+				<li>Was the failure associated with a specific load zone or time window?</li>
+			</ul>
+
+			<h2>4. User count</h2>
+			<p>Active users show the real load pressure imposed on the system. A performance result is not just “successful” because the script ran; it needs to be tied to the user count relevant to the target scenario. Without the user count, it is difficult to judge whether the result reflects a realistic or unrealistic workload.</p>
+			<p>When comparing results, make sure you compare the same percentage of load, the same duration, and the same user mix. Otherwise, differences in response time or throughput may be simply due to a different workload profile.</p>
+
+			<h2>5. Reading result tables correctly</h2>
+			<p>When reviewing a report, do not isolate a single statistic. Instead, read them together:</p>
+			<ul>
+				<li>p50, p95, and p99 show the range of response experience.</li>
+				<li>Throughput shows how much useful work the system completed.</li>
+				<li>Errors show whether correctness stayed stable.</li>
+				<li>User count shows the applied load.</li>
+			</ul>
+			<p>A useful question is: “How did the system behave as user count increased?” This is far more informative than a single point-in-time average.</p>
+
+			<section class="exercise">
+				<h2>Day 19 deliverable</h2>
+				<p>Prepare a one-page metric summary for one result set using p50, p90, p95, p99, throughput, error rate, and active user count. Explain how the metrics changed between the low-load and peak-load phases.</p>
+			</section>
+
+			<div class="footer-note"><strong>Previous:</strong> <a href="day-18.html">&larr; Day 18</a> &nbsp;|&nbsp; <strong>Next:</strong> <a href="day-20.html">Day 20: SLA interpretation and baseline comparison &rarr;</a></div>
+		</main>
+		<script src="../../assets/app.js"></script>
+	</body>
+</html>

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>NeoLoad Day 16 - Readiness Checks and Execution Process</title>
+		<link rel="stylesheet" href="../../assets/styles.css" />
+	</head>
+	<body>
+		<header class="topbar">
+			<a class="brand" href="../../index.html">Playwright/TypeScript Training Hub</a>
+			<button class="menu-toggle" data-menu-toggle>Open Menu</button>
+		</header>
+		<main class="content lesson">
+			<h1>Week 6, Day 16: Readiness Checks and Execution Process</h1>
+			<p class="lesson-meta"><span class="difficulty-badge">Intermediate</span>Verify the test is valid, approved, and configured before the run begins.</p>
+
+			<section class="exercise">
+				<h2>Session outcome</h2>
+				<p>One of the biggest sources of wasted test time is running without a clear readiness process. A test that is not ready can produce noisy, misleading results and damage confidence in the entire set of outcomes. This day focuses on the go/no-go checks that make a run credible.</p>
+			</section>
+
+			<h2>1. The purpose of readiness</h2>
+			<p>Readiness checks confirm that the environment, scripts, data, monitors, and operators are all aligned with the objective of the test. The goal is to avoid a “false start” in which the test fails because of setup issues instead of real performance behavior.</p>
+			<p>Readiness is not just technical. It also includes approvals, data ownership, environment status, test windows, and any internal review requirements. A script can technically run but still be unready if the data is wrong or the environment is not approved for load testing.</p>
+
+			<h2>2. What to check before execution</h2>
+			<ul>
+				<li><strong>Environment:</strong> target app is available and stable; environment matches the intended test condition.</li>
+				<li><strong>Scope and objective:</strong> the exact question the test is trying to answer is clear.</li>
+				<li><strong>Script quality:</strong> user path works, assertions are valid, correlation values are consistent, and no obvious noise remains.</li>
+				<li><strong>Data:</strong> approved test data is present, safe, and consistent with the user profile.</li>
+				<li><strong>Monitoring:</strong> all relevant server and application metrics are connected and readable.</li>
+				<li><strong>Load generators or zones:</strong> capacity is available and positioned correctly.</li>
+				<li><strong>Operator and ownership:</strong> the person running the test knows the stop conditions and escalation path.</li>
+			</ul>
+			<p>Good readiness checks are specific and documented. They should be easy to review later when someone asks why the test was considered valid.</p>
+
+			<h2>3. Smoke tests before the real run</h2>
+			<p>A smoke test is a short, low-volume run that proves the basic path works before a baseline or full load exercise. It is designed to answer: “Does the workflow work under a small load?”</p>
+			<p>Smoke testing is where you catch obvious issues like login failures, missing correlation, invalid assertions, or broken scripts. It is far cheaper to discover those problems in a one-user run than in a multi-user load test.</p>
+			<p>This is also where you verify that monitors, data, and throughput tracking are in place. If the smoke test fails, the planned load run should not begin until the defect is understood and resolved.</p>
+
+			<h2>4. What to record in the run evidence</h2>
+			<p>Before executing the main workload, record:</p>
+			<ul>
+				<li>Project version and script name</li>
+				<li>Environment and build version</li>
+				<li>Run timestamp and operator</li>
+				<li>Target workload and zone plan</li>
+				<li>Monitoring configuration and owner</li>
+				<li>Approvals or exceptions</li>
+			</ul>
+			<p>Without this evidence, later analysis becomes difficult. Teams cannot compare runs accurately if they do not know which version of the script and environment was used.</p>
+
+			<h2>5. Example go/no-go checklist</h2>
+			<table>
+				<thead>
+					<tr><th>Item</th><th>Check</th><th>Owner</th><th>Status</th></tr>
+				</thead>
+				<tbody>
+					<tr><td>Environment approval</td><td>Approved test environment is live and not under maintenance.</td><td>Service owner</td><td>Pass/Fail</td></tr>
+					<tr><td>Script validation</td><td>One-user smoke run succeeds and assertions pass.</td><td>Performance tester</td><td>Pass/Fail</td></tr>
+					<tr><td>Monitoring readiness</td><td>All app and server metrics are active.</td><td>Ops/monitoring owner</td><td>Pass/Fail</td></tr>
+					<tr><td>Data readiness</td><td>Approved data and accounts are available and safe.</td><td>Data owner</td><td>Pass/Fail</td></tr>
+				</tbody>
+			</table>
+			<p>When a checklist item fails, the right answer is not to “try anyway.” It is to fix the issue, document it, or stop the run until the risk is understood.</p>
+
+			<h2>6. Execution process</h2>
+			<p>Once the run is approved, the tester should:</p>
+			<ol>
+				<li>Confirm the environment, build, and workload model.</li>
+				<li>Start the smoke run and check for functional correctness.</li>
+				<li>Confirm monitors and logs are capturing correctly.</li>
+				<li>Start the baseline or target workload with the planned ramp.</li>
+				<li>Keep the stop conditions visible and escalate when a threshold is reached.</li>
+				<li>Collect artifacts and final results after completion.</li>
+			</ol>
+			<p>Readiness is the guardrail that prevents “chaotic tests” and preserves the trustworthiness of following analysis.</p>
+
+			<section class="exercise">
+				<h2>Day 16 deliverable</h2>
+				<p>Submit a go/no-go readiness checklist with each item, owner, and status. Include a smoke-test note showing the script was validated before the main run.</p>
+			</section>
+
+			<div class="footer-note"><strong>Previous:</strong> <a href="day-15.html">&larr; Day 15</a> &nbsp;|&nbsp; <strong>Next:</strong> <a href="day-17.html">Day 17: Runtime health, errors, and server metrics &rarr;</a></div>
+		</main>
+		<script src="../../assets/app.js"></script>
+	</body>
+</html>

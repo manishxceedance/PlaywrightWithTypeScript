@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>NeoLoad Day 18 - Controlled Aborts and Result Retention</title>
+		<link rel="stylesheet" href="../../assets/styles.css" />
+	</head>
+	<body>
+		<header class="topbar">
+			<a class="brand" href="../../index.html">Playwright/TypeScript Training Hub</a>
+			<button class="menu-toggle" data-menu-toggle>Open Menu</button>
+		</header>
+		<main class="content lesson">
+			<h1>Week 6, Day 18: Controlled Aborts and Result Retention</h1>
+			<p class="lesson-meta"><span class="difficulty-badge">Intermediate</span>Stop a test when it is no longer safe or useful, and keep the evidence for analysis.</p>
+
+			<section class="exercise">
+				<h2>Session outcome</h2>
+				<p>A performance test is not a run-it-until-it-breaks exercise. It is a controlled investigation. This day teaches when to stop a run, how to stop it cleanly, and how to preserve the evidence needed to explain what happened.</p>
+			</section>
+
+			<h2>1. Why aborts are necessary</h2>
+			<p>Not every test reaches a valid conclusion. A run may become unsafe, meaningless, or damaging to the environment. In such cases, the correct action is to stop the workload and preserve evidence before the system becomes unstable or the data becomes invalid.</p>
+			<p>Common reasons to abort:</p>
+			<ul>
+				<li>Error rate exceeds the agreed threshold.</li>
+				<li>Critical transactions fail repeatedly under moderate load.</li>
+				<li>Infrastructure risks or application instability appear.</li>
+				<li>The environment is no longer an approved target.</li>
+				<li>Data integrity or user-impact concerns arise.</li>
+			</ul>
+			<p>An abort is not a failure to complete the test. It is a controlled and documented decision that preserves safety and quality of analysis.</p>
+
+			<h2>2. Approved abort criteria</h2>
+			<p>Abort triggers should be written before the run. They can include:</p>
+			<ul>
+				<li>Critical business transaction error rate above a threshold.</li>
+				<li>Response time degradation beyond an agreed value for a specific operation.</li>
+				<li>Resource exhaustion, such as CPU or memory at unsafe levels.</li>
+				<li>Data inconsistency or side effects that were not expected.</li>
+			</ul>
+			<p>Having a clear trigger helps avoid emotional or reactive decisions. It also makes after-the-fact review much easier because you can say, “The run was aborted under the approved threshold in the runbook.”</p>
+
+			<h2>3. What evidence to retain</h2>
+			<p>When a run is stopped, preserve the artifacts that explain why it ended and what happened before it was stopped. Keep:</p>
+			<ul>
+				<li>Run configuration and project version.</li>
+				<li>Script name and workload model.</li>
+				<li>Monitoring exports and logs.</li>
+				<li>Error snapshots and transaction summaries.</li>
+				<li>Timestamps and the person who made the decision.</li>
+				<li>Reason for abort and any follow-up instruction.</li>
+			</ul>
+			<p>Retention matters because an aborted run still contains valuable evidence. It may reveal the exact threshold that triggered the issue, the first failing transaction, or a defect in the environment or script.</p>
+
+			<h2>4. Result retention process</h2>
+			<p>After a stop or abnormal run, do the following:</p>
+			<ol>
+				<li>Record the current timestamp and the reason for stopping.</li>
+				<li>Capture the final result and any relevant monitoring graphics.</li>
+				<li>Save the run log and environment notes.</li>
+				<li>Document whether the run is invalid or partial.</li>
+				<li>Decide whether it should be excluded, marked as an abort case, or used as a warning in the final report.</li>
+			</ol>
+			<p>This separates “no results” from “results that are incomplete or outside the approved scope.” Both are important to differentiate in a final performance assessment.</p>
+
+			<section class="exercise">
+				<h2>Day 18 deliverable</h2>
+				<p>Write an abort runbook with approved trigger conditions, the responsible decision-maker, evidence to retain, and a short explanation of how a stopped run should be documented in the final analysis.</p>
+			</section>
+
+			<div class="footer-note"><strong>Previous:</strong> <a href="day-17.html">&larr; Day 17</a> &nbsp;|&nbsp; <strong>Next:</strong> <a href="day-19.html">Day 19: Percentiles, throughput, errors, and user count &rarr;</a></div>
+		</main>
+		<script src="../../assets/app.js"></script>
+	</body>
+</html>

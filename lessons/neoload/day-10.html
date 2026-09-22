@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>NeoLoad Day 10 - REST Methods, Status Codes, Headers, and JSON</title>
+		<link rel="stylesheet" href="../../assets/styles.css" />
+	</head>
+	<body>
+		<header class="topbar">
+			<a class="brand" href="../../index.html">Playwright/TypeScript Training Hub</a>
+			<button class="menu-toggle" data-menu-toggle>Open Menu</button>
+		</header>
+		<main class="content lesson">
+			<h1>Week 4, Day 10: REST Methods, Status Codes, Headers, and JSON</h1>
+			<p class="lesson-meta"><span class="difficulty-badge">Intermediate</span>Understand the language of API interaction so your load test matches real production behavior.</p>
+
+			<section class="exercise">
+				<h2>Session outcome</h2>
+				<p>Today’s topic is foundational: the API contracts behind many modern systems. You will learn how REST methods map to intention, how status codes communicate success or failure, why headers matter for validation, and how JSON bodies hold the data the application sends and expects.</p>
+			</section>
+
+			<h2>1. REST methods and what they mean</h2>
+			<p>REST is an architectural style built around resources and standard HTTP operations. A resource might be an employee, a user, a product, or an order. Each operation typically maps to a clear business intent.</p>
+			<table>
+				<thead>
+					<tr><th>Method</th><th>Common purpose</th><th>Typical business meaning</th></tr>
+				</thead>
+				<tbody>
+					<tr><td>GET</td><td>Read data</td><td>Load a page, fetch a list, view a record.</td></tr>
+					<tr><td>POST</td><td>Create or submit new data</td><td>Login, create a record, save a form, initiate an action.</td></tr>
+					<tr><td>PUT</td><td>Replace or update a resource completely</td><td>Update a full record representation.</td></tr>
+					<tr><td>PATCH</td><td>Update part of a resource</td><td>Alter selected fields, notes, metadata, or flags.</td></tr>
+					<tr><td>DELETE</td><td>Remove a resource</td><td>Delete a user, job, order, or item.</td></tr>
+				</tbody>
+			</table>
+			<p>When you model a journey in NeoLoad, the method matters because it tells you the business action being performed. A POST to login and a GET to fetch employee details are not interchangeable, and their expected responses often differ.</p>
+
+			<h2>2. HTTP status codes</h2>
+			<p>Status codes are the server’s short answer to “Did the request succeed?” They also tell you whether the problem is client-side, server-side, or a business rule issue.</p>
+			<h3>Common categories</h3>
+			<ul>
+				<li><strong>2xx:</strong> success—request accepted and processed.</li>
+				<li><strong>3xx:</strong> redirect or forwarding.</li>
+				<li><strong>4xx:</strong> client error—bad request, unauthorized, forbidden, not found.</li>
+				<li><strong>5xx:</strong> server error—unexpected failure or unavailable service.</li>
+			</ul>
+			<h3>Examples</h3>
+			<ul>
+				<li><strong>200 OK:</strong> normal success for GET or valid response.</li>
+				<li><strong>201 Created:</strong> resource created successfully.</li>
+				<li><strong>202 Accepted:</strong> request accepted for async processing.</li>
+				<li><strong>204 No Content:</strong> successful action without a response body.</li>
+				<li><strong>400 Bad Request:</strong> invalid input or malformed request.</li>
+				<li><strong>401 Unauthorized:</strong> missing or invalid auth.</li>
+				<li><strong>403 Forbidden:</strong> authenticated but not allowed to do this action.</li>
+				<li><strong>404 Not Found:</strong> resource does not exist.</li>
+				<li><strong>500 Internal Server Error:</strong> server unexpectedly failed.</li>
+			</ul>
+			<p>Do not treat a 2xx status as automatically correct. You still need to assert that the response data is valid for the business case.</p>
+
+			<h2>3. Headers and content type</h2>
+			<p>Headers help the server and client agree on how the body should be interpreted. Two of the most important ones during API scripting are Content-Type and Authorization.</p>
+			<ul>
+				<li><strong>Content-Type:</strong> tells the server what format the request body uses, such as JSON or form data.</li>
+				<li><strong>Authorization:</strong> carries the token or credentials required for protected endpoints.</li>
+				<li><strong>Accept:</strong> tells the server which response format you want to receive.</li>
+				<li><strong>Cookie:</strong> preserves the current authenticated session.</li>
+			</ul>
+			<p>An API request can fail if the Content-Type is wrong, the Authorization header is missing, or the Accept header demands a format the server does not return. In load test design, these are as important as the URL and method.</p>
+
+			<h2>4. JSON as the default request and response format</h2>
+			<p>JSON is a lightweight, readable data format commonly used by modern APIs. Most REST APIs send and receive JSON content in request bodies and response bodies. A JSON body often contains fields like:</p>
+			<ul>
+				<li><code>id</code></li>
+				<li><code>status</code></li>
+				<li><code>message</code></li>
+				<li><code>data</code></li>
+				<li><code>token</code></li>
+				<li><code>employeeId</code></li>
+			</ul>
+			<p>To script a realistic API, you must know what fields are required, which ones are optional, and which values are expected to match the business case. If the contract is not known, inspect the real API docs or sample responses and write the contract down before running the load test.</p>
+
+			<h2>5. A good API contract checklist</h2>
+			<p>Before scripting a new API, document the endpoint contract in a simple table:</p>
+			<table>
+				<thead>
+					<tr><th>Endpoint</th><th>Method</th><th>Expected status</th><th>Headers</th><th>Body</th><th>Key JSON field</th></tr>
+				</thead>
+				<tbody>
+					<tr><td>/api/login</td><td>POST</td><td>200</td><td>Content-Type, Accept</td><td>username, password</td><td>token</td></tr>
+					<tr><td>/api/employees</td><td>GET</td><td>200</td><td>Authorization</td><td>None</td><td>items</td></tr>
+					<tr><td>/api/employees/{id}</td><td>PATCH</td><td>200</td><td>Authorization, Content-Type</td><td>field changes</td><td>status or updatedAt</td></tr>
+				</tbody>
+			</table>
+			<p>That contract is not just documentation—it is the basis for assertions and failure analysis. When your load result is under pressure, it tells you what behavior is expected and what is not.</p>
+
+			<h2>6. Practical exercise</h2>
+			<ol>
+				<li>Pick one simple API path with a read and one write action.</li>
+				<li>Document the method, endpoint, headers, expected status, request content, and key JSON field.</li>
+				<li>Record or build the API scenario in NeoLoad.</li>
+				<li>Assert status code, response content type, and one meaningful JSON field.</li>
+				<li>Replay with one user and confirm the request logic and success criteria match the application contract.</li>
+			</ol>
+
+			<h2>7. Common mistakes</h2>
+			<ul>
+				<li><strong>Sending the wrong HTTP method:</strong> a POST mistaken for a GET leads to invalid behavior.</li>
+				<li><strong>Ignoring response type:</strong> expecting JSON but receiving HTML or an error page.</li>
+				<li><strong>Not validating headers:</strong> security gates can reject a request before business logic executes.</li>
+				<li><strong>Reading only the first field in a JSON response:</strong> you need deeper checks for real correctness.</li>
+				<li><strong>Missing API contract documentation:</strong> the test becomes guesswork and future debugging becomes difficult.</li>
+			</ul>
+
+			<section class="exercise">
+				<h2>Day 10 deliverable</h2>
+				<p>Submit an endpoint contract table with at least two endpoints: one read and one write. Include method, endpoint, status expectation, required headers, request body, and the key JSON field you will assert during replay.</p>
+			</section>
+
+			<div class="footer-note"><strong>Previous:</strong> <a href="day-09.html">&larr; Day 9</a> &nbsp;|&nbsp; <strong>Next:</strong> <a href="day-11.html">Day 11: Authentication and request chaining &rarr;</a></div>
+		</main>
+		<script src="../../assets/app.js"></script>
+	</body>
+</html>

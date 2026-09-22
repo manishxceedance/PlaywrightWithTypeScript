@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>NeoLoad Day 22 - Capstone Scope, Objectives, Assumptions, and Risks</title>
+		<link rel="stylesheet" href="../../assets/styles.css" />
+	</head>
+	<body>
+		<header class="topbar">
+			<a class="brand" href="../../index.html">Playwright/TypeScript Training Hub</a>
+			<button class="menu-toggle" data-menu-toggle>Open Menu</button>
+		</header>
+		<main class="content lesson">
+			<h1>Week 8, Day 22: Capstone Scope, Objectives, Assumptions, and Risks</h1>
+			<p class="lesson-meta"><span class="difficulty-badge">Capstone</span>Plan the performance test so the run supports a real business decision.</p>
+
+			<section class="exercise">
+				<h2>Session outcome</h2>
+				<p>The capstone is not just “run a performance test.” It is the design of a credible, reviewable test that answers a real business question. This day focuses on the strategy behind the plan: why the test exists, what it includes, what it excludes, and what assumptions or risks could affect the result.</p>
+			</section>
+
+			<h2>1. The purpose of a capstone plan</h2>
+			<p>A good test plan helps a reviewer decide whether the run is valid and whether the conclusion is trustworthy. It should explain:</p>
+			<ul>
+				<li>What decision the test supports.</li>
+				<li>What user journey or API flow is being tested.</li>
+				<li>What the expected workload is.</li>
+				<li>Which metrics and thresholds matter.</li>
+				<li>What assumptions or risk factors could affect the result.</li>
+			</ul>
+			<p>Without this context, performance metrics are just numbers. With the context, they become evidence.</p>
+
+			<h2>2. Scope</h2>
+			<p>Scope defines exactly what the test includes and excludes. It should specify the user paths, app modules, environment, data, load generators, business time window, and key goals. A well-scoped test is easier to execute, explain, and defend.</p>
+			<p>Examples of scope questions include:</p>
+			<ul>
+				<li>Are we testing login, employee search, and update only, or the whole HRMS journey?</li>
+				<li>Is the target environment a development, staging, or production-like system?</li>
+				<li>Are we including third-party dependencies or excluding them from the test?</li>
+				<li>Is the test focused on a business-scenario run or broad system capacity?</li>
+			</ul>
+
+			<h2>3. Objectives and success criteria</h2>
+			<p>An objective should answer a specific business question, such as:</p>
+			<ul>
+				<li>Can the application support 200 concurrent users while maintaining p95 below 2 seconds?</li>
+				<li>Does the employee update workflow remain stable under the expected peak hour?</li>
+				<li>How does the application behave at the target load compared with the baseline?</li>
+			</ul>
+			<p>Success criteria should be measurable and tied to the business decision, not to vague impressions such as “fast enough” or “looks okay.”</p>
+
+			<h2>4. Assumptions and risks</h2>
+			<p>Every performance test includes assumptions. They may be about user mix, peak demand, environment conditions, or the availability of supporting systems. Risks are unforeseen factors that may affect the result or make the conclusion uncertain.</p>
+			<p>Examples:</p>
+			<ul>
+				<li>Assumption: the peak hour traffic is primarily read-heavy.</li>
+				<li>Risk: a downstream dependency may be impacted by external events during the run.</li>
+				<li>Assumption: the test data resembles production but is not identical.</li>
+				<li>Risk: a shared environment may experience unrelated background load.</li>
+			</ul>
+			<p>All assumptions should be documented, and all risks should be stated clearly so a reviewer can judge the reliability of the result.</p>
+
+			<h2>5. Standard capstone sections</h2>
+			<p>A strong plan usually includes:</p>
+			<ul>
+				<li>Business objective and decision</li>
+				<li>Scope and exclusions</li>
+				<li>Target journey or API workflow</li>
+				<li>User profile and load model</li>
+				<li>SLA or performance targets</li>
+				<li>Environment and data assumptions</li>
+				<li>Monitoring plan</li>
+				<li>Execution schedule and stop criteria</li>
+				<li>Evidence and reporting plan</li>
+			</ul>
+			<p>This gives the reader a complete view of how the test was designed and how the result should be interpreted.</p>
+
+			<section class="exercise">
+				<h2>Day 22 deliverable</h2>
+				<p>Prepare a capstone plan for one web or API journey. Include the objective, scope, user flow, workload assumptions, SLA targets, data assumptions, risks, and stop conditions. It should be suitable for review before execution begins.</p>
+			</section>
+
+			<div class="footer-note"><strong>Previous:</strong> <a href="day-21.html">&larr; Day 21</a> &nbsp;|&nbsp; <strong>Next:</strong> <a href="day-23.html">Day 23: Baseline versus load-test execution &rarr;</a></div>
+		</main>
+		<script src="../../assets/app.js"></script>
+	</body>
+</html>

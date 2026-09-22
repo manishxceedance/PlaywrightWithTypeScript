@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>NeoLoad Day 5 - Actions, Transactions, Pages, and Requests</title>
+		<link rel="stylesheet" href="../../assets/styles.css" />
+	</head>
+	<body>
+		<header class="topbar">
+			<a class="brand" href="../../index.html">Playwright/TypeScript Training Hub</a>
+			<button class="menu-toggle" data-menu-toggle>Open Menu</button>
+		</header>
+		<main class="content lesson">
+			<h1>Week 2, Day 5: Actions, Transactions, Pages, and Requests</h1>
+
+			<section class="exercise">
+				<h2>Session outcome</h2>
+				<p>Learn how NeoLoad organizes a recorded journey into business-readable actions, measurable transactions, page boundaries, and technical requests. You will apply the structure to the HRMS login, employee search, edit, save, and logout path from Day 4.</p>
+				<p>A well-structured user path makes results easier to read, helps teams connect performance data to business activity, and prevents a report from becoming a long list of anonymous HTTP calls.</p>
+			</section>
+
+			<h2>1. The four levels of a NeoLoad user path</h2>
+			<table>
+				<thead><tr><th>Level</th><th>Meaning</th><th>Performance purpose</th></tr></thead>
+				<tbody>
+					<tr><td><strong>Action</strong></td><td>A user intention or interaction, such as entering search criteria or selecting Save.</td><td>Explains what the virtual user is doing and keeps the flow readable.</td></tr>
+					<tr><td><strong>Transaction</strong></td><td>A measured business operation containing one or more actions and requests.</td><td>Produces a business-level response-time and success measurement.</td></tr>
+					<tr><td><strong>Page</strong></td><td>A logical navigation or screen boundary, such as Login, Employees, or Edit Employee.</td><td>Groups related activity and helps locate slow parts of a journey.</td></tr>
+					<tr><td><strong>Request</strong></td><td>A technical network operation, such as an HTTP request, resource call, or API call.</td><td>Shows the protocol-level work that creates the page or completes the action.</td></tr>
+				</tbody>
+			</table>
+			<p>The levels are related but are not interchangeable. A request is not automatically a business transaction, and a button click is not automatically a useful performance measurement.</p>
+
+			<h2>2. Actions: describe user intent</h2>
+			<p>An action describes a meaningful step performed by a virtual user. It should answer, “What is the user trying to do?” Actions can include opening a page, entering a search value, selecting a record, submitting a form, waiting for a result, or logging out.</p>
+			<h3>Good action names</h3>
+			<ul>
+				<li><code>ACT_OpenEmployees</code></li>
+				<li><code>ACT_SearchFirstEmployee</code></li>
+				<li><code>ACT_OpenEmployeeEdit</code></li>
+				<li><code>ACT_UpdateTrainingNote</code></li>
+				<li><code>ACT_SubmitEmployeeChanges</code></li>
+				<li><code>ACT_Logout</code></li>
+			</ul>
+			<h3>Action design rules</h3>
+			<ul>
+				<li>Use a verb and an object: <code>SearchEmployee</code> is clearer than <code>Step3</code>.</li>
+				<li>Represent user intent, not an arbitrary browser event.</li>
+				<li>Keep one action focused enough to troubleshoot when it fails.</li>
+				<li>Do not create an action for every static image, stylesheet, or browser housekeeping call.</li>
+				<li>Keep sensitive values out of names, comments, screenshots, and exported projects.</li>
+			</ul>
+
+			<h2>3. Transactions: measure business operations</h2>
+			<p>A transaction is the unit that stakeholders usually care about. It starts before a business operation and ends after the expected result has been received and validated. The measured time should represent the user-visible operation, not an arbitrary fragment of the recording.</p>
+			<h3>Recommended HRMS transactions</h3>
+			<table>
+				<thead><tr><th>Transaction</th><th>Start</th><th>End</th><th>Success check</th></tr></thead>
+				<tbody>
+					<tr><td><code>TRX_Login</code></td><td>Submit the login form.</td><td>Dashboard is available.</td><td>Dashboard or authenticated state is visible.</td></tr>
+					<tr><td><code>TRX_OpenEmployees</code></td><td>Select Employees.</td><td>Employee table is loaded.</td><td>Table and result count are available.</td></tr>
+					<tr><td><code>TRX_SearchFirstEmployee</code></td><td>Enter the first record value.</td><td>Filtered row is displayed.</td><td>Expected employee row is present.</td></tr>
+					<tr><td><code>TRX_SaveEmployee</code></td><td>Submit the edit form.</td><td>Save response and UI confirmation complete.</td><td>Success message or refreshed value is visible.</td></tr>
+					<tr><td><code>TRX_Logout</code></td><td>Select Logout.</td><td>Login page is displayed.</td><td>Authenticated dashboard is no longer accessible.</td></tr>
+				</tbody>
+			</table>
+			<p>Do not make one transaction cover the entire journey if you need to know which business step is slow. You may keep a broad end-to-end transaction as an additional measurement, but retain useful child transactions for diagnosis.</p>
+
+			<h2>4. Pages: create meaningful boundaries</h2>
+			<p>A page groups the requests and actions associated with a logical screen or navigation state. Pages help you read a user path from left to right and compare the time spent entering or leaving a screen.</p>
+			<p>For the HRMS scenario, useful page boundaries are:</p>
+			<ol>
+				<li><code>PAGE_Login</code>: login document, scripts, session establishment, and dashboard redirect.</li>
+				<li><code>PAGE_Dashboard</code>: dashboard data and initial widgets.</li>
+				<li><code>PAGE_Employees</code>: employee table, filters, pagination, and list data.</li>
+				<li><code>PAGE_EditEmployee</code>: edit modal data and update form resources.</li>
+				<li><code>PAGE_Logout</code>: logout request and return to the login state.</li>
+			</ol>
+			<p>A page boundary should be stable across recordings. Avoid naming a page after an unstable generated ID unless that ID is a data value documented separately.</p>
+
+			<h2>5. Requests: understand the technical work</h2>
+			<p>Requests are the lowest-level technical units visible in a web recording. They may retrieve HTML, JavaScript, CSS, images, employee data, search results, session information, or update data.</p>
+			<h3>Request naming convention</h3>
+			<p>Use a consistent pattern such as <code>REQ_[Method]_[Purpose]</code>:</p>
+			<ul>
+				<li><code>REQ_GET_LoginPage</code></li>
+				<li><code>REQ_POST_Login</code></li>
+				<li><code>REQ_GET_Employees</code></li>
+				<li><code>REQ_GET_SearchEmployees</code></li>
+				<li><code>REQ_GET_EmployeeDetails</code></li>
+				<li><code>REQ_PUT_UpdateEmployee</code></li>
+				<li><code>REQ_POST_Logout</code></li>
+			</ul>
+			<p>Keep a request when it contributes to the user journey, authentication, dynamic data, business validation, or a monitored dependency. Remove a request only after confirming that it is noise and does not change application behavior.</p>
+
+			<h2>6. Example hierarchy for the HRMS path</h2>
+			<pre><code>User path: UP_HRMS_Search_Edit_Logout
+	Page: PAGE_Login
+		Transaction: TRX_Login
+			Action: ACT_SubmitLogin
+				Request: REQ_POST_Login
+	Page: PAGE_Employees
+		Transaction: TRX_OpenEmployees
+			Action: ACT_OpenEmployees
+				Request: REQ_GET_Employees
+		Transaction: TRX_SearchFirstEmployee
+			Action: ACT_SearchFirstEmployee
+				Request: REQ_GET_SearchEmployees
+	Page: PAGE_EditEmployee
+		Transaction: TRX_SaveEmployee
+			Action: ACT_UpdateTrainingNote
+				Request: REQ_PUT_UpdateEmployee
+	Page: PAGE_Logout
+		Transaction: TRX_Logout
+			Action: ACT_Logout
+				Request: REQ_POST_Logout</code></pre>
+
+			<h2>7. Practical NeoLoad activity</h2>
+			<ol>
+				<li>Open the Day 4 user path <code>UP_HRMS_Search_Edit_Logout</code>.</li>
+				<li>Review the recorded tree from the top down. Mark each item as action, transaction, page, request, or noise.</li>
+				<li>Create the five business transactions listed above and place each around the complete business operation.</li>
+				<li>Create or rename page boundaries for Login, Dashboard, Employees, Edit Employee, and Logout.</li>
+				<li>Rename the important requests using the <code>REQ_[Method]_[Purpose]</code> convention.</li>
+				<li>Keep the existing correlation variables from Day 4 and ensure dynamic values are not replaced with new hard-coded values.</li>
+				<li>Replay with one virtual user and confirm that every transaction has a meaningful result.</li>
+				<li>Review the result view and confirm that you can identify login, employee search, update, and logout timings without reading anonymous request names.</li>
+			</ol>
+
+			<h2>8. Common mistakes</h2>
+			<ul>
+				<li><strong>One transaction around the entire script:</strong> useful for total time, but insufficient for finding the slow business step.</li>
+				<li><strong>One transaction per request:</strong> creates noisy reports and hides business meaning.</li>
+				<li><strong>Page names contain generated values:</strong> reports become difficult to compare between iterations.</li>
+				<li><strong>Static resources are treated as business work:</strong> response-time measurements become harder to interpret.</li>
+				<li><strong>Assertions are omitted:</strong> a fast error can be reported as a successful transaction.</li>
+				<li><strong>Correlation is removed while renaming:</strong> the script may work once and fail for another user or iteration.</li>
+			</ul>
+
+			<section class="exercise">
+				<h2>Day 5 deliverable</h2>
+				<p>Submit an annotated <code>UP_HRMS_Search_Edit_Logout</code> tree showing actions, five transactions, page boundaries, and named requests. Include one successful one-user replay and a short explanation of why each transaction boundary was selected.</p>
+			</section>
+
+			<div class="footer-note"><strong>Previous:</strong> <a href="day-04.html">&larr; Day 4</a> &nbsp;|&nbsp; <strong>Next:</strong> <a href="day-06.html">Day 6: Pacing and project structure &rarr;</a></div>
+		</main>
+		<script src="../../assets/app.js"></script>
+	</body>
+</html>

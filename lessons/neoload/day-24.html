@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>NeoLoad Day 24 - Evidence, Limitations, and Recommendations</title>
+		<link rel="stylesheet" href="../../assets/styles.css" />
+	</head>
+	<body>
+		<header class="topbar">
+			<a class="brand" href="../../index.html">Playwright/TypeScript Training Hub</a>
+			<button class="menu-toggle" data-menu-toggle>Open Menu</button>
+		</header>
+		<main class="content lesson">
+			<h1>Week 8, Day 24: Evidence, Limitations, and Recommendations</h1>
+			<p class="lesson-meta"><span class="difficulty-badge">Assessment</span>Close the test cycle with a result that can be reviewed, questioned, and trusted.</p>
+
+			<section class="exercise">
+				<h2>Session outcome</h2>
+				<p>The final step in performance testing is not “present the graph.” It is to write a report that separates facts from interpretation, states the limitations of the test, and provides practical recommendations. This day focuses on communicating a conclusion that is evidence-based and understandable to both technical and non-technical reviewers.</p>
+			</section>
+
+			<h2>1. What should be in the final report</h2>
+			<p>A strong performance report usually includes:</p>
+			<ul>
+				<li>Objective and scope of the test.</li>
+				<li>Workload model and user mix.</li>
+				<li>Environment, data, and script version.</li>
+				<li>Baseline versus target-load comparison.</li>
+				<li>SLA results and metric summary.</li>
+				<li>Errors and their timing.</li>
+				<li>Monitoring evidence and suspected constraints.</li>
+				<li>Limitations and caveats.</li>
+				<li>Recommendations and next actions.</li>
+			</ul>
+			<p>The report should tell the reader not only what happened, but also the reason the conclusion is credible.</p>
+
+			<h2>2. Separate facts from interpretation</h2>
+			<p>Good reporting is careful about what is observed and what is inferred.</p>
+			<ul>
+				<li><strong>Observed fact:</strong> p95 login response time increased from 1.2s to 3.8s at the target workload.</li>
+				<li><strong>Interpretation:</strong> the login flow is likely bottlenecked by the application tier or downstream dependency.</li>
+			</ul>
+			<p>The first is directly supported by the data. The second is a hypothesis that should be described as such, with the evidence that supports it and the gaps that still remain.</p>
+
+			<h2>3. Limitations matter</h2>
+			<p>Every performance test has limits. They might be:</p>
+			<ul>
+				<li>Test data is not identical to production data.</li>
+				<li>Third-party dependencies were excluded from scope.</li>
+				<li>Monitoring coverage was partial.</li>
+				<li>The environment was shared or not perfectly stable.</li>
+				<li>Only a subset of user journeys was included.</li>
+			</ul>
+			<p>Stating limitations is not a sign of weak analysis. It shows the work is honest and helps the reviewer understand how much weight to place on the evidence.</p>
+
+			<h2>4. Recommendations</h2>
+			<p>A recommendation should be specific and actionable. It should answer the practical question: “What should happen next?”</p>
+			<p>Examples include:</p>
+			<ul>
+				<li>Investigate database query performance under peak load.</li>
+				<li>Increase thread pool capacity or tune connection pooling.</li>
+				<li>Refine the app workload model to include a more realistic user mix.</li>
+				<li>Repeat the run in a production-like environment before a release decision.</li>
+			</ul>
+			<p>Recommendations should be grounded in the evidence, not in generic advice.</p>
+
+			<h2>5. Final assessment rubric</h2>
+			<ul>
+				<li>20%: clear scope, objectives, assumptions, and risks.</li>
+				<li>25%: valid NeoLoad design and workload model.</li>
+				<li>25%: repeatable execution and complete evidence.</li>
+				<li>20%: accurate metric and SLA analysis.</li>
+				<li>10%: practical recommendations and honest limitations.</li>
+			</ul>
+			<p>This final evaluation is meant to judge whether the test and report are trustworthy and whether they support a real engineering decision.</p>
+
+			<section class="exercise">
+				<h2>Final deliverable</h2>
+				<p>Submit the final performance report containing the objective, workload model, results, errors, monitoring evidence, limitations, and recommendations. Also include the supporting project files, run logs, and baseline/target comparison as appendices.</p>
+			</section>
+
+			<div class="footer-note"><strong>Previous:</strong> <a href="day-23.html">&larr; Day 23</a> &nbsp;|&nbsp; <strong>Track complete:</strong> <a href="../../pages/neoload.html">Return to NeoLoad roadmap</a></div>
+		</main>
+		<script src="../../assets/app.js"></script>
+	</body>
+</html>

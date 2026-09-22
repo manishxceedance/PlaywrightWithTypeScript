@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>NeoLoad Day 23 - Baseline Versus Load-Test Execution</title>
+		<link rel="stylesheet" href="../../assets/styles.css" />
+	</head>
+	<body>
+		<header class="topbar">
+			<a class="brand" href="../../index.html">Playwright/TypeScript Training Hub</a>
+			<button class="menu-toggle" data-menu-toggle>Open Menu</button>
+		</header>
+		<main class="content lesson">
+			<h1>Week 8, Day 23: Baseline Versus Load-Test Execution</h1>
+			<p class="lesson-meta"><span class="difficulty-badge">Capstone</span>Run the test with control, consistency, and evidence retention.</p>
+
+			<section class="exercise">
+				<h2>Session outcome</h2>
+				<p>This day brings together all the prior work: script validation, workload design, data handling, monitoring readiness, and go/no-go decisions. The goal is to execute both a baseline and a target workload in a way that supports a legitimate comparison and a defensible final result.</p>
+			</section>
+
+			<h2>1. Baseline execution</h2>
+			<p>A baseline run is the low-to-moderate workload that acts as a comparison point. It should be smaller than the target workload, but still realistic enough to show how the application behaves under stable conditions.</p>
+			<p>During the baseline, confirm:</p>
+			<ul>
+				<li>The script runs successfully.</li>
+				<li>Transactions and assertions behave as expected.</li>
+				<li>Monitors record the main health signals.</li>
+				<li>Environment conditions match the approved test plan.</li>
+			</ul>
+			<p>Baseline results are not “just a warm-up.” They are a critical control run used later to compare the target workload and identify regressions or shifts in performance.</p>
+
+			<h2>2. Target-load execution</h2>
+			<p>After the baseline is approved, run the target workload with the agreed ramp, hold, and stop conditions. Keep the same script, workload assumptions, and data pattern unless the approved plan explicitly calls for a change. That consistency is what makes the comparison meaningful.</p>
+			<p>During the run, document:</p>
+			<ul>
+				<li>When the load increased.</li>
+				<li>When the system began to show signs of degradation.</li>
+				<li>Any warnings, errors, or abort decisions.</li>
+				<li>Whether the run stayed within the agreed scope.</li>
+			</ul>
+
+			<h2>3. Execution log and artifacts</h2>
+			<p>Both runs should be stored with enough metadata that another reviewer can understand the environment and conditions. Capture:</p>
+			<ul>
+				<li>Project and script version</li>
+				<li>Build, environment, and date</li>
+				<li>Workload, ramp, and user count</li>
+				<li>Monitoring exports or screenshots</li>
+				<li>Warnings or operational notes</li>
+				<li>Final run status and stop reason if applicable</li>
+			</ul>
+			<p>Without these artifacts, a reviewer cannot judge whether the comparison is meaningful or whether an anomaly was caused by test design rather than the application itself.</p>
+
+			<h2>4. Common mistakes during execution</h2>
+			<ul>
+				<li>Changing the script between baseline and target run.</li>
+				<li>Starting the target load without a valid smoke check.</li>
+				<li>Ignoring operational notes or warnings during the run.</li>
+				<li>Not preserving the correct artifacts for comparison.</li>
+				<li>Changing the environment or data unexpectedly and then comparing results as if they were identical.</li>
+			</ul>
+
+			<section class="exercise">
+				<h2>Day 23 deliverable</h2>
+				<p>Submit two labeled result sets: baseline and target load. Include the execution log, the workload conditions, the environment used, and any warnings or deviations that occurred during the run.</p>
+			</section>
+
+			<div class="footer-note"><strong>Previous:</strong> <a href="day-22.html">&larr; Day 22</a> &nbsp;|&nbsp; <strong>Next:</strong> <a href="day-24.html">Day 24: Evidence, limitations, and recommendations &rarr;</a></div>
+		</main>
+		<script src="../../assets/app.js"></script>
+	</body>
+</html>

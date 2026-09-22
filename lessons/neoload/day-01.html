@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>NeoLoad 2026.02 Day 1 - Performance Testing Basics</title>
+		<link rel="stylesheet" href="../../assets/styles.css" />
+	</head>
+	<body>
+		<header class="topbar">
+			<a class="brand" href="../../index.html">Playwright/TypeScript Training Hub</a>
+			<button class="menu-toggle" data-menu-toggle>Open Menu</button>
+		</header>
+		<main class="content lesson">
+			<h1>Week 1, Day 1: NeoLoad 2026.02 and Performance Testing Basics</h1>
+			<p class="lesson-meta"><span class="difficulty-badge">Beginner</span>Install the tool, launch the sample application, and record your first user path.</p>
+
+			<section class="exercise">
+				<h2>What you will complete today</h2>
+				<ol>
+					<li>Install and verify NeoLoad 2026.02 on Windows.</li>
+					<li>Open the published Login - HRMS Practice App training endpoint.</li>
+					<li>Understand response time, throughput, users, and errors.</li>
+					<li>Record and replay a basic sample journey in NeoLoad.</li>
+				</ol>
+				<p><strong>Time:</strong> 60-90 minutes. Use a non-production environment only.</p>
+			</section>
+
+			<h2>1. Prepare your computer</h2>
+			<p>Before installing NeoLoad, make sure you have Windows permission to install software, a supported Java/runtime configuration according to the NeoLoad 2026.02 release notes, an approved NeoLoad account or license, and this training repository on your computer.</p>
+			<p>Download the NeoLoad <strong>2026.02</strong> Windows installer from your organization's approved Tricentis/NeoLoad download portal. Do not use an installer from an untrusted mirror.</p>
+
+			<h2>2. Install NeoLoad 2026.02</h2>
+			<ol>
+				<li>Close other NeoLoad instances and run the downloaded installer as a normal Windows application.</li>
+				<li>Accept the license terms, keep the default installation location unless your team requires another location, and finish the installation.</li>
+				<li>Open NeoLoad from the Start menu.</li>
+				<li>Sign in or activate the license using your organization's approved method.</li>
+				<li>Open <strong>Help &gt; About</strong> and confirm that the installed version is <strong>2026.02</strong>.</li>
+			</ol>
+			<p><strong>Evidence:</strong> save a screenshot of the About/version dialog without exposing license keys, account names, or tokens.</p>
+
+			<h2>3. Open the sample application</h2>
+			<p>Use the published HRMS Practice App training endpoint below. It is an HTTP URL suitable for NeoLoad recording and avoids recording a local <code>file://</code> path.</p>
+			<p><a href="https://manishxceedance.github.io/PlaywrightWithTypeScript/lessons/practice-app/hrms/login.html" target="_blank" rel="noopener">Open Login - HRMS Practice App</a></p>
+			<p>Direct URL for NeoLoad recording:</p>
+			<pre><code>https://manishxceedance.github.io/PlaywrightWithTypeScript/lessons/practice-app/hrms/login.html</code></pre>
+			<p><strong>Check:</strong> the page title is <em>Login - HRMS Practice App</em> and the login form and Sign In control are visible.</p>
+
+			<h2>4. Learn the four measurements</h2>
+			<ul>
+				<li><strong>Response time:</strong> how long a request or business transaction takes.</li>
+				<li><strong>Throughput:</strong> how much work completes per unit of time.</li>
+				<li><strong>Concurrent users:</strong> how many virtual users are active at once.</li>
+				<li><strong>Error rate:</strong> the proportion of failed requests or business checks.</li>
+			</ul>
+			<p>For this first lab, the goal is not to create heavy load. The goal is to prove that NeoLoad can model and replay one valid journey.</p>
+
+			<h2>5. Record your first NeoLoad user path</h2>
+			<ol>
+				<li>In NeoLoad 2026.02, create a new project named <code>neoload-training</code>.</li>
+				<li>Start a web recording and use the URL from step 3.</li>
+				<li>In the HRMS Practice App, enter the approved local training account values provided by your instructor or environment owner.</li>
+				<li>Click <strong>Sign In</strong> and wait for the HRMS dashboard to open.</li>
+				<li>Stop recording and save the user path as <code>UP_HRMS_Login</code>.</li>
+				<li>Replay the path with one virtual user. Confirm that the page loads and the recorded requests complete without errors.</li>
+			</ol>
+			<p><strong>Do not</strong> increase virtual users today. This is a functional smoke check before performance workload design.</p>
+
+			<section class="exercise">
+				<h2>Day 1 completion checklist</h2>
+				<ul>
+					<li>NeoLoad About dialog shows version 2026.02.</li>
+					<li>Login - HRMS Practice App opens from the published HTTPS endpoint.</li>
+					<li>The <code>UP_HRMS_Login</code> user path is saved.</li>
+					<li>A one-user replay completes successfully.</li>
+					<li>You saved the version screenshot and replay result.</li>
+				</ul>
+			</section>
+
+			<h2>Common problems</h2>
+			<ul>
+				<li><strong>NeoLoad will not start:</strong> check the 2026.02 release prerequisites and your organization's installation policy.</li>
+				<li><strong>License cannot be activated:</strong> confirm that you are using the approved account, proxy, or license-server settings; never paste license secrets into this lesson.</li>
+				<li><strong>Browser cannot open the page:</strong> confirm network access to the published HTTPS endpoint and try again in a clean browser tab.</li>
+				<li><strong>Recording shows no useful requests:</strong> confirm that you used the published HTTPS URL, not a local file path, and start recording before opening the HRMS login URL.</li>
+				<li><strong>Replay fails:</strong> use one user, inspect the first failed request, and confirm the published application is reachable before increasing load.</li>
+			</ul>
+
+			<section class="exercise">
+				<h2>Day 1 deliverable</h2>
+				<p>Submit the NeoLoad 2026.02 version evidence, the saved <code>UP_HRMS_Login</code> project or export, the successful one-user replay result, and a short note defining response time, throughput, concurrent users, and error rate.</p>
+			</section>
+
+			<div class="footer-note"><strong>Next:</strong> <a href="day-02.html">Day 2: Types of performance testing &rarr;</a></div>
+		</main>
+		<script src="../../assets/app.js"></script>
+	</body>
+</html>

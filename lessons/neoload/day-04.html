@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>NeoLoad Day 4 - HRMS Web User Path</title>
+		<link rel="stylesheet" href="../../assets/styles.css" />
+	</head>
+	<body>
+		<header class="topbar">
+			<a class="brand" href="../../index.html">Playwright/TypeScript Training Hub</a>
+			<button class="menu-toggle" data-menu-toggle>Open Menu</button>
+		</header>
+		<main class="content lesson">
+			<h1>Week 2, Day 4: Record the HRMS Web User Path</h1>
+
+			<section class="exercise">
+				<h2>Scenario and objective</h2>
+				<p>Record one complete HRMS employee-maintenance journey: sign in, open Employees, search for the first employee record, edit a safe training field, save the record, and log out.</p>
+				<p>Use the published <a href="https://manishxceedance.github.io/PlaywrightWithTypeScript/lessons/practice-app/hrms/login.html" target="_blank" rel="noopener">Login - HRMS Practice App</a>. Use only the approved training account and approved test data for your environment.</p>
+				<p><strong>Important:</strong> This is a functional recording with one virtual user. Do not increase load until the path is validated and the data-change strategy is approved.</p>
+			</section>
+
+			<h2>1. Prepare the recording</h2>
+			<ol>
+				<li>Open NeoLoad and the <code>neoload-training</code> project created on Day 3.</li>
+				<li>Start a new web recording and name the user path <code>UP_HRMS_Search_Edit_Logout</code>.</li>
+				<li>Use the published HRMS login URL as the recording start page.</li>
+				<li>Confirm that the target environment, test account, and record-edit permission are approved.</li>
+			</ol>
+
+			<h2>2. Record the HRMS journey</h2>
+			<ol>
+				<li>Open the HRMS login page and complete the sign-in form with the approved training account values.</li>
+				<li>Wait until the dashboard is visible. Add a transaction named <code>TRX_Login</code>.</li>
+				<li>Open <strong>Employees</strong> from the navigation or use <strong>View Employees</strong>. Add <code>TRX_OpenEmployees</code>.</li>
+				<li>Wait for the employee table to finish loading. Do not use a fixed sleep if a visible table or result count can be observed.</li>
+				<li>Identify the first row in the employee table. Capture its displayed employee name or employee ID as a runtime value for later correlation.</li>
+				<li>Enter that value in <strong>Search by name, email, ID, title...</strong> and wait for the debounced results to refresh. Add <code>TRX_SearchFirstEmployee</code>.</li>
+				<li>Click the Edit action for the matching row and add <code>TRX_OpenEdit</code>.</li>
+				<li>Change one approved, reversible training field, such as the notes field. Do not alter identity, access, salary, or compliance data unless your instructor explicitly approves it.</li>
+				<li>Click <strong>Save Changes</strong>. Add <code>TRX_SaveEmployee</code> and verify the success notification or refreshed row.</li>
+				<li>Click <strong>Logout</strong> and add <code>TRX_Logout</code>. Confirm that the login page is displayed again.</li>
+				<li>Stop the recording and save the user path.</li>
+			</ol>
+
+			<h2>3. Clean and organize the recorded path</h2>
+			<ul>
+				<li>Remove analytics, static assets, browser noise, and unrelated third-party requests only when you understand their purpose.</li>
+				<li>Keep requests needed to create the session, load employee data, search, update the record, and log out.</li>
+				<li>Rename pages and requests so another tester can understand them, for example <code>REQ_GetEmployees</code>, <code>REQ_SearchEmployees</code>, and <code>REQ_UpdateEmployee</code>.</li>
+				<li>Keep the transaction boundaries aligned with business actions rather than individual clicks.</li>
+				<li>Replay the path with one virtual user and confirm the saved change and logout are successful.</li>
+			</ul>
+
+			<h2>4. Why the path fails without correlation</h2>
+			<p>A recording captures the values returned during one browser session. Some of those values are generated dynamically and will be different in another session, another iteration, or another virtual user. If the script replays the original values literally, the server may reject the request or update the wrong record.</p>
+			<table>
+				<thead><tr><th>Dynamic value</th><th>Why it changes</th><th>What to correlate</th></tr></thead>
+				<tbody>
+					<tr><td>Session or authentication value</td><td>Created for a new sign-in session.</td><td>Extract the value from the login response or session flow and reuse it in later requests.</td></tr>
+					<tr><td>Employee ID</td><td>The first row, search result, or selected record may have a generated identifier.</td><td>Capture the identifier from the employee list or search response before the edit request.</td></tr>
+					<tr><td>CSRF or request token</td><td>Security tokens can be generated per page or session.</td><td>Extract the token and pass the current value in the update request.</td></tr>
+					<tr><td>Record version or update timestamp</td><td>Optimistic-locking data can change after a read.</td><td>Capture the latest version value and send it with the save operation when required.</td></tr>
+				</tbody>
+			</table>
+
+			<h2>5. Demonstrate the no-correlation failure</h2>
+			<ol>
+				<li>Replay the recorded path once with one virtual user and save the successful result.</li>
+				<li>Inspect the request that searches for or updates the employee record. Identify recorded values that came from an earlier response.</li>
+				<li>Run a controlled second iteration with the recorded values left unchanged. Capture the first failure, status, response message, and timestamp if the application rejects stale or invalid values.</li>
+				<li>Do not keep retrying a failed update against shared data. Restore the approved training value if the first run changed it.</li>
+				<li>Document whether this application exposes the value in an HTTP response, browser storage, a cookie, or only through client-side IndexedDB.</li>
+			</ol>
+			<p><strong>Application-specific challenge:</strong> the HRMS practice app uses browser-side session and data storage. Some browser operations may not appear as ordinary server API requests in a NeoLoad recording. If the employee identifier or update is handled entirely in client-side storage, explain that limitation and record the visible browser flow separately rather than claiming that HTTP correlation has been demonstrated.</p>
+
+			<h2>6. Correlation strategy</h2>
+			<ol>
+				<li>Run the path and locate the dynamic value in the response or captured browser data.</li>
+				<li>Add the appropriate NeoLoad extractor or variable for the value.</li>
+				<li>Replace the recorded literal with the extracted variable in every later request that consumes it.</li>
+				<li>Replay with one user, then repeat with a second approved data set or iteration.</li>
+				<li>Verify that the update affects only the intended training record and that logout still succeeds.</li>
+			</ol>
+
+			<section class="exercise">
+				<h2>Day 4 deliverable</h2>
+				<p>Submit the cleaned <code>UP_HRMS_Search_Edit_Logout</code> user path, a transaction map, one successful one-user replay, a no-correlation failure observation, and a correlation decision log listing each dynamic value, its source, and its intended handling.</p>
+			</section>
+
+			<h2>Common recording problems</h2>
+			<ul>
+				<li><strong>Login works but later requests fail:</strong> inspect session values and tokens before changing the workload.</li>
+				<li><strong>Search returns no row:</strong> wait for the table and debounce refresh, then use the displayed first-row value rather than a hard-coded guess.</li>
+				<li><strong>Save updates the wrong record:</strong> stop immediately, restore approved data, and correlate the employee identifier.</li>
+				<li><strong>NeoLoad shows no employee update request:</strong> document the client-side storage limitation; the browser workflow may not be represented as HTTP traffic.</li>
+				<li><strong>Logout is not recorded:</strong> confirm the session is still valid and retain the logout action as a business checkpoint.</li>
+			</ul>
+
+			<div class="footer-note"><strong>Previous:</strong> <a href="day-03.html">&larr; Day 3</a> &nbsp;|&nbsp; <strong>Next:</strong> <a href="day-05.html">Day 5: Actions and transactions &rarr;</a></div>
+		</main>
+		<script src="../../assets/app.js"></script>
+	</body>
+</html>

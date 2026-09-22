@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>NeoLoad Day 14 - Populations and User-Path Weighting</title>
+		<link rel="stylesheet" href="../../assets/styles.css" />
+	</head>
+	<body>
+		<header class="topbar">
+			<a class="brand" href="../../index.html">Playwright/TypeScript Training Hub</a>
+			<button class="menu-toggle" data-menu-toggle>Open Menu</button>
+		</header>
+		<main class="content lesson">
+			<h1>Week 5, Day 14: Populations and User-Path Weighting</h1>
+			<p class="lesson-meta"><span class="difficulty-badge">Intermediate</span>Model the real mix of users and actions in the system under test.</p>
+
+			<section class="exercise">
+				<h2>Session outcome</h2>
+				<p>A real system rarely has one user type and one action. Customers browse, search, log in, create orders, update profiles, and sign out at different rates. This day explains how to model these differences in NeoLoad by creating populations and weighing each user path appropriately.</p>
+			</section>
+
+			<h2>1. What is a population?</h2>
+			<p>A population is a group of virtual users that shares the same behavior pattern, data characteristics, and workload assumptions. It is not just “all users.” It is a modeled user persona or segment of the application audience.</p>
+			<p>Examples include:</p>
+			<ul>
+				<li>Customers viewing products and placing orders.</li>
+				<li>Support agents searching records and updating cases.</li>
+				<li>Admins managing configuration or permissions.</li>
+				<li>Read-heavy users and write-heavy users in the same environment.</li>
+			</ul>
+			<p>Each population may have different user paths, data constraints, pacing, and user counts. This is how a performance model becomes closer to production behavior.</p>
+
+			<h2>2. Why user-path weighting matters</h2>
+			<p>If every user follows the same path, the workload is unrealistic. Real traffic is a mix of actions. One business flow may happen frequently while another is rare. Weighting is the way you reflect this mix in the test design.</p>
+			<p>Example: of 100 virtual users, 70 may browse and search, 20 may log in and update a profile, and 10 may perform a checkout or admin operation. Without weights, the test would overrepresent one action and underrepresent another.</p>
+			<p>Weights should be based on real usage data or a documented traffic assumption. If you cannot support the weighting with evidence, label it as an assumption and keep the remainder of the test design transparent.</p>
+
+			<h2>3. Designing populations</h2>
+			<ol>
+				<li>Identify business personas or user roles.</li>
+				<li>List their primary journeys, data needs, and expected frequency.</li>
+				<li>Assign a realistic size or share of the total traffic.</li>
+				<li>Model action mix within each population.</li>
+				<li>Keep each population distinct enough to explain differences in behavior.</li>
+			</ol>
+			<p>Do not create a population just because the data values differ. A population should represent a meaningful user pattern or role.</p>
+
+			<h2>4. Use cases for population modeling</h2>
+			<ul>
+				<li>Peak hour traffic includes a mix of casual browsing and transaction-heavy users.</li>
+				<li>Support operations may be fewer in count but more demanding per session.</li>
+				<li>Admin flows may require more permissions and more data maintenance.</li>
+				<li>Customer journeys may vary by device, region, or account type.</li>
+			</ul>
+			<p>The goal is not to model every possible role. It is to model the kinds of activity that matter to the business decision you are trying to support.</p>
+
+			<h2>5. User-path weighting example</h2>
+			<table>
+				<thead>
+					<tr><th>Population</th><th>Persona</th><th>User path</th><th>Weight</th><th>Rationale</th></tr>
+				</thead>
+				<tbody>
+					<tr><td>Customer</td><td>Regular user</td><td>Login + view employees</td><td>60%</td><td>Most customers perform light browsing and reads.</td></tr>
+					<tr><td>Customer</td><td>Returning user</td><td>Search + edit profile</td><td>25%</td><td>Moderate interaction after login.</td></tr>
+					<tr><td>Support</td><td>Agent</td><td>Search + update record</td><td>15%</td><td>Fewer users but more data-intensive operations.</td></tr>
+				</tbody>
+			</table>
+			<p>As long as the weights are explained and traceable to a business assumption, the workload is useful. If the weights are arbitrary or chosen to make the test look stronger, they reduce the value of the result.</p>
+
+			<h2>6. Practical exercise</h2>
+			<ol>
+				<li>Define at least two populations relevant to the system under test.</li>
+				<li>Assign one or more user paths to each population.</li>
+				<li>Define a percent mix or weight for each path.</li>
+				<li>Document the traffic assumption behind each weight.</li>
+				<li>Run a theoretical check to ensure the total workload makes sense in the context of the chosen concurrency and pacing.</li>
+			</ol>
+
+			<h2>7. Common mistakes</h2>
+			<ul>
+				<li><strong>One population for all users:</strong> hides the difference between roles and actions.</li>
+				<li><strong>Weights chosen by convenience:</strong> not based on business traffic or user personas.</li>
+				<li><strong>Ignoring the difference between read-heavy and write-heavy users:</strong> causes unrealistic load patterns.</li>
+				<li><strong>Over-modeling too many different roles:</strong> keep the model useful and manageable.</li>
+			</ul>
+
+			<section class="exercise">
+				<h2>Day 14 deliverable</h2>
+				<p>Create a population plan containing at least two populations, a weighted user-path mix, and a short rationale for the weights. Explain how the model reflects likely production behavior.</p>
+			</section>
+
+			<div class="footer-note"><strong>Previous:</strong> <a href="day-13.html">&larr; Day 13</a> &nbsp;|&nbsp; <strong>Next:</strong> <a href="day-15.html">Day 15: Ramp patterns, zones, and stop conditions &rarr;</a></div>
+		</main>
+		<script src="../../assets/app.js"></script>
+	</body>
+</html>

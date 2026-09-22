@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>NeoLoad Day 6 - Filters, Think Time, Pacing, and Structure</title>
+		<link rel="stylesheet" href="../../assets/styles.css" />
+	</head>
+	<body>
+		<header class="topbar">
+			<a class="brand" href="../../index.html">Playwright/TypeScript Training Hub</a>
+			<button class="menu-toggle" data-menu-toggle>Open Menu</button>
+		</header>
+		<main class="content lesson">
+			<h1>Week 2, Day 6: Filters, Think Time, Pacing, and NeoLoad Structure</h1>
+
+			<section class="exercise">
+				<h2>Session outcome</h2>
+				<p>Learn how to remove recording noise without removing business behavior, model realistic user pauses, control the gap between iterations, and organize the NeoLoad project so another tester can maintain it.</p>
+				<p>Use the <code>UP_HRMS_Search_Edit_Logout</code> path from Day 4 as the working example. Every decision must be documented so the workload remains explainable.</p>
+			</section>
+
+			<h2>1. Filters: remove noise safely</h2>
+			<p>A filter controls which recorded traffic is retained, excluded, or handled differently. Recording captures more than business actions: static files, analytics, advertisements, browser support calls, third-party content, and duplicate resources may appear beside the requests needed for the HRMS workflow.</p>
+			<p>The goal is not to make the script smaller at any cost. The goal is to keep traffic that represents the approved system behavior and remove traffic that would distort the workload or make results difficult to interpret.</p>
+			<h3>Common filter categories</h3>
+			<table>
+				<thead><tr><th>Category</th><th>Examples</th><th>Decision</th></tr></thead>
+				<tbody>
+					<tr><td>Static resources</td><td>Images, fonts, stylesheets, and scripts.</td><td>Keep if their transfer cost is part of the user experience or application load; remove only when the test scope excludes them.</td></tr>
+					<tr><td>Analytics and telemetry</td><td>Tracking pixels, analytics events, marketing tags.</td><td>Usually exclude when they are outside the system under test and would add irrelevant traffic.</td></tr>
+					<tr><td>Third-party services</td><td>External ads, maps, chat, or hosted widgets.</td><td>Exclude or model separately unless the dependency is part of the agreed scope.</td></tr>
+					<tr><td>Browser noise</td><td>Favicon requests, extension calls, duplicate refreshes.</td><td>Remove when they do not affect the business flow.</td></tr>
+					<tr><td>Functional requests</td><td>Login, employee search, employee update, logout, session, token, and validation calls.</td><td>Keep. These requests are part of the business journey or its correctness.</td></tr>
+				</tbody>
+			</table>
+			<h3>Filter decision process</h3>
+			<ol>
+				<li>Identify the request by host, path, method, purpose, and response.</li>
+				<li>Ask whether removing it changes authentication, data, business validation, user-visible timing, or application state.</li>
+				<li>Choose keep, exclude, or investigate. Never exclude an unknown request only because its name looks technical.</li>
+				<li>Replay the path after the change and compare functional results and key timings.</li>
+				<li>Record the rule, reason, owner, date, and impact in the project notes.</li>
+			</ol>
+
+			<h2>2. Think time: model a user's pause</h2>
+			<p>Think time is the pause while a user reads a page, decides what to do, enters information, or waits before taking the next action. It belongs inside the journey between user actions and usually occurs within a transaction or page flow.</p>
+			<h3>Examples in the HRMS path</h3>
+			<ul>
+				<li>Pause after the dashboard opens while the user decides to open Employees.</li>
+				<li>Pause while the user reads the employee table and identifies the first record.</li>
+				<li>Pause while the user reviews the employee edit form before changing a field.</li>
+				<li>Pause after saving while the user reads the confirmation.</li>
+			</ul>
+			<p>Think time should represent a user behavior, not server waiting. Do not add think time to hide slow response time, and do not remove every pause just to make the test run faster. If a pause is unknown, document the assumption and use a consistent value until real usage data is available.</p>
+
+			<h2>3. Pacing: control iteration frequency</h2>
+			<p>Pacing is the delay that controls how frequently a virtual user starts the next iteration of a user path. It prevents a script from looping unrealistically fast after the previous iteration finishes. Think time models pauses within a journey; pacing controls the gap between journeys.</p>
+			<table>
+				<thead><tr><th>Concept</th><th>Where it occurs</th><th>Purpose</th></tr></thead>
+				<tbody>
+					<tr><td>Think time</td><td>Between actions or pages in one iteration.</td><td>Models reading, decision-making, and data entry.</td></tr>
+					<tr><td>Pacing</td><td>Between the end of one iteration and the start of the next.</td><td>Controls business frequency and prevents unrealistic looping.</td></tr>
+					<tr><td>Load schedule</td><td>Across the whole population or test.</td><td>Controls how many users arrive, hold, and leave over time.</td></tr>
+				</tbody>
+			</table>
+			<p><strong>Example:</strong> a user may spend 20 seconds reading the Employees page, then complete the edit flow in 8 seconds, and wait 60 seconds before starting the next employee-maintenance iteration. The 20 seconds is think time; the 60-second gap is pacing.</p>
+			<p>Do not confuse pacing with throughput. Pacing is a model input; throughput is an observed result. Changing pacing changes the offered workload and can change throughput, response time, and resource utilization.</p>
+
+			<h2>4. NeoLoad project structure</h2>
+			<p>Keep the project organized by responsibility and reuse. A clear structure makes it easier to review changes, compare results, and hand the test to another engineer.</p>
+			<table>
+				<thead><tr><th>Project area</th><th>What belongs there</th><th>HRMS example</th></tr></thead>
+				<tbody>
+					<tr><td>Project information</td><td>Purpose, owner, target environment, version, approvals, and assumptions.</td><td>HRMS training target and approved test scope.</td></tr>
+					<tr><td>User paths</td><td>Recorded or designed user journeys with actions, pages, transactions, requests, data, and assertions.</td><td><code>UP_HRMS_Search_Edit_Logout</code>.</td></tr>
+					<tr><td>Variables and data</td><td>Parameterized values, data files, extractors, correlation variables, and masking decisions.</td><td>Employee identifier and current session values.</td></tr>
+					<tr><td>Populations</td><td>Groups of virtual users with shared behavior, data, and load settings.</td><td>HRMS employee-maintenance users.</td></tr>
+					<tr><td>Runtime settings</td><td>Duration, user counts, arrival rate, pacing, ramp pattern, zones, and stop conditions.</td><td>One-user validation before a controlled population run.</td></tr>
+					<tr><td>Monitoring</td><td>Server, application, database, network, and log monitoring configuration.</td><td>HRMS application and data-store health during execution.</td></tr>
+					<tr><td>Results</td><td>Run metadata, transaction measurements, errors, percentiles, exports, and comparison notes.</td><td>Baseline and load result sets with matching configuration.</td></tr>
+				</tbody>
+			</table>
+
+			<h2>5. Practical exercise in NeoLoad</h2>
+			<ol>
+				<li>Open <code>UP_HRMS_Search_Edit_Logout</code> from Day 4.</li>
+				<li>Review every recorded item and create a filter decision: keep, exclude, or investigate.</li>
+				<li>Keep login, employee search, employee update, session, correlation, validation, and logout traffic.</li>
+				<li>Exclude only approved noise and document each exclusion with its reason.</li>
+				<li>Add think-time assumptions between dashboard navigation, employee search, edit review, and save confirmation.</li>
+				<li>Configure pacing for the gap between one completed employee-maintenance flow and the next iteration.</li>
+				<li>Check that the user path, variables, population, runtime settings, monitoring, and results areas are clearly named and saved.</li>
+				<li>Replay one user and verify that the filtered path still logs in, searches, saves the approved training change, and logs out.</li>
+			</ol>
+
+			<h2>6. Common mistakes and corrections</h2>
+			<ul>
+				<li><strong>Removing all static resources:</strong> decide whether page-transfer experience is in scope before excluding them.</li>
+				<li><strong>Removing session or validation traffic:</strong> the script may appear fast but no longer represents a valid user.</li>
+				<li><strong>Using think time as a server wait:</strong> measure server delay separately and keep user pauses intentional.</li>
+				<li><strong>Using pacing inside every transaction:</strong> this changes business response measurements; keep between-iteration pacing outside the transaction being measured.</li>
+				<li><strong>Leaving default names:</strong> anonymous request names make result analysis and troubleshooting slow.</li>
+				<li><strong>Mixing environments or versions:</strong> preserve the target, project version, data source, and runtime settings with every result.</li>
+			</ul>
+
+			<section class="exercise">
+				<h2>Day 6 deliverable</h2>
+				<p>Submit a filter decision log, think-time and pacing assumptions, a project-structure map, and one successful replay of the cleaned HRMS user path.</p>
+			</section>
+
+			<div class="footer-note"><strong>Previous:</strong> <a href="day-05.html">&larr; Day 5</a> &nbsp;|&nbsp; <strong>Next:</strong> <a href="day-07.html">Day 7: Variables and data &rarr;</a></div>
+		</main>
+		<script src="../../assets/app.js"></script>
+	</body>
+</html>

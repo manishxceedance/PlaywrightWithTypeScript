@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>NeoLoad 2026.02 Day 3 - Setup and Life Cycle</title>
+		<link rel="stylesheet" href="../../assets/styles.css" />
+	</head>
+	<body>
+		<header class="topbar">
+			<a class="brand" href="../../index.html">Playwright/TypeScript Training Hub</a>
+			<button class="menu-toggle" data-menu-toggle>Open Menu</button>
+		</header>
+		<main class="content lesson">
+			<h1>Week 1, Day 3: NeoLoad 2026.02 Setup and Complete Life Cycle</h1>
+
+			<section class="exercise">
+				<h2>Session outcome</h2>
+				<p>Install the organization-approved NeoLoad 2026.02 package, verify the installation, create a training project, and understand every stage from performance-test planning through final recommendations.</p>
+				<p><strong>Important:</strong> Use only the company portal, approved environments, approved data, and approved accounts. Do not download software from unofficial websites or test production without written authorization.</p>
+			</section>
+
+			<h2>1. Confirm prerequisites</h2>
+			<ul>
+				<li>Windows access with permission to install approved software.</li>
+				<li>Access to the company software/download portal and the NeoLoad license or identity provider used by your organization.</li>
+				<li>The NeoLoad 2026.02 release notes and installation prerequisites available from the same approved portal.</li>
+				<li>An approved non-production target, test data, test accounts, and monitoring contacts.</li>
+				<li>Enough disk space for the application, project files, browser recordings, logs, and result exports.</li>
+			</ul>
+
+			<h2>2. Download NeoLoad 2026.02 from the company portal</h2>
+			<ol>
+				<li>Open your company software portal using the normal corporate bookmark or intranet link.</li>
+				<li>Sign in through the company-approved identity process. Never share account secrets in project files or lesson notes.</li>
+				<li>Search for <strong>NeoLoad</strong> and open the approved product entry.</li>
+				<li>Select the release labeled <strong>2026.02</strong>. Do not select a newer release just because it appears first.</li>
+				<li>Read the release notes, supported operating-system information, licensing instructions, and any company installation notes.</li>
+				<li>Download the Windows installer from the approved portal. If a checksum or signature is provided, record it for verification.</li>
+				<li>Save the installer in a temporary, access-controlled folder. Do not commit it to the training repository or upload it to a public location.</li>
+			</ol>
+			<p><strong>Download evidence:</strong> record the portal name, product name, version 2026.02, download date, and installer filename. Do not record private account details or license keys.</p>
+
+			<h2>3. Install and verify NeoLoad 2026.02</h2>
+			<ol>
+				<li>Close any running NeoLoad session.</li>
+				<li>Run the company-provided installer and accept the approved license terms.</li>
+				<li>Keep the default installation options unless your organization provides a different standard.</li>
+				<li>Complete the installation and launch NeoLoad from the Windows Start menu.</li>
+				<li>Sign in or connect to the approved license service according to company instructions.</li>
+				<li>Open <strong>Help &gt; About</strong> and verify that the product version is <strong>2026.02</strong>.</li>
+				<li>Record the verification date and version. Never capture license keys, tokens, or private account information in evidence.</li>
+			</ol>
+
+			<h2>4. Create and inspect a NeoLoad project</h2>
+			<ol>
+				<li>Create a new project named <code>neoload-training</code>.</li>
+				<li>Set the project description to identify the approved training target and environment, without storing secrets.</li>
+				<li>Locate the areas used throughout the course: user paths, populations, runtime settings, load generators or zones, results, and monitoring.</li>
+				<li>Save the project in a controlled workspace and create an initial version such as <code>baseline-setup</code>.</li>
+				<li>Write down the project owner, target environment, data owner, approval contact, and retention location.</li>
+			</ol>
+
+			<h2>5. Complete NeoLoad's performance testing life cycle</h2>
+			<p>The life cycle is a repeatable process. Each stage produces an output that becomes an input to the next stage.</p>
+			<table>
+				<thead><tr><th>Stage</th><th>What you do</th><th>Expected output</th></tr></thead>
+				<tbody>
+					<tr><td><strong>1. Define objectives</strong></td><td>State the business decision, risk, scope, target environment, and success criteria.</td><td>Test charter with objectives, SLAs, assumptions, exclusions, and risks.</td></tr>
+					<tr><td><strong>2. Model the workload</strong></td><td>Describe user roles, journeys, user mix, concurrency or arrival rate, pacing, duration, and data.</td><td>Workload model and population plan.</td></tr>
+					<tr><td><strong>3. Design user paths</strong></td><td>Record or build web/API journeys, organize transactions, and name requests clearly.</td><td>Readable NeoLoad user paths with business measurements.</td></tr>
+					<tr><td><strong>4. Add dynamic data</strong></td><td>Parameterize test data, extract dynamic values, correlate tokens, and manage sessions.</td><td>Reusable script that works for multiple users and iterations.</td></tr>
+					<tr><td><strong>5. Validate functionally</strong></td><td>Replay with one user, add assertions, inspect requests, and fix functional errors.</td><td>Validated script with successful and negative checks where needed.</td></tr>
+					<tr><td><strong>6. Prepare the test</strong></td><td>Confirm approvals, environment, data, monitoring, load zones, schedules, stop conditions, and result retention.</td><td>Go/no-go checklist and approved execution plan.</td></tr>
+					<tr><td><strong>7. Execute baseline</strong></td><td>Run a small controlled workload to establish a comparison point and detect setup problems.</td><td>Baseline result with configuration and environment evidence.</td></tr>
+					<tr><td><strong>8. Execute the target workload</strong></td><td>Apply the planned ramp, hold, workload mix, and duration while monitoring health.</td><td>Load-test result, runtime observations, and execution log.</td></tr>
+					<tr><td><strong>9. Monitor and control</strong></td><td>Watch users, response times, throughput, errors, server metrics, and stop thresholds during execution.</td><td>Time-correlated monitoring evidence and any controlled-abort record.</td></tr>
+					<tr><td><strong>10. Analyze results</strong></td><td>Review percentiles, throughput, errors, user count, SLAs, baselines, and resource behavior.</td><td>Findings, bottleneck hypotheses, limitations, and comparison tables.</td></tr>
+					<tr><td><strong>11. Report and recommend</strong></td><td>Explain observed facts, interpretation, risks, release decision, and next actions.</td><td>Professional report with evidence and recommendations.</td></tr>
+					<tr><td><strong>12. Improve and repeat</strong></td><td>Apply tuning or infrastructure changes, preserve versions, and repeat comparable tests.</td><td>Trend history and evidence-based improvement decision.</td></tr>
+				</tbody>
+			</table>
+
+			<h2>6. Practice activity</h2>
+			<ol>
+				<li>Open the published <a href="https://manishxceedance.github.io/PlaywrightWithTypeScript/lessons/practice-app/hrms/login.html" target="_blank" rel="noopener">Login - HRMS Practice App</a> used in Day 1.</li>
+				<li>Create the <code>neoload-training</code> project and save the <code>baseline-setup</code> version.</li>
+				<li>Create a life-cycle checklist using the twelve stages above.</li>
+				<li>For each stage, write the person responsible, required input, expected output, and approval needed.</li>
+				<li>Mark the project as ready for Day 4 only when the software version and project setup are verified.</li>
+			</ol>
+
+			<section class="exercise">
+				<h2>Day 3 deliverable</h2>
+				<p>Submit a setup record containing the company portal download evidence, NeoLoad 2026.02 verification, project name and version, and a complete life-cycle checklist with outputs and owners.</p>
+			</section>
+
+			<h2>Common setup issues</h2>
+			<ul>
+				<li><strong>Version mismatch:</strong> return to the company portal and select the entry explicitly labeled 2026.02.</li>
+				<li><strong>Installation blocked:</strong> follow the company software-request process; do not bypass endpoint controls.</li>
+				<li><strong>License unavailable:</strong> confirm the approved identity or license-service instructions with the tool owner.</li>
+				<li><strong>Project cannot be saved:</strong> choose a writable controlled workspace and verify disk permissions.</li>
+				<li><strong>Target is not approved:</strong> stop setup practice and obtain environment approval before recording or executing a test.</li>
+			</ul>
+
+			<div class="footer-note"><strong>Previous:</strong> <a href="day-02.html">&larr; Day 2</a> &nbsp;|&nbsp; <strong>Next:</strong> <a href="day-04.html">Day 4: Record a web scenario &rarr;</a></div>
+		</main>
+		<script src="../../assets/app.js"></script>
+	</body>
+</html>

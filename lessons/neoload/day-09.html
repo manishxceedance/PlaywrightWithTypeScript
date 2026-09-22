@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>NeoLoad Day 9 - Assertions, Sessions, Headers, and Tokens</title>
+		<link rel="stylesheet" href="../../assets/styles.css" />
+	</head>
+	<body>
+		<header class="topbar">
+			<a class="brand" href="../../index.html">Playwright/TypeScript Training Hub</a>
+			<button class="menu-toggle" data-menu-toggle>Open Menu</button>
+		</header>
+		<main class="content lesson">
+			<h1>Week 3, Day 9: Assertions, Sessions, Headers, and Tokens</h1>
+			<p class="lesson-meta"><span class="difficulty-badge">Intermediate</span>Check whether the API or page did the right thing, not just whether it responded.</p>
+
+			<section class="exercise">
+				<h2>Session outcome</h2>
+				<p>On this day, you move from “the request returned something” to “the request produced the expected effect.” You will define the difference between status-code checks, business assertions, session continuity, header validation, and secure token handling.</p>
+			</section>
+
+			<h2>1. Why assertions matter</h2>
+			<p>Without assertions, a test can report success even though the application returned an error page, a validation message, empty list data, or a session-expired response. In performance testing, this is dangerous because the result becomes “green” even though the user journey failed.</p>
+			<p>Assertions answer the question: “Did the application behave as expected?” They can validate:</p>
+			<ul>
+				<li>HTTP status codes, such as 200, 201, 202, 302, 401, or 500.</li>
+				<li>Business outcome, such as “login succeeded,” “employee row exists,” or “token was accepted.”</li>
+				<li>Response content or field values, such as a JSON property equal to the expected ID.</li>
+				<li>Expected redirect or page state after the action.</li>
+			</ul>
+			<p>The best scripts combine both transport checks and meaningful business checks. A 200 OK with the wrong payload is not a valid success. Similarly, a 302 redirect is not enough if the user remains on the login page.</p>
+
+			<h2>2. Sessions and cookies</h2>
+			<p>Most web applications keep a user session alive with cookies, server-side state, or browser storage. In a performance test, these values are essential because they prove the requester remains authenticated and in the correct context.</p>
+			<p>Session data can be created during login, stored in cookies, or carried through the application via headers, tokens, or local state. If the session is not preserved correctly, future requests may fail even though the script reaches the right endpoint.</p>
+			<p>Common examples:</p>
+			<ul>
+				<li>Session cookie after login.</li>
+				<li>Authentication token in a header.</li>
+				<li>Context-specific IDs used by the application to determine which records the user can access.</li>
+			</ul>
+
+			<h2>3. Headers and their role</h2>
+			<p>HTTP headers tell the server information about the request and the client. Some headers are standard, such as Accept, Content-Type, and User-Agent. Some are custom or generated dynamically, such as Authorization, X-CSRF-Token, or correlation values.</p>
+			<p>If a request includes the wrong header value or omits a required header, the server may reject it even though the route is correct. This is especially common in API testing, CSRF-protected web applications, and signed or tokenized flows.</p>
+			<p>When designing checks:</p>
+			<ul>
+				<li>Confirm required headers are present for the request.</li>
+				<li>Check Content-Type when payloads are sent.</li>
+				<li>Verify Authorization, Cookie, and X-CSRF-Token values are correct and current.</li>
+				<li>Keep header names and values consistent with the real app behavior.</li>
+			</ul>
+
+			<h2>4. Tokens: what they are and why they matter</h2>
+			<p>Tokens are often used as short-lived security or state values. They help confirm that a request came from the right user in the right phase of the transaction. Examples include:</p>
+			<ul>
+				<li>Auth token for a protected endpoint.</li>
+				<li>CSRF token to prevent cross-site request forgery.</li>
+				<li>Session token or nonce returned by a server.</li>
+			</ul>
+			<p>If a token is stale, expired, or mismatched, the request can be rejected even when the rest of the request is valid. This is why extraction and correlation are often paired with assertions. A token that is successfully extracted but not used correctly still fails the script.</p>
+			<p>Important security rule: Never store, print, or commit real credentials, tokens, or session values in project files or public notes. Use approved test accounts and keep confidential values out of logs and exported artifacts.</p>
+
+			<h2>5. Types of assertions you should add</h2>
+			<h3>Success assertions</h3>
+			<ul>
+				<li>Login request returns a successful authentication status.</li>
+				<li>Search returns at least one matching employee or expected result count.</li>
+				<li>Update request returns a success code and visible confirmation.</li>
+				<li>Logout leads back to a logged-out state.</li>
+			</ul>
+			<h3>Negative assertions</h3>
+			<ul>
+				<li>Invalid password should fail with a defined error.</li>
+				<li>Missing required field should return validation error.</li>
+				<li>Unauthorized request should fail with 401 or equivalent.</li>
+				<li>Unknown ID should return not found or a graceful error.</li>
+			</ul>
+			<p>Negative checks are critical because they prove the application is not just returning something—it is enforcing the correct behavior when input is invalid.</p>
+
+			<h2>6. Practical approach in NeoLoad</h2>
+			<ol>
+				<li>Define the successful outcome of each critical action.</li>
+				<li>Decide whether the assertion is a status check, text check, JSON field check, or redirect check.</li>
+				<li>Make sure the assertion matches the real app contract, not a guess.</li>
+				<li>Replay the script once with valid data and once with invalid test data.</li>
+				<li>Compare the failure message and status code to the expected application behavior.</li>
+			</ol>
+			<p>Do not create assertions that are too weak or too broad. A weak check like “any response body is returned” hides problems. A too-broad check like “error text contains login” can also be misleading. The ideal assertion is specific and meaningful.</p>
+
+			<h2>7. Common mistakes</h2>
+			<ul>
+				<li><strong>Only checking status codes:</strong> a 200 response can still be a failed business action.</li>
+				<li><strong>Checking for text that changes frequently:</strong> keep the assertion stable and tied to business meaning.</li>
+				<li><strong>Ignoring cookie or token flow:</strong> the request may fail even though the endpoint is correct.</li>
+				<li><strong>Writing assertions only for success:</strong> negative tests are necessary to prove validation and security work.</li>
+				<li><strong>Using real credentials in a test script:</strong> always use safe, approved test accounts.</li>
+			</ul>
+
+			<section class="exercise">
+				<h2>Day 9 deliverable</h2>
+				<p>Create a validation table for your target user flow. Include at least one valid success assertion, one negative assertion, the cookie or session element being preserved, the header or token used for the request, and a short note explaining why the assertion proves business correctness.</p>
+			</section>
+
+			<div class="footer-note"><strong>Previous:</strong> <a href="day-08.html">&larr; Day 8</a> &nbsp;|&nbsp; <strong>Next:</strong> <a href="day-10.html">Day 10: REST methods, status codes, headers, and JSON &rarr;</a></div>
+		</main>
+		<script src="../../assets/app.js"></script>
+	</body>
+</html>

@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>NeoLoad Day 2 - Types of Performance Testing</title>
+		<link rel="stylesheet" href="../../assets/styles.css" />
+	</head>
+	<body>
+		<header class="topbar">
+			<a class="brand" href="../../index.html">Playwright/TypeScript Training Hub</a>
+			<button class="menu-toggle" data-menu-toggle>Open Menu</button>
+		</header>
+		<main class="content lesson">
+			<h1>Week 1, Day 2: Performance Testing and Its Types</h1>
+
+			<section class="exercise">
+				<h2>Learning objectives</h2>
+				<p>By the end of this session, you should be able to explain performance testing in plain language, identify the risk behind a test, distinguish the major performance test types, and choose a suitable NeoLoad workload for each one.</p>
+			</section>
+
+			<h2>1. What is performance testing?</h2>
+			<p>Performance testing is the controlled measurement of an application's speed, stability, scalability, and resource behavior under a defined workload. The workload describes what users do, how often they do it, how many users are active, how long the test runs, and what data they use.</p>
+			<p>It is different from functional testing. Functional testing asks, <strong>"Does the feature produce the correct result?"</strong> Performance testing also asks, <strong>"Does it continue to produce the correct result quickly and reliably when many users or large amounts of data are involved?"</strong></p>
+
+			<h2>2. Why is performance testing needed?</h2>
+			<ul>
+				<li><strong>Protect user experience:</strong> slow pages and failed transactions reduce trust and completion rates.</li>
+				<li><strong>Validate service levels:</strong> verify agreed response-time, throughput, availability, and error targets.</li>
+				<li><strong>Find capacity limits:</strong> understand how much traffic the system can support before quality degrades.</li>
+				<li><strong>Find bottlenecks early:</strong> expose limits in application code, databases, APIs, networks, queues, or infrastructure.</li>
+				<li><strong>Reduce production risk:</strong> test expected peaks and failure behavior before a release or business event.</li>
+				<li><strong>Support planning:</strong> provide evidence for infrastructure sizing, scaling decisions, and release readiness.</li>
+				<li><strong>Detect degradation:</strong> compare a new build with a trusted baseline and identify performance regressions.</li>
+			</ul>
+
+			<h2>3. Important performance measurements</h2>
+			<table>
+				<thead><tr><th>Measurement</th><th>Definition</th><th>Example question</th></tr></thead>
+				<tbody>
+					<tr><td>Response time</td><td>Time taken by a request or business transaction to complete.</td><td>How long does login take at the 95th percentile?</td></tr>
+					<tr><td>Throughput</td><td>Amount of completed work per unit of time, such as requests or orders per second.</td><td>How many orders can the service process per minute?</td></tr>
+					<tr><td>Concurrency</td><td>Number of users or requests active at the same time.</td><td>What happens with 500 active users?</td></tr>
+					<tr><td>Resource utilization</td><td>Use of CPU, memory, disk, network, database connections, or other resources.</td><td>Does database CPU saturate during the peak?</td></tr>
+					<tr><td>Error rate</td><td>Percentage or count of failed requests or failed business validations.</td><td>Do errors remain below the agreed threshold?</td></tr>
+					<tr><td>Percentile</td><td>A response-time position showing the experience of most users, including the tail.</td><td>Does p95 meet the service-level target?</td></tr>
+				</tbody>
+			</table>
+
+			<h2>4. Types of performance testing</h2>
+			<p>These test types can be combined. For example, a capacity test may use a gradual load ramp, while an endurance test may use the normal production workload for several hours.</p>
+			<table>
+				<thead><tr><th>Type</th><th>Definition</th><th>When to use it</th><th>Typical NeoLoad design</th></tr></thead>
+				<tbody>
+					<tr><td><strong>Baseline</strong></td><td>A small, controlled run used as a comparison point.</td><td>Before a load test, release, or tuning change.</td><td>One or a few users, stable data, short duration.</td></tr>
+					<tr><td><strong>Load</strong></td><td>Testing the expected number of users and normal business traffic.</td><td>To confirm the system meets targets under planned conditions.</td><td>Production-like user mix, pacing, duration, and workload.</td></tr>
+					<tr><td><strong>Stress</strong></td><td>Gradually increasing load beyond the expected level until limits or unacceptable behavior appear.</td><td>To find the breaking point and observe degradation.</td><td>Load zones with increasing users or arrival rate and stop conditions.</td></tr>
+					<tr><td><strong>Spike</strong></td><td>A sudden increase or decrease in workload.</td><td>To test flash sales, announcements, batch events, or sudden demand.</td><td>Rapid ramp-up, short peak hold, and controlled ramp-down.</td></tr>
+					<tr><td><strong>Endurance / Soak</strong></td><td>Running a sustained workload for a long period.</td><td>To find memory leaks, connection leaks, queue growth, or gradual slowdown.</td><td>Normal load held for hours with continuous monitoring.</td></tr>
+					<tr><td><strong>Volume</strong></td><td>Testing with a large amount of data, records, files, or payload content.</td><td>To find data-size, query, storage, or processing limits.</td><td>Controlled data set with realistic record and payload sizes.</td></tr>
+					<tr><td><strong>Capacity</strong></td><td>Determining the maximum workload that meets defined performance targets.</td><td>For infrastructure sizing and business growth planning.</td><td>Stepwise load increase until the first agreed SLA fails.</td></tr>
+					<tr><td><strong>Scalability</strong></td><td>Measuring how performance changes when resources or workload are increased.</td><td>To validate horizontal or vertical scaling decisions.</td><td>Repeatable tests across instance counts, zones, or resource sizes.</td></tr>
+					<tr><td><strong>Failover / Recovery</strong></td><td>Measuring behavior during component failure and recovery.</td><td>To validate resilience, continuity, and recovery objectives.</td><td>Approved fault event, monitored workload, recovery timing, and data checks.</td></tr>
+					<tr><td><strong>Concurrency</strong></td><td>Testing many simultaneous actions or requests competing for shared resources.</td><td>For checkout, reservations, updates, locking, or shared inventory.</td><td>Coordinated virtual users performing the same operation together.</td></tr>
+				</tbody>
+			</table>
+
+			<h2>5. How to choose the right type</h2>
+			<ol>
+				<li>Start with the risk: slow normal traffic, sudden demand, long-running stability, large data, or failure recovery.</li>
+				<li>Define the workload: users, arrival rate, user mix, pacing, data, duration, and environment.</li>
+				<li>Define success: response-time percentile, throughput, error rate, resource limit, or recovery time.</li>
+				<li>Choose the smallest test that can answer the question, then increase scope only when the evidence is valid.</li>
+			</ol>
+			<p><strong>Example:</strong> If the risk is a year-end traffic surge, use a load test for expected traffic and a spike test for the sudden increase. If the risk is a memory leak, use an endurance test. If the risk is slow searches with millions of records, use a volume test.</p>
+
+			<h2>6. Practical exercise</h2>
+			<p>Use the published <a href="https://manishxceedance.github.io/PlaywrightWithTypeScript/lessons/practice-app/hrms/login.html" target="_blank" rel="noopener">Login - HRMS Practice App</a> as the sample system from Day 1.</p>
+			<ol>
+				<li>Create a decision table with these columns: risk, test type, workload, duration, success criteria, and evidence.</li>
+				<li>Add at least six rows covering baseline, load, stress, spike, endurance, and volume testing.</li>
+				<li>For each row, explain why a normal load test alone would not answer the risk.</li>
+				<li>Open NeoLoad and describe which user path, population, pacing, and runtime settings you would configure for each row.</li>
+			</ol>
+
+			<section class="exercise">
+				<h2>Day 2 deliverable</h2>
+				<p>Submit the completed decision table and a one-paragraph explanation of performance testing, why it is needed, and the difference between load, stress, spike, endurance, volume, capacity, scalability, and failover testing.</p>
+			</section>
+
+			<section class="quiz" data-quiz>
+				<h2>Self-check</h2>
+				<div class="question" data-answer="c"><p>1. Which test is designed to find gradual degradation over a long period?</p><label><input type="radio" name="day2-q1" value="a" /> Spike testing</label><label><input type="radio" name="day2-q1" value="b" /> Volume testing</label><label><input type="radio" name="day2-q1" value="c" /> Endurance testing</label></div>
+				<div class="question" data-answer="a"><p>2. Which test models expected business traffic?</p><label><input type="radio" name="day2-q2" value="a" /> Load testing</label><label><input type="radio" name="day2-q2" value="b" /> Stress testing</label><label><input type="radio" name="day2-q2" value="c" /> Failover testing</label></div>
+				<div class="question" data-answer="b"><p>3. What is the main purpose of a baseline?</p><label><input type="radio" name="day2-q3" value="a" /> To simulate the largest possible workload</label><label><input type="radio" name="day2-q3" value="b" /> To provide a controlled comparison point</label><label><input type="radio" name="day2-q3" value="c" /> To replace monitoring</label></div>
+				<button class="grade-btn" type="button" data-grade>Grade Me</button><p class="result" data-result aria-live="polite"></p>
+			</section>
+
+			<div class="footer-note"><strong>Previous:</strong> <a href="day-01.html">&larr; Day 1</a> &nbsp;|&nbsp; <strong>Next:</strong> <a href="day-03.html">Day 3: NeoLoad setup &rarr;</a></div>
+		</main>
+		<script src="../../assets/app.js"></script>
+	</body>
+</html>
