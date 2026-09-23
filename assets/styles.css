@@ -479,6 +479,312 @@ body {
   color: #3f4a56;
 }
 
+/* Playwright API course */
+.api-course-layout {
+  max-width: 1500px;
+  grid-template-columns: 300px minmax(0, 1fr);
+}
+
+.api-course-layout > * {
+  min-width: 0;
+}
+
+.api-course-home,
+.api-lesson {
+  background: #ffffff;
+}
+
+.api-course-hero {
+  border-top: 6px solid #146c5a;
+  padding: 2.1rem 2rem;
+  background: #f0f8f5;
+}
+
+.api-course-hero h1 {
+  max-width: 850px;
+  margin: 0.35rem 0 0.8rem;
+  color: #123c35;
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: clamp(2rem, 4vw, 3.4rem);
+  line-height: 1.05;
+}
+
+.api-course-hero p:not(.course-kicker) {
+  max-width: 78ch;
+  line-height: 1.65;
+  margin-bottom: 1.5rem;
+}
+
+.course-kicker {
+  margin: 0;
+  color: #8a3e1c;
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.course-principles {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  border-block: 1px solid var(--line);
+}
+
+.course-principles div {
+  display: grid;
+  gap: 0.35rem;
+  padding: 1.2rem;
+}
+
+.course-principles div + div {
+  border-left: 1px solid var(--line);
+}
+
+.course-principles span {
+  color: #45515f;
+  line-height: 1.45;
+}
+
+.week-roadmap {
+  padding: 1.5rem 2rem 2rem;
+}
+
+.week-roadmap article {
+  display: grid;
+  grid-template-columns: 90px minmax(220px, 0.85fr) minmax(260px, 1.15fr);
+  column-gap: 1.2rem;
+  align-items: start;
+  padding: 1.4rem 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.week-roadmap article > p:not(.week-number) {
+  grid-column: 2;
+  margin: 0.25rem 0 0;
+  color: #52606d;
+  line-height: 1.5;
+}
+
+.week-roadmap h2 {
+  grid-column: 2;
+  margin: 0;
+  font-size: 1.25rem;
+}
+
+.week-number {
+  grid-row: 1 / span 2;
+  margin: 0;
+  color: #146c5a;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.week-roadmap ol {
+  grid-column: 3;
+  grid-row: 1 / span 2;
+  margin: 0;
+  padding-left: 2.2rem;
+  line-height: 1.9;
+}
+
+.week-roadmap a,
+.api-lesson a {
+  color: #075f83;
+}
+
+.api-lesson {
+  max-width: 980px;
+  padding: 2rem clamp(1.2rem, 4vw, 3.5rem);
+}
+
+.api-lesson > h1 {
+  margin: 0.35rem 0 0.5rem;
+  color: #123c35;
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: clamp(1.9rem, 4vw, 3rem);
+  line-height: 1.12;
+}
+
+.api-lesson h2 {
+  margin-top: 1.8rem;
+  color: #123c35;
+}
+
+.api-lesson h3 {
+  margin: 1.25rem 0 0.3rem;
+  color: #8a3e1c;
+}
+
+.api-lesson p,
+.api-lesson li {
+  line-height: 1.65;
+}
+
+.session-plan {
+  margin-top: 1.5rem;
+  border-left: 5px solid #146c5a;
+  padding: 0.2rem 1.2rem 0.6rem;
+  background: #f0f8f5;
+}
+
+.session-plan h2 {
+  margin-top: 0.8rem;
+}
+
+.session-plan ol {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(120px, 1fr));
+  gap: 0.75rem;
+  padding: 0;
+  list-style: none;
+}
+
+.session-plan li {
+  border-top: 2px solid #78a99d;
+  padding-top: 0.55rem;
+  font-size: 0.9rem;
+}
+
+.api-lesson table {
+  display: block;
+  width: 100%;
+  overflow-x: auto;
+  border-collapse: collapse;
+}
+
+.api-lesson pre {
+  max-width: 100%;
+}
+
+.api-lesson th,
+.api-lesson td {
+  border: 1px solid var(--line);
+  padding: 0.7rem;
+  text-align: left;
+}
+
+.api-lesson th {
+  background: #e9f3f0;
+}
+
+.lesson-pager {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 1.7rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--line);
+}
+
+.lesson-pager a {
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.step-reference {
+  min-width: 0;
+  max-width: 100%;
+  overflow: hidden;
+  background: #ffffff;
+  padding: 2rem clamp(1.2rem, 4vw, 3.5rem);
+}
+
+.step-reference p,
+.step-reference li,
+.step-reference code:not(pre code) {
+  overflow-wrap: anywhere;
+}
+
+.step-reference > h1 {
+  margin: 0.35rem 0 0.5rem;
+  color: #123c35;
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: clamp(1.9rem, 4vw, 3rem);
+  line-height: 1.12;
+  overflow-wrap: anywhere;
+}
+
+.step-search-wrap {
+  position: sticky;
+  top: 82px;
+  z-index: 3;
+  display: grid;
+  grid-template-columns: auto minmax(180px, 1fr) auto;
+  gap: 0.8rem;
+  align-items: center;
+  margin: 1.4rem 0;
+  padding: 0.8rem 1rem;
+  border: 1px solid #b9d9d4;
+  background: #f0f8f5;
+}
+
+.step-search-wrap input {
+  min-width: 0;
+  border: 1px solid #91aca5;
+  border-radius: 0.35rem;
+  padding: 0.65rem 0.75rem;
+  background: #ffffff;
+  color: var(--ink);
+  font: inherit;
+}
+
+.step-search-wrap span {
+  color: #46554f;
+  font-size: 0.88rem;
+  white-space: nowrap;
+}
+
+.step-group {
+  margin-top: 2.2rem;
+}
+
+.step-group > h2 {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-bottom: 0.55rem;
+  border-bottom: 2px solid #146c5a;
+  color: #123c35;
+}
+
+.step-group > h2 span {
+  color: #56655f;
+  font-size: 0.85rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.step-entry {
+  padding: 1rem 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.step-entry h3 {
+  margin: 0 0 0.45rem;
+  font-size: 1rem;
+}
+
+.step-entry h3 code {
+  color: #075f83;
+  overflow-wrap: anywhere;
+}
+
+.step-entry p {
+  margin: 0 0 0.65rem;
+  line-height: 1.55;
+}
+
+.step-entry pre {
+  margin: 0;
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+.step-entry[hidden],
+.step-group[hidden] {
+  display: none;
+}
+
 @keyframes rise {
   from {
     opacity: 0;
@@ -491,12 +797,24 @@ body {
 }
 
 @media (max-width: 900px) {
+  .topbar {
+    flex-wrap: wrap;
+    padding: 0.9rem 1rem;
+  }
+
+  .brand {
+    flex: 1 1 100%;
+    font-size: 1rem;
+    overflow-wrap: anywhere;
+  }
+
   .menu-toggle {
     display: inline-block;
   }
 
   .layout {
     grid-template-columns: 1fr;
+    padding: 1rem;
   }
 
   .sidebar {
@@ -523,5 +841,44 @@ body {
 
   .home-grid {
     grid-template-columns: 1fr;
+  }
+
+  .api-course-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .course-principles,
+  .session-plan ol {
+    grid-template-columns: 1fr;
+  }
+
+  .course-principles div + div {
+    border-left: 0;
+    border-top: 1px solid var(--line);
+  }
+
+  .week-roadmap article {
+    grid-template-columns: 1fr;
+  }
+
+  .week-number,
+  .week-roadmap h2,
+  .week-roadmap article > p:not(.week-number),
+  .week-roadmap ol {
+    grid-column: 1;
+    grid-row: auto;
+  }
+
+  .week-roadmap ol {
+    margin-top: 0.6rem;
+  }
+
+  .step-search-wrap {
+    position: static;
+    grid-template-columns: 1fr;
+  }
+
+  .step-search-wrap span {
+    white-space: normal;
   }
 }

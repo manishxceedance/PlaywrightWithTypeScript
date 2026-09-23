@@ -19,6 +19,10 @@ function resolveMainHomeHref() {
     return '../../pages/neoload.html';
   }
 
+  if (/\/lessons\/api\/day-\d{2}\.html$/.test(path)) {
+    return '../../pages/playwright-api.html';
+  }
+
   const markers = ['lessons', 'pages'];
 
   for (const marker of markers) {

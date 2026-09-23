@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>kernal-automation 1.0.0 Step Reference</title>
+    <link rel="stylesheet" href="../assets/styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <a class="brand" href="playwright-api.html">Playwright API Training</a>
+      <button class="menu-toggle" data-menu-toggle aria-label="Open reference menu">Open Menu</button>
+    </header>
+    <div class="layout api-course-layout">
+      <aside class="sidebar" data-sidebar>
+        <h2>Step categories</h2>
+        <div class="menu-group"><ul>
+          <li><a href="#usage">Usage rules</a></li>
+          <li><a href="#client">Client and URL</a></li>
+          <li><a href="#request">Request data</a></li>
+          <li><a href="#send">Send requests</a></li>
+          <li><a href="#basic-validation">Basic validation</a></li>
+          <li><a href="#matching">Body and field matching</a></li>
+          <li><a href="#collections">Collections and dates</a></li>
+          <li><a href="#field-validation">Field validation</a></li>
+          <li><a href="#variables">Response variables</a></li>
+          <li><a href="#links">Broken-link workflow</a></li>
+        </ul></div>
+      </aside>
+
+      <main class="content lesson step-reference">
+        <p class="course-kicker">Package inventory / 54 registered Cucumber steps</p>
+        <h1>@bhsi-architecture/kernal-automation Step Reference</h1>
+        <p class="lesson-meta"><span class="difficulty-badge">Version 1.0.0</span>Generated from <code>project-kernal/core/bhsi-architecture-kernal-automation-1.0.0.tgz</code>: 50 API steps and 4 broken-link workflow steps.</p>
+        <div class="step-search-wrap">
+          <label for="step-search"><strong>Find a step</strong></label>
+          <input id="step-search" type="search" placeholder="Try: XML, unique, request body, date..." data-step-search />
+          <span data-step-count aria-live="polite"></span>
+        </div>
+
+        <section id="usage">
+          <h2>How to use package steps</h2>
+          <ul>
+            <li><strong>Load order:</strong> <code>cucumber.cjs</code> loads package hooks and <code>dist/steps/**/*.js</code>; feature files can use these expressions without project-owned duplicates.</li>
+            <li><strong>Scenario state:</strong> values assigned in tables or extracted from bodies are stored in <code>scenarioVariables</code> and referenced as <code>{{variableName}}</code>.</li>
+            <li><strong>Authentication:</strong> headers support <code>{{basicAuth}}</code>, <code>{{basicAuth:ID_VAR,SECRET_VAR}}</code>, <code>{{accessToken}}</code>, and <code>{{accessToken:TOKEN_VAR}}</code>.</li>
+            <li><strong>Paths:</strong> JSON checks accept JSONPath such as <code>$.items[*].id</code>; XML checks accept XPath. File paths are workspace-relative.</li>
+            <li><strong>Matching:</strong> object matching is partial. Arrays default to ordered sequence matching. Set <code>isSequence</code> to <code>false</code> for order-independent matching.</li>
+            <li><strong>Types and dates:</strong> accepted types are <code>string</code>, <code>number</code>, <code>boolean</code>, and <code>date</code>; <code>integer</code> and <code>decimal</code> normalize to number. Date tokens include <code>YYYY</code>, <code>YY</code>, <code>MMM</code>, <code>MM</code>, <code>DD</code>, <code>HH</code>, <code>mm</code>, and <code>ss</code>.</li>
+            <li><strong>Non-empty values:</strong> use <code>{{notEmpty}}</code> in expected JSON or table values.</li>
+            <li><strong>Lifecycle:</strong> the package closes the API request context in an <code>After</code> hook.</li>
+          </ul>
+        </section>
+
+        <section id="client" class="step-group" data-step-group>
+          <h2>Client and URL setup <span>5 steps</span></h2>
+          <article class="step-entry" data-step-entry><h3><code>Given the API client is initialized</code></h3><p>Creates the Playwright <code>APIRequestContext</code>. Run this before sending any request.</p><pre><code>Background:
+  Given the API client is initialized</code></pre></article>
+          <article class="step-entry" data-step-entry><h3><code>Given I set the base URI, base path and endpoint with the following parameters</code></h3><p>Builds the URL from the first DataTable row. Column names must be <code>baseUri</code>, <code>basePath</code>, and <code>endpoint</code>.</p><pre><code>Given I set the base URI, base path and endpoint with the following parameters
+  | baseUri            | basePath | endpoint        |
+  | https://api.test   | /v1      | /customers/{id} |</code></pre></article>
+          <article class="step-entry" data-step-entry><h3><code>Given I set the following path parameters</code></h3><p>Replaces <code>{key}</code> placeholders in the endpoint and stores resolved values as scenario variables.</p><pre><code>And I set the following path parameters
+  | key | value          |
+  | id  | {{customerId}} |</code></pre></article>
+          <article class="step-entry" data-step-entry><h3><code>Given I set the following query parameters</code></h3><p>URL-encodes <code>key</code>/<code>value</code> rows and appends them to the endpoint.</p><pre><code>And I set the following query parameters
+  | key    | value |
+  | status | active |
+  | limit  | 20     |</code></pre></article>
+          <article class="step-entry" data-step-entry><h3><code>Given I set the following headers</code></h3><p>Sets request headers and resolves variables. Authentication placeholders read approved environment variables.</p><pre><code>And I set the following headers
+  | key           | value                     |
+  | Accept        | application/json          |
+  | Authorization | {{accessToken:FX_API_TOKEN}} |</code></pre></article>
+        </section>
+
+        <section id="request" class="step-group" data-step-group>
+          <h2>Request body and variables <span>6 steps</span></h2>
+          <article class="step-entry" data-step-entry><h3><code>Given I set the request body as {string} with the following details</code></h3><p>Sets an inline request body from the first row's <code>value</code> column. The string parameter labels the body type but is not used by the implementation.</p><pre><code>And I set the request body as "JSON" with the following details
+  | value                         |
+  | {"name":"{{customerName}}"} |</code></pre></article>
+          <article class="step-entry" data-step-entry><h3><code>Given I set the following data-urlencode parameters</code></h3><p>Creates form fields from <code>key</code>/<code>value</code> rows. The generic sender uses Playwright's <code>form</code> option.</p><pre><code>And I set the following data-urlencode parameters
+  | key          | value              |
+  | grant_type   | client_credentials |
+  | scope        | rates.read         |</code></pre></article>
+          <article class="step-entry" data-step-entry><h3><code>Given I set the following request parameters</code></h3><p>Stores arbitrary <code>key</code>/<code>value</code> pairs as scenario variables for later placeholder substitution.</p><pre><code>And I set the following request parameters
+  | key             | value     |
+  | customerName    | API User  |
+  | requestReference| REF-1001  |</code></pre></article>
+          <article class="step-entry" data-step-entry><h3><code>Given I store request data from {string} as {string}</code></h3><p>Reads one value from the currently loaded JSON request body by JSONPath and stores it under a scenario variable name.</p><pre><code>And I store request data from "$.customer.reference" as "expectedReference"</code></pre></article>
+          <article class="step-entry" data-step-entry><h3><code>Given I store request XML data from {string} as {string}</code></h3><p>Reads one value from the current XML request body by XPath and stores it as a scenario variable.</p><pre><code>And I store request XML data from "string(//Customer/Id)" as "expectedId"</code></pre></article>
+          <article class="step-entry" data-step-entry><h3><code>Given I set the request body from file {string}</code></h3><p>Loads a payload file and resolves <code>{{placeholders}}</code>. An optional <code>key</code>/<code>value</code> DataTable can populate variables first.</p><pre><code>And I set the request body from file "test-data/Customer/create.json"
+  | key  | value    |
+  | name | API User |</code></pre></article>
+        </section>
+
+        <section id="send" class="step-group" data-step-group>
+          <h2>Send requests <span>2 steps</span></h2>
+          <article class="step-entry" data-step-entry><h3><code>When I send the {string} request with the file request body</code></h3><p>Sends the loaded file body with the explicit HTTP method. It defaults content type to JSON unless overridden by headers.</p><pre><code>When I send the "POST" request with the file request body</code></pre></article>
+          <article class="step-entry" data-step-entry><h3><code>When I send the {string} request</code></h3><p>Sends any explicit method. It uses form data when configured, otherwise the current body, and captures sanitized request/response evidence.</p><pre><code>When I send the "PATCH" request</code></pre></article>
+        </section>
+
+        <section id="basic-validation" class="step-group" data-step-group>
+          <h2>Basic response validation <span>3 steps</span></h2>
+          <article class="step-entry" data-step-entry><h3><code>Then the response status code should be</code></h3><p>Compares the actual status with the first <code>statusCode</code> table value.</p><pre><code>Then the response status code should be
+  | statusCode |
+  | 201        |</code></pre></article>
+          <article class="step-entry" data-step-entry><h3><code>Then the response should match the following details</code></h3><p>Partially matches top-level response properties from <code>key</code>/<code>value</code> rows. Values support scenario variables and <code>{{notEmpty}}</code>.</p><pre><code>And the response should match the following details
+  | key    | value        |
+  | status | active       |
+  | id     | {{notEmpty}} |</code></pre></article>
+          <article class="step-entry" data-step-entry><h3><code>Then the response should be a non-empty list</code></h3><p>Checks a root array, or the package-specific <code>fromCurrenices</code>/<code>toCurrencies</code> list, has at least one item.</p><pre><code>Then the response should be a non-empty list</code></pre></article>
+        </section>
+
+        <section id="matching" class="step-group" data-step-group>
+          <h2>Body and field matching <span>8 steps</span></h2>
+          <article class="step-entry" data-step-entry><h3><code>Then the response should match {string}</code></h3><p>Partially matches the full response against inline JSON, plain text, a variable, or a file path.</p><pre><code>Then the response should match "test-data/Customer/expected.json"</code></pre></article>
+          <article class="step-entry" data-step-entry><h3><code>Then the response should match {string} with isSequence {string}</code></h3><p>Matches the full response and controls array ordering. Use <code>false</code> when expected items may appear in any order.</p><pre><code>Then the response should match "[{&quot;code&quot;:&quot;USD&quot;}]" with isSequence "false"</code></pre></article>
+          <article class="step-entry" data-step-entry><h3><code>Then the response should match:</code></h3><p>DocString form of full-response matching, useful for readable multiline expected JSON.</p><pre><code>Then the response should match:
+  """
+  {"status":"active","id":"{{notEmpty}}"}
+  """</code></pre></article>
+          <article class="step-entry" data-step-entry><h3><code>Then the response should match with isSequence {string}:</code></h3><p>DocString full-response matching with explicit ordered or unordered array behavior.</p><pre><code>Then the response should match with isSequence "false":
+  """
+  [{"code":"USD"},{"code":"EUR"}]
+  """</code></pre></article>
+          <article class="step-entry" data-step-entry><h3><code>Then the response field {string} should match {string}</code></h3><p>Partially matches one JSONPath-addressed response field against inline JSON, text, a variable, or a file.</p><pre><code>Then the response field "$.customer" should match "{&quot;status&quot;:&quot;active&quot;}"</code></pre></article>
+          <article class="step-entry" data-step-entry><h3><code>Then the response field {string} should match {string} with isSequence {string}</code></h3><p>Matches one field while controlling whether expected array order matters.</p><pre><code>Then the response field "$.roles" should match "[&quot;reader&quot;,&quot;writer&quot;]" with isSequence "false"</code></pre></article>
+          <article class="step-entry" data-step-entry><h3><code>Then the response field {string} should match:</code></h3><p>DocString form for matching a selected field.</p><pre><code>Then the response field "$.customer" should match:
+  """
+  {"name":"API User"}
+  """</code></pre></article>
+          <article class="step-entry" data-step-entry><h3><code>Then the response field {string} should match with isSequence {string}:</code></h3><p>DocString field matching with explicit array-order behavior.</p><pre><code>Then the response field "$.roles" should match with isSequence "false":
+  """
+  ["reader","writer"]
+  """</code></pre></article>
+        </section>
+
+        <section id="collections" class="step-group" data-step-group>
+          <h2>Collection and date validation <span>7 steps</span></h2>
+          <article class="step-entry" data-step-entry><h3><code>Then the response values at {string} should match {string}</code></h3><p>Selects all JSONPath or XPath values and matches them as an ordered sequence by default.</p><pre><code>Then the response values at "$.items[*].status" should match "[&quot;active&quot;,&quot;active&quot;]"</code></pre></article>
+          <article class="step-entry" data-step-entry><h3><code>Then the response values at {string} should match {string} with isSequence {string}</code></h3><p>Matches selected values with explicit ordered (<code>true</code>) or order-independent (<code>false</code>) behavior.</p><pre><code>Then the response values at "$.items[*].code" should match "[&quot;USD&quot;,&quot;EUR&quot;]" with isSequence "false"</code></pre></article>
+          <article class="step-entry" data-step-entry><h3><code>Then the response values at {string} should be type {string}</code></h3><p>Checks that every selected value has the expected type.</p><pre><code>Then the response values at "$.items[*].rate" should be type "number"</code></pre></article>
+          <article class="step-entry" data-step-entry><h3><code>Then the response values at {string} should be type {string} with format {string}</code></h3><p>Checks every selected value's type and format; format is primarily used for dates.</p><pre><code>Then the response values at "$.items[*].effectiveDate" should be type "date" with format "YYYY-MM-DD"</code></pre></article>
+          <article class="step-entry" data-step-entry><h3><code>Then the response values at {string} should have count {string}</code></h3><p>Checks the number of values selected by the JSONPath or XPath.</p><pre><code>Then the response values at "$.items[*]" should have count "3"</code></pre></article>
+          <article class="step-entry" data-step-entry><h3><code>Then the response values at {string} should be unique</code></h3><p>Fails when the selected collection contains duplicate values.</p><pre><code>Then the response values at "$.items[*].id" should be unique</code></pre></article>
+          <article class="step-entry" data-step-entry><h3><code>Then the response date values at {string} should be greater than date values at {string} with formats {string} and {string}</code></h3><p>Compares paired date/time collections and requires every value from the first path to be later than its paired value from the second.</p><pre><code>Then the response date values at "$.items[*].end" should be greater than date values at "$.items[*].start" with formats "YYYY-MM-DD HH:mm:ss" and "YYYY-MM-DD HH:mm:ss"</code></pre></article>
+        </section>
+
+        <section id="field-validation" class="step-group" data-step-group>
+          <h2>Field, length, type, and date validation <span>17 steps</span></h2>
+          <article class="step-entry" data-step-entry><h3><code>Then the response field {string} should be {string}</code></h3><p>Compares a selected field with a resolved expected value; supports <code>{{notEmpty}}</code>.</p><pre><code>Then the response field "$.status" should be "active"</code></pre></article>
+          <article class="step-entry" data-step-entry><h3><code>Then the response field {string} should be {string} with format {string}</code></h3><p>Compares dates after normalizing the actual value with the supplied format.</p><pre><code>Then the response field "$.effectiveDate" should be "2026-09-23" with format "DD-MMM-YYYY"</code></pre></article>
+          <article class="step-entry" data-step-entry><h3><code>Then the response field {string} should be numeric {string}</code></h3><p>Converts the actual and expected values to numbers and requires exact numeric equality.</p><pre><code>Then the response field "$.count" should be numeric "3"</code></pre></article>
+          <article class="step-entry" data-step-entry><h3><code>Then the response field {string} should be true</code></h3><p>Requires the selected value to be the boolean <code>true</code>.</p><pre><code>Then the response field "$.enabled" should be true</code></pre></article>
+          <article class="step-entry" data-step-entry><h3><code>Then the response field {string} should be false</code></h3><p>Requires the selected value to be the boolean <code>false</code>.</p><pre><code>Then the response field "$.deleted" should be false</code></pre></article>
+          <article class="step-entry" data-step-entry><h3><code>Then the response field {string} should contain {string}</code></h3><p>Checks substring containment for scalar values or exact element inclusion for arrays.</p><pre><code>Then the response field "$.message" should contain "created"</code></pre></article>
+          <article class="step-entry" data-step-entry><h3><code>Then the response value at {string} should have length {string}</code></h3><p>Checks the length of a JSONPath or XPath selected string, array, or collection value.</p><pre><code>Then the response value at "$.reference" should have length "12"</code></pre></article>
+          <article class="step-entry" data-step-entry><h3><code>Then the response field {string} should have length {string}</code></h3><p>Field-oriented alias for response value length validation.</p><pre><code>Then the response field "$.items" should have length "3"</code></pre></article>
+          <article class="step-entry" data-step-entry><h3><code>Then the response XML path {string} should have length {string}</code></h3><p>XML-oriented alias for XPath-selected value length validation.</p><pre><code>Then the response XML path "//Customer/Code/text()" should have length "8"</code></pre></article>
+          <article class="step-entry" data-step-entry><h3><code>Then the response value at {string} should be type {string}</code></h3><p>Checks the type of one JSONPath or XPath selected value.</p><pre><code>Then the response value at "$.rate" should be type "number"</code></pre></article>
+          <article class="step-entry" data-step-entry><h3><code>Then the response value at {string} should be type {string} with format {string}</code></h3><p>Checks one selected value's type and date format.</p><pre><code>Then the response value at "$.createdDate" should be type "date" with format "YYYY-MM-DD"</code></pre></article>
+          <article class="step-entry" data-step-entry><h3><code>Then the response field {string} should be type {string}</code></h3><p>Field-oriented alias for a single-value type check.</p><pre><code>Then the response field "$.customer.id" should be type "string"</code></pre></article>
+          <article class="step-entry" data-step-entry><h3><code>Then the response field {string} should be type {string} with format {string}</code></h3><p>Field-oriented type and date-format validation.</p><pre><code>Then the response field "$.updatedDate" should be type "date" with format "DD-MMM-YYYY"</code></pre></article>
+          <article class="step-entry" data-step-entry><h3><code>Then the response field {string} should match date {string} with response format {string} and expected format {string}</code></h3><p>Parses actual and expected date strings with different formats and compares their calendar date.</p><pre><code>Then the response field "$.effectiveDate" should match date "23-Sep-2026" with response format "YYYY-MM-DD" and expected format "DD-MMM-YYYY"</code></pre></article>
+          <article class="step-entry" data-step-entry><h3><code>Then the response field {string} should match {string} as type {string}</code></h3><p>Requires both selected and expected values to have the requested type before matching them.</p><pre><code>Then the response field "$.count" should match "3" as type "number"</code></pre></article>
+          <article class="step-entry" data-step-entry><h3><code>Then the response XML path {string} should be type {string}</code></h3><p>XML-oriented alias for checking one XPath-selected value's type.</p><pre><code>Then the response XML path "string(//Customer/Id)" should be type "string"</code></pre></article>
+          <article class="step-entry" data-step-entry><h3><code>Then the response XML path {string} should be type {string} with format {string}</code></h3><p>Checks an XPath-selected value's type and date format.</p><pre><code>Then the response XML path "string(//EffectiveDate)" should be type "date" with format "YYYY-MM-DD"</code></pre></article>
+        </section>
+
+        <section id="variables" class="step-group" data-step-group>
+          <h2>Response variable extraction <span>2 steps</span></h2>
+          <article class="step-entry" data-step-entry><h3><code>Then I store response data from {string} as {string}</code></h3><p>Extracts the first JSONPath value into scenario state for later <code>{{variableName}}</code> substitution.</p><pre><code>Then I store response data from "$.id" as "customerId"</code></pre></article>
+          <article class="step-entry" data-step-entry><h3><code>Then I store response XML data from {string} as {string}</code></h3><p>Extracts one XPath value from an XML text response into scenario state.</p><pre><code>Then I store response XML data from "string(//Customer/Id)" as "customerId"</code></pre></article>
+        </section>
+
+        <section id="links" class="step-group" data-step-group>
+          <h2>Broken-link scanner workflow <span>4 steps</span></h2>
+          <article class="step-entry" data-step-entry><h3><code>Given the user navigates to application url {string}</code></h3><p>Navigates the current Playwright page with <code>domcontentloaded</code> and records failures for final workflow reporting.</p><pre><code>Given the user navigates to application url "https://example.test"</code></pre></article>
+          <article class="step-entry" data-step-entry><h3><code>When the user scans all links using scanner.scanPageMethod with includeIgnored as true</code></h3><p>Runs <code>LinkScannerUtil</code> against the current page, includes ignored links, and stores all results on World.</p><pre><code>When the user scans all links using scanner.scanPageMethod with includeIgnored as true</code></pre></article>
+          <article class="step-entry" data-step-entry><h3><code>Then the framework writes link status details to a CSV file inside current run folder</code></h3><p>Confirms scan results exist and marks them ready for CSV export. The following filename step performs the write.</p><pre><code>Then the framework writes link status details to a CSV file inside current run folder</code></pre></article>
+          <article class="step-entry" data-step-entry><h3><code>Then the CSV file name should include {string} and row number {string}</code></h3><p>Writes a lock-protected CSV under the current run's <code>link-scanner</code> folder, attaches it to the report, and fails if any workflow step recorded an error.</p><pre><code>Then the CSV file name should include "CustomerLinks" and row number "01"</code></pre></article>
+        </section>
+
+        <section class="exercise">
+          <h2>Recommended learning exercise</h2>
+          <ol><li>Build one GET scenario using only client, URL, send, status, and field steps.</li><li>Build one POST scenario with a file payload and store the created ID.</li><li>Use that ID in path parameters for GET, PATCH, and DELETE.</li><li>Add one unordered collection match, one uniqueness check, and one date-format check.</li><li>Run the feature and inspect sanitized API request/response evidence in the report.</li></ol>
+        </section>
+        <nav class="lesson-pager" aria-label="Reference navigation"><a href="playwright-api.html">&larr; API course overview</a><a href="../lessons/api/day-13.html">Framework CRUD lesson &rarr;</a></nav>
+      </main>
+    </div>
+    <script src="../assets/step-reference.js"></script>
+    <script src="../assets/app.js"></script>
+  </body>
+</html>
