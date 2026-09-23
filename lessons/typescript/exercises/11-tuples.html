@@ -1,0 +1,95 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tuples | TypeScript Exercise</title>
+    <link rel="stylesheet" href="../../../assets/styles.css" />
+    <style>
+      .lesson-table { width: 100%; border-collapse: collapse; min-width: 920px; }
+      .lesson-table th, .lesson-table td { border: 1px solid var(--line); padding: 1rem; vertical-align: top; text-align: left; }
+      .lesson-table th { background: var(--accent); color: #fff; }
+      .lesson-table td:first-child { width: 19%; color: var(--accent); }
+      .lesson-table td:nth-child(2) { width: 30%; line-height: 1.55; }
+      .lesson-table td:last-child { width: 51%; padding: 0; }
+      .lesson-table pre { margin: 0; border: 0; border-radius: 0; }
+      .table-scroll { overflow-x: auto; border: 1px solid var(--line); }
+      .lesson-nav { display: flex; justify-content: space-between; gap: 1rem; margin-top: 1.4rem; }
+    </style>  </head>
+  <body>
+    <header class="topbar"><a class="brand" href="../../../index.html">Playwright/TypeScript Training Hub</a><button class="menu-toggle" data-menu-toggle>Open Menu</button></header>
+    <div class="layout">
+      <aside class="sidebar" data-sidebar><h2>Exercise Deck</h2><div class="menu-group"><p class="menu-group-title">All Exercises</p><ul><li><a href="../10-practice-deck.html">Exercise Deck Home</a></li><li><a href="01-hello-unions-and-type-guards.html">1. Hello, unions, and type guards</a></li><li><a href="02-explicit-type-annotations.html">2. Explicit type annotations</a></li><li><a href="03-variables-and-scope.html">3. Variables and scope</a></li><li><a href="04-strings.html">4. Strings</a></li><li><a href="05-numbers.html">5. Numbers</a></li><li><a href="06-booleans.html">6. Booleans</a></li><li><a href="07-undefined-null-any-and-unknown.html">7. undefined, null, any, and unknown</a></li><li><a href="08-never-and-void.html">8. never and void</a></li><li><a href="09-type-inference.html">9. Type inference</a></li><li><a href="10-arrays.html">10. Arrays</a></li><li><a class="active" href="11-tuples.html">11. Tuples</a></li><li><a href="12-enums.html">12. Enums</a></li><li><a href="13-type-aliases.html">13. Type aliases</a></li><li><a href="14-union-and-intersection-types.html">14. Union and intersection types</a></li><li><a href="15-functions.html">15. Functions</a></li><li><a href="16-rest-and-spread.html">16. Rest and spread</a></li><li><a href="17-function-types.html">17. Function types</a></li><li><a href="18-call-signatures.html">18. Call signatures</a></li><li><a href="19-function-overloading.html">19. Function overloading</a></li><li><a href="20-arrow-functions.html">20. Arrow functions</a></li><li><a href="21-object-types.html">21. Object types</a></li><li><a href="22-interfaces.html">22. Interfaces</a></li><li><a href="23-index-signatures.html">23. Index signatures</a></li><li><a href="24-type-narrowing.html">24. Type narrowing</a></li><li><a href="25-literal-types.html">25. Literal types</a></li><li><a href="26-mapped-types.html">26. Mapped types</a></li><li><a href="27-conditional-types.html">27. Conditional types</a></li><li><a href="28-utility-types.html">28. Utility types</a></li><li><a href="29-record-types.html">29. Record types</a></li><li><a href="30-generics.html">30. Generics</a></li><li><a href="31-classes-and-oop.html">31. Classes and OOP</a></li><li><a href="32-access-modifiers.html">32. Access modifiers</a></li><li><a href="33-abstract-classes-and-interfaces.html">33. Abstract classes and interfaces</a></li><li><a href="34-static-members.html">34. Static members</a></li><li><a href="35-getters-and-setters.html">35. Getters and setters</a></li><li><a href="36-modules-consumer.html">36. Modules: consumer</a></li><li><a href="37-modules-named-export.html">37. Modules: named export</a></li><li><a href="38-modules-class-import.html">38. Modules: class import</a></li><li><a href="39-modules-default-export.html">39. Modules: default export</a></li><li><a href="40-modules-utility-functions.html">40. Modules: utility functions</a></li><li><a href="41-namespaces.html">41. Namespaces</a></li><li><a href="42-decorators.html">42. Decorators</a></li><li><a href="43-promises.html">43. Promises</a></li><li><a href="44-typed-api-calls.html">44. Typed API calls</a></li></ul></div></aside>
+      <main class="content lesson">
+        <section class="hero"><h1>Tuples</h1><p>Use a fixed-position collection when each position has a different meaning.</p></section>
+        <section class="lesson-section"><h2>How to Use This Page</h2><p>Read the explanation first. Try the sample yourself, then compare the type choices and comments. Change one value at a time and predict the result before running it.</p></section>
+        <section class="lesson-section"><h2>Examples</h2><div class="table-scroll"><table class="lesson-table"><thead><tr><th>Method Name</th><th>Explanation</th><th>Concrete Sample</th></tr></thead><tbody><tr><td><strong>Tuples</strong></td><td>Use a fixed-position collection when each position has a different meaning.</td><td><pre><code>// A tuple is a fixed-length array where each position has a known type.
+
+// 1. Basic tuple: the first item must be a string and the second must be a number.
+const user: [string, number] = [&#39;Manish&#39;, 30];
+console.log(&#39;basic tuple:&#39;, user);
+console.log(&#39;name:&#39;, user[0]);
+console.log(&#39;age:&#39;, user[1]);
+
+// 2. Labeled tuple: labels improve readability but do not change the types.
+const employee: [name: string, age: number, department: string] = [
+	&#39;Anita&#39;,
+	28,
+	&#39;QA&#39;,
+];
+console.log(&#39;labeled tuple:&#39;, employee);
+
+// 3. Optional tuple element: the optional item can be omitted or undefined.
+const addressWithCountry: [street: string, city: string, country?: string] = [
+	&#39;MG Road&#39;,
+	&#39;Pune&#39;,
+];
+console.log(&#39;optional tuple:&#39;, addressWithCountry);
+
+// 4. Rest tuple: the first item is fixed, followed by zero or more numbers.
+const scores: [student: string, ...scores: number[]] = [&#39;Ravi&#39;, 80, 90, 95];
+console.log(&#39;rest tuple:&#39;, scores);
+
+// 5. Readonly tuple: items cannot be changed after creation.
+const coordinates: readonly [number, number] = [18.52, 73.85];
+console.log(&#39;readonly tuple:&#39;, coordinates);
+// coordinates[0] = 20; // Error: a readonly tuple cannot be modified
+
+// 6. Union of tuples: the value must match one of the listed tuple shapes.
+const result: [&#39;success&#39;, number] | [&#39;error&#39;, string] = [&#39;success&#39;, 200];
+console.log(&#39;union tuple:&#39;, result);
+
+// 7. Nested tuple: a tuple can contain another tuple as one of its items.
+const userWithLocation: [string, [number, number]] = [
+	&#39;Neha&#39;,
+	[18.52, 73.85],
+];
+console.log(&#39;nested tuple:&#39;, userWithLocation);
+
+// 8. Function parameter tuple: describes the arguments accepted by a function.
+type LogArguments = [message: string, repeatCount?: number];
+function logMessage(...args: LogArguments): void {
+	const [message, repeatCount = 1] = args;
+	console.log(message.repeat(repeatCount));
+}
+logMessage(&#39;Hello&#39;, 2);
+
+// 9. Function return tuple: documents multiple values returned in a fixed order.
+function getUser(): [name: string, age: number] {
+	return [&#39;Priya&#39;, 25];
+}
+const [userName, userAge] = getUser();
+console.log(&#39;returned tuple:&#39;, userName, userAge);
+
+// 10. Tuple type created with a const assertion: values and positions are readonly literals.
+const httpStatus = [200, &#39;OK&#39;] as const;
+console.log(&#39;const tuple:&#39;, httpStatus);
+console.log(httpStatus[0]);
+console.log(httpStatus[1]);</code></pre></td></tr></tbody></table></div></section>
+        <nav class="lesson-nav"><a href="10-arrays.html">Previous</a><a href="12-enums.html">Next</a></nav>
+      </main>
+    </div>
+    <script src="../../../assets/app.js"></script>
+  </body>
+</html>
+

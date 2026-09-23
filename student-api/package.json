@@ -1,0 +1,22 @@
+{
+  "name": "student-records-api-practice",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Local CSV-backed Student Records API for API testing practice.",
+  "scripts": {
+    "start": "node server.js",
+    "start:private": "powershell -ExecutionPolicy Bypass -File .\\start-private.ps1",
+    "test": "node --test api.test.js"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "dependencies": {
+    "csv-parse": "^6.1.0",
+    "csv-stringify": "^6.6.0",
+    "express": "^5.1.0",
+    "express-rate-limit": "^8.1.0",
+    "helmet": "^8.1.0",
+    "swagger-ui-express": "^5.0.1"
+  }
+}

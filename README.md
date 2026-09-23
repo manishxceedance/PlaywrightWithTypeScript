@@ -19,6 +19,10 @@ This project is a static website designed for manual testers who want to learn T
 ## Run locally
 Since this is a static site, you can open `index.html` directly, or use a small static server.
 
+## Student CRUD API and Swagger
+
+An optional Node.js sample provides authenticated student create, get, update, and delete operations, a CSV database retaining the latest 1,000 creations, and an interactive Swagger page. See [Student API setup](student-api/README.md) for private credential entry and local startup. This backend runs separately from the static website and cannot be hosted on GitHub Pages.
+
 ## Free GitHub hosting (GitHub Pages)
 1. Create a GitHub repository and push this project.
 2. Open repository **Settings**.

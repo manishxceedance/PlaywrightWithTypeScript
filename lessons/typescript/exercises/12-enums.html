@@ -1,0 +1,154 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Enums | TypeScript Exercise</title>
+    <link rel="stylesheet" href="../../../assets/styles.css" />
+    <style>
+      .lesson-table { width: 100%; border-collapse: collapse; min-width: 920px; }
+      .lesson-table th, .lesson-table td { border: 1px solid var(--line); padding: 1rem; vertical-align: top; text-align: left; }
+      .lesson-table th { background: var(--accent); color: #fff; }
+      .lesson-table td:first-child { width: 19%; color: var(--accent); }
+      .lesson-table td:nth-child(2) { width: 30%; line-height: 1.55; }
+      .lesson-table td:last-child { width: 51%; padding: 0; }
+      .lesson-table pre { margin: 0; border: 0; border-radius: 0; }
+      .table-scroll { overflow-x: auto; border: 1px solid var(--line); }
+      .lesson-nav { display: flex; justify-content: space-between; gap: 1rem; margin-top: 1.4rem; }
+    </style>  </head>
+  <body>
+    <header class="topbar"><a class="brand" href="../../../index.html">Playwright/TypeScript Training Hub</a><button class="menu-toggle" data-menu-toggle>Open Menu</button></header>
+    <div class="layout">
+      <aside class="sidebar" data-sidebar><h2>Exercise Deck</h2><div class="menu-group"><p class="menu-group-title">All Exercises</p><ul><li><a href="../10-practice-deck.html">Exercise Deck Home</a></li><li><a href="01-hello-unions-and-type-guards.html">1. Hello, unions, and type guards</a></li><li><a href="02-explicit-type-annotations.html">2. Explicit type annotations</a></li><li><a href="03-variables-and-scope.html">3. Variables and scope</a></li><li><a href="04-strings.html">4. Strings</a></li><li><a href="05-numbers.html">5. Numbers</a></li><li><a href="06-booleans.html">6. Booleans</a></li><li><a href="07-undefined-null-any-and-unknown.html">7. undefined, null, any, and unknown</a></li><li><a href="08-never-and-void.html">8. never and void</a></li><li><a href="09-type-inference.html">9. Type inference</a></li><li><a href="10-arrays.html">10. Arrays</a></li><li><a href="11-tuples.html">11. Tuples</a></li><li><a class="active" href="12-enums.html">12. Enums</a></li><li><a href="13-type-aliases.html">13. Type aliases</a></li><li><a href="14-union-and-intersection-types.html">14. Union and intersection types</a></li><li><a href="15-functions.html">15. Functions</a></li><li><a href="16-rest-and-spread.html">16. Rest and spread</a></li><li><a href="17-function-types.html">17. Function types</a></li><li><a href="18-call-signatures.html">18. Call signatures</a></li><li><a href="19-function-overloading.html">19. Function overloading</a></li><li><a href="20-arrow-functions.html">20. Arrow functions</a></li><li><a href="21-object-types.html">21. Object types</a></li><li><a href="22-interfaces.html">22. Interfaces</a></li><li><a href="23-index-signatures.html">23. Index signatures</a></li><li><a href="24-type-narrowing.html">24. Type narrowing</a></li><li><a href="25-literal-types.html">25. Literal types</a></li><li><a href="26-mapped-types.html">26. Mapped types</a></li><li><a href="27-conditional-types.html">27. Conditional types</a></li><li><a href="28-utility-types.html">28. Utility types</a></li><li><a href="29-record-types.html">29. Record types</a></li><li><a href="30-generics.html">30. Generics</a></li><li><a href="31-classes-and-oop.html">31. Classes and OOP</a></li><li><a href="32-access-modifiers.html">32. Access modifiers</a></li><li><a href="33-abstract-classes-and-interfaces.html">33. Abstract classes and interfaces</a></li><li><a href="34-static-members.html">34. Static members</a></li><li><a href="35-getters-and-setters.html">35. Getters and setters</a></li><li><a href="36-modules-consumer.html">36. Modules: consumer</a></li><li><a href="37-modules-named-export.html">37. Modules: named export</a></li><li><a href="38-modules-class-import.html">38. Modules: class import</a></li><li><a href="39-modules-default-export.html">39. Modules: default export</a></li><li><a href="40-modules-utility-functions.html">40. Modules: utility functions</a></li><li><a href="41-namespaces.html">41. Namespaces</a></li><li><a href="42-decorators.html">42. Decorators</a></li><li><a href="43-promises.html">43. Promises</a></li><li><a href="44-typed-api-calls.html">44. Typed API calls</a></li></ul></div></aside>
+      <main class="content lesson">
+        <section class="hero"><h1>Enums</h1><p>Represent a closed set of named values with numeric and string enum members.</p></section>
+        <section class="lesson-section"><h2>How to Use This Page</h2><p>Read the explanation first. Try the sample yourself, then compare the type choices and comments. Change one value at a time and predict the result before running it.</p></section>
+        <section class="lesson-section"><h2>Examples</h2><div class="table-scroll"><table class="lesson-table"><thead><tr><th>Method Name</th><th>Explanation</th><th>Concrete Sample</th></tr></thead><tbody><tr><td><strong>Enums</strong></td><td>Represent a closed set of named values with numeric and string enum members.</td><td><pre><code>enum direction{
+    North= &quot;NORTH&quot;,
+    South= &quot;SOUTH&quot;,
+    East= &quot;EAST&quot;,
+    West= &quot;WEST&quot;
+}
+
+console.log(direction);
+console.log(direction.North);
+console.log(direction.South);
+console.log(direction.East);
+console.log(direction.West);
+
+// An enum is a group of named constants. It makes related values easier to read.
+
+// 1. Numeric enum: values start at 0 and increase automatically.
+enum Direction {
+    North,
+    South,
+    East,
+    West,
+}
+
+console.log(&#39;numeric enum:&#39;, Direction.North); // 0
+console.log(&#39;numeric reverse lookup:&#39;, Direction[0]); // North
+
+// 2. Numeric enum with custom starting values.
+enum HttpStatus {
+    Ok = 200,
+    Created = 201,
+    BadRequest = 400,
+    NotFound = 404,
+}
+
+console.log(&#39;HTTP status:&#39;, HttpStatus.NotFound); // 404
+
+// 3. String enum: every member has an explicit string value.
+enum Role {
+    Admin = &#39;ADMIN&#39;,
+    Editor = &#39;EDITOR&#39;,
+    Viewer = &#39;VIEWER&#39;,
+}
+
+const currentRole: Role = Role.Editor;
+console.log(&#39;string enum:&#39;, currentRole); // EDITOR
+
+// 4. Heterogeneous enum: numeric and string members can be mixed.
+// This is valid, but it is usually clearer to use one value type consistently.
+enum ApiResult {
+    Success = 200,
+    Failure = &#39;FAILURE&#39;,
+}
+
+console.log(&#39;heterogeneous enum:&#39;, ApiResult.Success, ApiResult.Failure);
+
+// 5. Computed enum members: a member can be calculated from another value.
+enum FilePermission {
+    Read = 1,
+    Write = 2,
+    ReadWrite = Read | Write,
+}
+
+console.log(&#39;computed enum:&#39;, FilePermission.ReadWrite); // 3
+
+// 6. Enum in a function parameter: only valid enum members are accepted.
+function canEdit(role: Role): boolean {
+    return role === Role.Admin || role === Role.Editor;
+}
+
+console.log(&#39;can edit:&#39;, canEdit(Role.Editor)); // true
+console.log(&#39;can edit as viewer:&#39;, canEdit(Role.Viewer)); // false
+
+// 7. Enum in a switch: useful when behavior depends on a named state.
+function getDirectionText(value: Direction): string {
+    switch (value) {
+        case Direction.North:
+            return &#39;Moving north&#39;;
+        case Direction.South:
+            return &#39;Moving south&#39;;
+        case Direction.East:
+            return &#39;Moving east&#39;;
+        case Direction.West:
+            return &#39;Moving west&#39;;
+    }
+}
+
+console.log(&#39;switch example:&#39;, getDirectionText(Direction.East));
+
+// 8. const enum: values are inserted at compile time, so no enum object is emitted.
+const enum LogLevel {
+    Info = &#39;INFO&#39;,
+    Warning = &#39;WARNING&#39;,
+    Error = &#39;ERROR&#39;,
+}
+
+const selectedLevel: LogLevel = LogLevel.Warning;
+console.log(&#39;const enum:&#39;, selectedLevel);
+
+// 9. Enum as a group of options for an object.
+enum Theme {
+    Light = &#39;light&#39;,
+    Dark = &#39;dark&#39;,
+}
+
+type UserSettings = {
+    username: string;
+    theme: Theme;
+};
+
+const settings: UserSettings = {
+    username: &#39;Manish&#39;,
+    theme: Theme.Dark,
+};
+
+console.log(&#39;settings:&#39;, settings);
+
+// 10. For simple string choices, a union type is often smaller than an enum.
+type Size = &#39;small&#39; | &#39;medium&#39; | &#39;large&#39;;
+const shirtSize: Size = &#39;medium&#39;;
+console.log(&#39;union alternative:&#39;, shirtSize);
+
+</code></pre></td></tr></tbody></table></div></section>
+        <nav class="lesson-nav"><a href="11-tuples.html">Previous</a><a href="13-type-aliases.html">Next</a></nav>
+      </main>
+    </div>
+    <script src="../../../assets/app.js"></script>
+  </body>
+</html>
+

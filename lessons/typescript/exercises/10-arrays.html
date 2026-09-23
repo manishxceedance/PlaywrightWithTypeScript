@@ -1,0 +1,94 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Arrays | TypeScript Exercise</title>
+    <link rel="stylesheet" href="../../../assets/styles.css" />
+    <style>
+      .lesson-table { width: 100%; border-collapse: collapse; min-width: 920px; }
+      .lesson-table th, .lesson-table td { border: 1px solid var(--line); padding: 1rem; vertical-align: top; text-align: left; }
+      .lesson-table th { background: var(--accent); color: #fff; }
+      .lesson-table td:first-child { width: 19%; color: var(--accent); }
+      .lesson-table td:nth-child(2) { width: 30%; line-height: 1.55; }
+      .lesson-table td:last-child { width: 51%; padding: 0; }
+      .lesson-table pre { margin: 0; border: 0; border-radius: 0; }
+      .table-scroll { overflow-x: auto; border: 1px solid var(--line); }
+      .lesson-nav { display: flex; justify-content: space-between; gap: 1rem; margin-top: 1.4rem; }
+    </style>  </head>
+  <body>
+    <header class="topbar"><a class="brand" href="../../../index.html">Playwright/TypeScript Training Hub</a><button class="menu-toggle" data-menu-toggle>Open Menu</button></header>
+    <div class="layout">
+      <aside class="sidebar" data-sidebar><h2>Exercise Deck</h2><div class="menu-group"><p class="menu-group-title">All Exercises</p><ul><li><a href="../10-practice-deck.html">Exercise Deck Home</a></li><li><a href="01-hello-unions-and-type-guards.html">1. Hello, unions, and type guards</a></li><li><a href="02-explicit-type-annotations.html">2. Explicit type annotations</a></li><li><a href="03-variables-and-scope.html">3. Variables and scope</a></li><li><a href="04-strings.html">4. Strings</a></li><li><a href="05-numbers.html">5. Numbers</a></li><li><a href="06-booleans.html">6. Booleans</a></li><li><a href="07-undefined-null-any-and-unknown.html">7. undefined, null, any, and unknown</a></li><li><a href="08-never-and-void.html">8. never and void</a></li><li><a href="09-type-inference.html">9. Type inference</a></li><li><a class="active" href="10-arrays.html">10. Arrays</a></li><li><a href="11-tuples.html">11. Tuples</a></li><li><a href="12-enums.html">12. Enums</a></li><li><a href="13-type-aliases.html">13. Type aliases</a></li><li><a href="14-union-and-intersection-types.html">14. Union and intersection types</a></li><li><a href="15-functions.html">15. Functions</a></li><li><a href="16-rest-and-spread.html">16. Rest and spread</a></li><li><a href="17-function-types.html">17. Function types</a></li><li><a href="18-call-signatures.html">18. Call signatures</a></li><li><a href="19-function-overloading.html">19. Function overloading</a></li><li><a href="20-arrow-functions.html">20. Arrow functions</a></li><li><a href="21-object-types.html">21. Object types</a></li><li><a href="22-interfaces.html">22. Interfaces</a></li><li><a href="23-index-signatures.html">23. Index signatures</a></li><li><a href="24-type-narrowing.html">24. Type narrowing</a></li><li><a href="25-literal-types.html">25. Literal types</a></li><li><a href="26-mapped-types.html">26. Mapped types</a></li><li><a href="27-conditional-types.html">27. Conditional types</a></li><li><a href="28-utility-types.html">28. Utility types</a></li><li><a href="29-record-types.html">29. Record types</a></li><li><a href="30-generics.html">30. Generics</a></li><li><a href="31-classes-and-oop.html">31. Classes and OOP</a></li><li><a href="32-access-modifiers.html">32. Access modifiers</a></li><li><a href="33-abstract-classes-and-interfaces.html">33. Abstract classes and interfaces</a></li><li><a href="34-static-members.html">34. Static members</a></li><li><a href="35-getters-and-setters.html">35. Getters and setters</a></li><li><a href="36-modules-consumer.html">36. Modules: consumer</a></li><li><a href="37-modules-named-export.html">37. Modules: named export</a></li><li><a href="38-modules-class-import.html">38. Modules: class import</a></li><li><a href="39-modules-default-export.html">39. Modules: default export</a></li><li><a href="40-modules-utility-functions.html">40. Modules: utility functions</a></li><li><a href="41-namespaces.html">41. Namespaces</a></li><li><a href="42-decorators.html">42. Decorators</a></li><li><a href="43-promises.html">43. Promises</a></li><li><a href="44-typed-api-calls.html">44. Typed API calls</a></li></ul></div></aside>
+      <main class="content lesson">
+        <section class="hero"><h1>Arrays</h1><p>Use typed lists and common collection operations safely.</p></section>
+        <section class="lesson-section"><h2>How to Use This Page</h2><p>Read the explanation first. Try the sample yourself, then compare the type choices and comments. Change one value at a time and predict the result before running it.</p></section>
+        <section class="lesson-section"><h2>Examples</h2><div class="table-scroll"><table class="lesson-table"><thead><tr><th>Method Name</th><th>Explanation</th><th>Concrete Sample</th></tr></thead><tbody><tr><td><strong>Arrays</strong></td><td>Use typed lists and common collection operations safely.</td><td><pre><code>let user: string[] = [&quot;Manish&quot;,&quot;Kumar&quot;,&quot;Gupta&quot;];
+console.log(&#39;user joined:&#39;, user.join(&#39; &#39;));
+
+// Array methods reference
+const numbers: number[] = [10, 20, 90, 80, 50, 40, 60, 70, 30];
+console.log(&#39;numbers:&#39;, numbers); // TypeScript infers the type as number[]
+console.log(&#39;typeof numbers:&#39;, typeof numbers); // Arrays are objects in JavaScript
+
+// Static methods
+console.log(&#39;Array.from:&#39;, Array.from(&#39;123&#39;)); // Creates an array from an iterable or array-like value
+console.log(&#39;Array.isArray:&#39;, Array.isArray(numbers)); // Checks whether a value is an array
+console.log(&#39;Array.of:&#39;, Array.of(10, 20, 30)); // Creates an array from its arguments
+
+// Methods that read or search without changing the original array
+console.log(&#39;at:&#39;, numbers.at(2)); // Returns the item at an index; negative indexes count from the end
+console.log(&#39;concat:&#39;, numbers.concat([100, 110])); // Combines arrays or values into a new array
+console.log(&#39;entries:&#39;, [...numbers.entries()]); // Returns an iterator containing [index, value] pairs
+console.log(&#39;every:&#39;, numbers.every((number) =&gt; number &gt; 0)); // Checks whether every item passes a test
+console.log(&#39;find:&#39;, numbers.find((number) =&gt; number &gt; 75)); // Returns the first item that passes a test
+console.log(&#39;findIndex:&#39;, numbers.findIndex((number) =&gt; number &gt; 75)); // Returns the index of the first matching item
+console.log(&#39;findLast:&#39;, numbers.findLast((number) =&gt; number &gt; 75)); // Returns the last item that passes a test
+console.log(&#39;findLastIndex:&#39;, numbers.findLastIndex((number) =&gt; number &gt; 75)); // Returns the index of the last matching item
+console.log(&#39;includes:&#39;, numbers.includes(90)); // Checks whether an item exists in the array
+console.log(&#39;indexOf:&#39;, numbers.indexOf(90)); // Returns the first index of an item, or -1
+console.log(&#39;join:&#39;, numbers.join(&#39; - &#39;)); // Joins all items into a string using a separator
+console.log(&#39;keys:&#39;, [...numbers.keys()]); // Returns an iterator containing the array indexes
+console.log(&#39;lastIndexOf:&#39;, [10, 20, 10].lastIndexOf(10)); // Returns the last index of an item, or -1
+console.log(&#39;slice:&#39;, numbers.slice(1, 4)); // Copies part of an array into a new array
+console.log(&#39;some:&#39;, numbers.some((number) =&gt; number &gt; 85)); // Checks whether at least one item passes a test
+console.log(&#39;toString:&#39;, numbers.toString()); // Converts the array to a comma-separated string
+console.log(&#39;values:&#39;, [...numbers.values()]); // Returns an iterator containing the array values
+
+// Methods that transform an array and return a new array
+console.log(&#39;filter:&#39;, numbers.filter((number) =&gt; number &gt;= 50)); // Returns items that pass a test
+console.log(&#39;flat:&#39;, [1, [2, [3]]].flat(2)); // Flattens nested arrays by the specified depth
+console.log(&#39;map:&#39;, numbers.map((number) =&gt; number * 2)); // Creates a new array from transformed items
+console.log(&#39;toReversed:&#39;, numbers.toReversed()); // Returns a reversed copy without changing the original
+console.log(&#39;toSorted:&#39;, numbers.toSorted((first, second) =&gt; first - second)); // Returns a sorted copy without changing the original
+console.log(&#39;with:&#39;, numbers.with(0, 999)); // Returns a copy with one item replaced
+
+// Methods that execute a function or combine all items
+numbers.forEach((number, index) =&gt; console.log(`forEach [${index}]:`, number)); // Runs a function once for each item
+console.log(&#39;reduce:&#39;, numbers.reduce((total, number) =&gt; total + number, 0)); // Reduces all items to one value from left to right
+console.log(&#39;reduceRight:&#39;, [&#39;A&#39;, &#39;B&#39;, &#39;C&#39;].reduceRight((text, letter) =&gt; text + letter, &#39;&#39;)); // Reduces all items from right to left
+
+// Methods that change the original array
+const mutableNumbers = [3, 1, 2, 4];
+console.log(&#39;copyWithin:&#39;, mutableNumbers.copyWithin(0, 1)); // Copies part of an array to another position
+console.log(&#39;fill:&#39;, [1, 2, 3].fill(0, 1, 3)); // Replaces items with a value between start and end indexes
+console.log(&#39;pop:&#39;, mutableNumbers.pop()); // Removes and returns the last item
+mutableNumbers.push(4); // Adds one or more items to the end and returns the new length
+console.log(&#39;after push:&#39;, mutableNumbers);
+console.log(&#39;reverse:&#39;, mutableNumbers.reverse()); // Reverses the array in place
+console.log(&#39;mutableNumbers after reverse:&#39;, mutableNumbers); // Check the array after reversing
+console.log(&#39;shift:&#39;, mutableNumbers.shift()); // Removes and returns the first item
+mutableNumbers.unshift(9); // Adds one or more items to the beginning and returns the new length
+console.log(&#39;after unshift:&#39;, mutableNumbers);
+
+let mutliTypeArray: (number | string | boolean)[] = [1, &quot;two&quot;, true];
+console.log(&#39;mutliTypeArray:&#39;, mutliTypeArray); // Logs the array with multiple types
+console.log(&#39;mutliTypeArray values:&#39;, [...mutliTypeArray.values()]); // Logs the values of the array using the values() iterator
+console.log(&#39;type of mutliTypeArray:&#39;, typeof mutliTypeArray); // Logs the type of the array</code></pre></td></tr></tbody></table></div></section>
+        <nav class="lesson-nav"><a href="09-type-inference.html">Previous</a><a href="11-tuples.html">Next</a></nav>
+      </main>
+    </div>
+    <script src="../../../assets/app.js"></script>
+  </body>
+</html>
+

@@ -1,0 +1,63 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Numbers | TypeScript Exercise</title>
+    <link rel="stylesheet" href="../../../assets/styles.css" />
+    <style>
+      .lesson-table { width: 100%; border-collapse: collapse; min-width: 920px; }
+      .lesson-table th, .lesson-table td { border: 1px solid var(--line); padding: 1rem; vertical-align: top; text-align: left; }
+      .lesson-table th { background: var(--accent); color: #fff; }
+      .lesson-table td:first-child { width: 19%; color: var(--accent); }
+      .lesson-table td:nth-child(2) { width: 30%; line-height: 1.55; }
+      .lesson-table td:last-child { width: 51%; padding: 0; }
+      .lesson-table pre { margin: 0; border: 0; border-radius: 0; }
+      .table-scroll { overflow-x: auto; border: 1px solid var(--line); }
+      .lesson-nav { display: flex; justify-content: space-between; gap: 1rem; margin-top: 1.4rem; }
+    </style>  </head>
+  <body>
+    <header class="topbar"><a class="brand" href="../../../index.html">Playwright/TypeScript Training Hub</a><button class="menu-toggle" data-menu-toggle>Open Menu</button></header>
+    <div class="layout">
+      <aside class="sidebar" data-sidebar><h2>Exercise Deck</h2><div class="menu-group"><p class="menu-group-title">All Exercises</p><ul><li><a href="../10-practice-deck.html">Exercise Deck Home</a></li><li><a href="01-hello-unions-and-type-guards.html">1. Hello, unions, and type guards</a></li><li><a href="02-explicit-type-annotations.html">2. Explicit type annotations</a></li><li><a href="03-variables-and-scope.html">3. Variables and scope</a></li><li><a href="04-strings.html">4. Strings</a></li><li><a class="active" href="05-numbers.html">5. Numbers</a></li><li><a href="06-booleans.html">6. Booleans</a></li><li><a href="07-undefined-null-any-and-unknown.html">7. undefined, null, any, and unknown</a></li><li><a href="08-never-and-void.html">8. never and void</a></li><li><a href="09-type-inference.html">9. Type inference</a></li><li><a href="10-arrays.html">10. Arrays</a></li><li><a href="11-tuples.html">11. Tuples</a></li><li><a href="12-enums.html">12. Enums</a></li><li><a href="13-type-aliases.html">13. Type aliases</a></li><li><a href="14-union-and-intersection-types.html">14. Union and intersection types</a></li><li><a href="15-functions.html">15. Functions</a></li><li><a href="16-rest-and-spread.html">16. Rest and spread</a></li><li><a href="17-function-types.html">17. Function types</a></li><li><a href="18-call-signatures.html">18. Call signatures</a></li><li><a href="19-function-overloading.html">19. Function overloading</a></li><li><a href="20-arrow-functions.html">20. Arrow functions</a></li><li><a href="21-object-types.html">21. Object types</a></li><li><a href="22-interfaces.html">22. Interfaces</a></li><li><a href="23-index-signatures.html">23. Index signatures</a></li><li><a href="24-type-narrowing.html">24. Type narrowing</a></li><li><a href="25-literal-types.html">25. Literal types</a></li><li><a href="26-mapped-types.html">26. Mapped types</a></li><li><a href="27-conditional-types.html">27. Conditional types</a></li><li><a href="28-utility-types.html">28. Utility types</a></li><li><a href="29-record-types.html">29. Record types</a></li><li><a href="30-generics.html">30. Generics</a></li><li><a href="31-classes-and-oop.html">31. Classes and OOP</a></li><li><a href="32-access-modifiers.html">32. Access modifiers</a></li><li><a href="33-abstract-classes-and-interfaces.html">33. Abstract classes and interfaces</a></li><li><a href="34-static-members.html">34. Static members</a></li><li><a href="35-getters-and-setters.html">35. Getters and setters</a></li><li><a href="36-modules-consumer.html">36. Modules: consumer</a></li><li><a href="37-modules-named-export.html">37. Modules: named export</a></li><li><a href="38-modules-class-import.html">38. Modules: class import</a></li><li><a href="39-modules-default-export.html">39. Modules: default export</a></li><li><a href="40-modules-utility-functions.html">40. Modules: utility functions</a></li><li><a href="41-namespaces.html">41. Namespaces</a></li><li><a href="42-decorators.html">42. Decorators</a></li><li><a href="43-promises.html">43. Promises</a></li><li><a href="44-typed-api-calls.html">44. Typed API calls</a></li></ul></div></aside>
+      <main class="content lesson">
+        <section class="hero"><h1>Numbers</h1><p>Practice arithmetic, rounding, conversion, formatting, and useful Math helpers.</p></section>
+        <section class="lesson-section"><h2>How to Use This Page</h2><p>Read the explanation first. Try the sample yourself, then compare the type choices and comments. Change one value at a time and predict the result before running it.</p></section>
+        <section class="lesson-section"><h2>Examples</h2><div class="table-scroll"><table class="lesson-table"><thead><tr><th>Method Name</th><th>Explanation</th><th>Concrete Sample</th></tr></thead><tbody>
+        <tr><td><strong>Arithmetic operators</strong></td><td>Add, subtract, multiply, divide, find a remainder, or calculate powers.</td><td><pre><code>const total = 20 + 6;
+      const remainder = 20 % 6;
+      const squared = 6 ** 2;
+      console.log(total, remainder, squared); // 26 2 36</code></pre></td></tr>
+<tr><td><strong>Comparison operators</strong></td><td>Compare values and receive a boolean result.</td><td><pre><code>const retries = 2;
+const status = &quot;passed&quot;;
+const canRun = retries &lt; 3;
+const isEqual = status === &quot;passed&quot;;
+console.log(canRun, isEqual); // true true</code></pre></td></tr>
+<tr><td><strong>Math.round()</strong></td><td>Rounds to the nearest integer.</td><td><pre><code>const whole = Math.round(12.6); // 13</code></pre></td></tr>
+<tr><td><strong>Math.floor() / Math.ceil()</strong></td><td>Rounds down or up to the nearest integer.</td><td><pre><code>const lower = Math.floor(12.9); // 12\nconst higher = Math.ceil(12.1); // 13</code></pre></td></tr>
+<tr><td><strong>Math.trunc()</strong></td><td>Removes the decimal portion without rounding.</td><td><pre><code>const seconds = Math.trunc(12.9); // 12</code></pre></td></tr>
+<tr><td><strong>toFixed()</strong></td><td>Formats a number with a fixed number of decimal places and returns a string.</td><td><pre><code>const price = 12.5.toFixed(2); // &quot;12.50&quot;</code></pre></td></tr>
+<tr><td><strong>toPrecision()</strong></td><td>Formats to a number of significant digits and returns a string.</td><td><pre><code>const display = (1234.56).toPrecision(4); // &quot;1235&quot;</code></pre></td></tr>
+<tr><td><strong>Number()</strong></td><td>Converts an entire valid numeric string into a number.</td><td><pre><code>const port = Number(&quot;3000&quot;);</code></pre></td></tr>
+<tr><td><strong>parseInt() / parseFloat()</strong></td><td>Parses an integer or decimal from the beginning of a string.</td><td><pre><code>const count = parseInt(&quot;12 tests&quot;, 10);
+const rate = parseFloat(&quot;99.5%&quot;);
+console.log(count, rate); // 12 99.5</code></pre></td></tr>
+<tr><td><strong>Number.isNaN()</strong></td><td>Checks whether a value is the special NaN value.</td><td><pre><code>const invalid = Number.isNaN(Number(&quot;unknown&quot;)); // true</code></pre></td></tr>
+<tr><td><strong>Number.isInteger()</strong></td><td>Checks whether a number has no fractional part.</td><td><pre><code>const complete = Number.isInteger(42); // true</code></pre></td></tr>
+<tr><td><strong>toString(radix)</strong></td><td>Converts a number to text in binary, octal, or hexadecimal.</td><td><pre><code>const hex = (255).toString(16); // &quot;ff&quot;</code></pre></td></tr>
+<tr><td><strong>Math.max() / Math.min()</strong></td><td>Finds the largest or smallest value in a list.</td><td><pre><code>const fastest = Math.min(320, 180, 250); // 180</code></pre></td></tr>
+<tr><td><strong>Math.abs()</strong></td><td>Returns the positive magnitude of a number.</td><td><pre><code>const actual = 87;
+const expected = 100;
+const difference = Math.abs(actual - expected);
+console.log(difference); // 13</code></pre></td></tr>
+<tr><td><strong>Math.sqrt() / Math.cbrt()</strong></td><td>Calculates square and cube roots.</td><td><pre><code>const root = Math.sqrt(64); // 8</code></pre></td></tr>
+<tr><td><strong>Math.random()</strong></td><td>Returns a number from zero (inclusive) to one (exclusive).</td><td><pre><code>const sample = Math.random();</code></pre></td></tr></tbody></table></div></section>
+        <nav class="lesson-nav"><a href="04-strings.html">Previous</a><a href="06-booleans.html">Next</a></nav>
+      </main>
+    </div>
+    <script src="../../../assets/app.js"></script>
+  </body>
+</html>
+
+
+

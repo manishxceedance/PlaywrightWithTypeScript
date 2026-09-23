@@ -1,0 +1,93 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Promises | TypeScript Exercise</title>
+    <link rel="stylesheet" href="../../../assets/styles.css" />
+    <style>
+      .lesson-table { width: 100%; border-collapse: collapse; min-width: 920px; }
+      .lesson-table th, .lesson-table td { border: 1px solid var(--line); padding: 1rem; vertical-align: top; text-align: left; }
+      .lesson-table th { background: var(--accent); color: #fff; }
+      .lesson-table td:first-child { width: 19%; color: var(--accent); }
+      .lesson-table td:nth-child(2) { width: 30%; line-height: 1.55; }
+      .lesson-table td:last-child { width: 51%; padding: 0; }
+      .lesson-table pre { margin: 0; border: 0; border-radius: 0; }
+      .table-scroll { overflow-x: auto; border: 1px solid var(--line); }
+      .lesson-nav { display: flex; justify-content: space-between; gap: 1rem; margin-top: 1.4rem; }
+    </style>  </head>
+  <body>
+    <header class="topbar"><a class="brand" href="../../../index.html">Playwright/TypeScript Training Hub</a><button class="menu-toggle" data-menu-toggle>Open Menu</button></header>
+    <div class="layout">
+      <aside class="sidebar" data-sidebar><h2>Exercise Deck</h2><div class="menu-group"><p class="menu-group-title">All Exercises</p><ul><li><a href="../10-practice-deck.html">Exercise Deck Home</a></li><li><a href="01-hello-unions-and-type-guards.html">1. Hello, unions, and type guards</a></li><li><a href="02-explicit-type-annotations.html">2. Explicit type annotations</a></li><li><a href="03-variables-and-scope.html">3. Variables and scope</a></li><li><a href="04-strings.html">4. Strings</a></li><li><a href="05-numbers.html">5. Numbers</a></li><li><a href="06-booleans.html">6. Booleans</a></li><li><a href="07-undefined-null-any-and-unknown.html">7. undefined, null, any, and unknown</a></li><li><a href="08-never-and-void.html">8. never and void</a></li><li><a href="09-type-inference.html">9. Type inference</a></li><li><a href="10-arrays.html">10. Arrays</a></li><li><a href="11-tuples.html">11. Tuples</a></li><li><a href="12-enums.html">12. Enums</a></li><li><a href="13-type-aliases.html">13. Type aliases</a></li><li><a href="14-union-and-intersection-types.html">14. Union and intersection types</a></li><li><a href="15-functions.html">15. Functions</a></li><li><a href="16-rest-and-spread.html">16. Rest and spread</a></li><li><a href="17-function-types.html">17. Function types</a></li><li><a href="18-call-signatures.html">18. Call signatures</a></li><li><a href="19-function-overloading.html">19. Function overloading</a></li><li><a href="20-arrow-functions.html">20. Arrow functions</a></li><li><a href="21-object-types.html">21. Object types</a></li><li><a href="22-interfaces.html">22. Interfaces</a></li><li><a href="23-index-signatures.html">23. Index signatures</a></li><li><a href="24-type-narrowing.html">24. Type narrowing</a></li><li><a href="25-literal-types.html">25. Literal types</a></li><li><a href="26-mapped-types.html">26. Mapped types</a></li><li><a href="27-conditional-types.html">27. Conditional types</a></li><li><a href="28-utility-types.html">28. Utility types</a></li><li><a href="29-record-types.html">29. Record types</a></li><li><a href="30-generics.html">30. Generics</a></li><li><a href="31-classes-and-oop.html">31. Classes and OOP</a></li><li><a href="32-access-modifiers.html">32. Access modifiers</a></li><li><a href="33-abstract-classes-and-interfaces.html">33. Abstract classes and interfaces</a></li><li><a href="34-static-members.html">34. Static members</a></li><li><a href="35-getters-and-setters.html">35. Getters and setters</a></li><li><a href="36-modules-consumer.html">36. Modules: consumer</a></li><li><a href="37-modules-named-export.html">37. Modules: named export</a></li><li><a href="38-modules-class-import.html">38. Modules: class import</a></li><li><a href="39-modules-default-export.html">39. Modules: default export</a></li><li><a href="40-modules-utility-functions.html">40. Modules: utility functions</a></li><li><a href="41-namespaces.html">41. Namespaces</a></li><li><a href="42-decorators.html">42. Decorators</a></li><li><a class="active" href="43-promises.html">43. Promises</a></li><li><a href="44-typed-api-calls.html">44. Typed API calls</a></li></ul></div></aside>
+      <main class="content lesson">
+        <section class="hero"><h1>Promises</h1><p>Use Promise&lt;T&gt; to describe a value that becomes available asynchronously.</p></section>
+        <section class="lesson-section"><h2>How to Use This Page</h2><p>Read the explanation first. Try the sample yourself, then compare the type choices and comments. Change one value at a time and predict the result before running it.</p></section>
+        <section class="lesson-section"><h2>Examples</h2><div class="table-scroll"><table class="lesson-table"><thead><tr><th>Method Name</th><th>Explanation</th><th>Concrete Sample</th></tr></thead><tbody><tr><td><strong>Promises</strong></td><td>Use Promise&lt;T&gt; to describe a value that becomes available asynchronously.</td><td><pre><code>// //pending,fullfilled,rejected-
+// const msgPromise:Promise&lt;string&gt; = new Promise((resolve) =&gt; {
+//    setTimeout(() =&gt; {
+//        resolve(&quot;Promise fulfilled successfully&quot;);
+//    }, 5000);
+// });
+
+// async function usePromise() {
+//     const message = await msgPromise;
+//     console.log(message);
+// }
+// console.log(&quot;Promise created, waiting for fulfillment...&quot;);
+// usePromise();
+
+// // msgPromise
+// //     .then((message) =&gt; {
+// //         console.log(message);
+// //     })
+// //     .finally(() =&gt; {
+// //         console.log(&quot;Promise processing completed.&quot;);
+// //     });
+
+/**********************Promise with object******************************* */
+interface MessagePromise {
+    message: string;
+    timestamp: number;
+}
+
+function getMessagePromise(success: boolean): Promise&lt;MessagePromise&gt; {
+    return new Promise((resolve, reject) =&gt; {
+        if (!success) {
+            reject(new Error(&quot;Message Promise failed&quot;));
+        }
+        setTimeout(() =&gt; {
+            resolve({ message: &quot;Message Promise fulfilled successfully&quot;, timestamp: Date.now() });
+        }, 5000);
+    });
+}
+
+async function useMessagePromise(status: boolean) {
+    console.log(&quot;Getting message promise...&quot;);
+    try {
+        const r = await getMessagePromise(status);
+        console.log(r.message);
+        console.log(r.timestamp);
+    } catch (e: any) {
+        console.error(e.message);
+    } finally {
+        console.log(&quot;Message promise processing completed.&quot;);
+    }
+}
+
+(async () =&gt; {
+    await console.log(&quot;Starting message promise tests...&quot;);
+    await useMessagePromise(true);
+    await console.log(&quot;Testing message promise with failure...&quot;);
+    await useMessagePromise(false);
+    await console.log(&quot;Message promise tests completed.&quot;);
+})();
+
+</code></pre></td></tr></tbody></table></div></section>
+        <nav class="lesson-nav"><a href="42-decorators.html">Previous</a><a href="44-typed-api-calls.html">Next</a></nav>
+      </main>
+    </div>
+    <script src="../../../assets/app.js"></script>
+  </body>
+</html>
+

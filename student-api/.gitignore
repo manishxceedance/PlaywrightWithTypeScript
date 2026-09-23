@@ -1,5 +1,5 @@
 node_modules/
-student-api/data/
+data/
 .env
 .env.*
-ts/
+*.csv.lock

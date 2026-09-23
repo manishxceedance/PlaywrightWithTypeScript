@@ -1,0 +1,70 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TypeScript Exercise Deck</title>
+    <link rel="stylesheet" href="../../assets/styles.css" />
+    <style>
+      .lesson-table { width: 100%; border-collapse: collapse; min-width: 920px; }
+      .lesson-table th, .lesson-table td { border: 1px solid var(--line); padding: 1rem; vertical-align: top; text-align: left; }
+      .lesson-table th { background: var(--accent); color: #fff; }
+      .lesson-table td:first-child { width: 19%; color: var(--accent); }
+      .lesson-table td:nth-child(2) { width: 30%; line-height: 1.55; }
+      .lesson-table td:last-child { width: 51%; padding: 0; }
+      .lesson-table pre { margin: 0; border: 0; border-radius: 0; }
+      .table-scroll { overflow-x: auto; border: 1px solid var(--line); }
+      .lesson-nav { display: flex; justify-content: space-between; gap: 1rem; margin-top: 1.4rem; }
+    </style>  </head>
+  <body>
+    <header class="topbar"><a class="brand" href="../../index.html">Playwright/TypeScript Training Hub</a><button class="menu-toggle" data-menu-toggle>Open Menu</button></header>
+    <div class="layout">
+      <aside class="sidebar" data-sidebar><h2>Learning Menus</h2><div class="menu-group"><p class="menu-group-title">TypeScript</p><ul><li><a href="00-javascript-basics.html">0. JavaScript Basics</a></li><li><a href="01-introduction.html">1. Introduction and Setup</a></li><li><a href="02-types-and-unions.html">2. Types, Unions, and Narrowing</a></li><li><a href="03-functions-and-objects.html">3. Functions and Object Types</a></li><li><a href="04-interfaces-and-type-aliases.html">4. Interfaces and Type Aliases</a></li><li><a class="active" href="10-practice-deck.html">TypeScript Exercise Deck</a></li></ul></div></aside>
+      <main class="content lesson"><section class="hero"><h1>TypeScript Exercise Deck</h1><p>Choose one focused lesson per day. Each page explains a single TypeScript example with a concrete sample you can reproduce in your own editor.</p></section><section class="lesson-section"><h2>Learning Path</h2><div class="table-scroll"><table class="lesson-table"><thead><tr><th>Day</th><th>Topic</th><th>What You Will Practice</th><th>Lesson</th></tr></thead><tbody><tr><td>1</td><td><strong>Hello, unions, and type guards</strong></td><td>Use a union when a value may have one of two valid types, then use 	ypeof to make it safe.</td><td><a href="exercises/01-hello-unions-and-type-guards.html">Open lesson</a></td></tr>
+<tr><td>2</td><td><strong>Explicit type annotations</strong></td><td>Describe a user shape with a type alias and let TypeScript validate function input and output.</td><td><a href="exercises/02-explicit-type-annotations.html">Open lesson</a></td></tr>
+<tr><td>3</td><td><strong>Variables and scope</strong></td><td>Learn when to use const, let, and ar, then see how scope affects availability.</td><td><a href="exercises/03-variables-and-scope.html">Open lesson</a></td></tr>
+<tr><td>4</td><td><strong>Strings</strong></td><td>Practice the string operations used to clean, search, format, and extract text.</td><td><a href="exercises/04-strings.html">Open lesson</a></td></tr>
+<tr><td>5</td><td><strong>Numbers</strong></td><td>Practice arithmetic, rounding, conversion, formatting, and useful Math helpers.</td><td><a href="exercises/05-numbers.html">Open lesson</a></td></tr>
+<tr><td>6</td><td><strong>Booleans</strong></td><td>Build reliable conditions with comparisons, logical operators, conversion, and boolean-returning methods.</td><td><a href="exercises/06-booleans.html">Open lesson</a></td></tr>
+<tr><td>7</td><td><strong>undefined, null, any, and unknown</strong></td><td>Understand missing values and why unknown is safer than ny for unchecked input.</td><td><a href="exercises/07-undefined-null-any-and-unknown.html">Open lesson</a></td></tr>
+<tr><td>8</td><td><strong>never and void</strong></td><td>Separate functions that return no value from functions that never finish normally.</td><td><a href="exercises/08-never-and-void.html">Open lesson</a></td></tr>
+<tr><td>9</td><td><strong>Type inference</strong></td><td>See how TypeScript infers types and when an explicit annotation improves clarity.</td><td><a href="exercises/09-type-inference.html">Open lesson</a></td></tr>
+<tr><td>10</td><td><strong>Arrays</strong></td><td>Use typed lists and common collection operations safely.</td><td><a href="exercises/10-arrays.html">Open lesson</a></td></tr>
+<tr><td>11</td><td><strong>Tuples</strong></td><td>Use a fixed-position collection when each position has a different meaning.</td><td><a href="exercises/11-tuples.html">Open lesson</a></td></tr>
+<tr><td>12</td><td><strong>Enums</strong></td><td>Represent a closed set of named values with numeric and string enum members.</td><td><a href="exercises/12-enums.html">Open lesson</a></td></tr>
+<tr><td>13</td><td><strong>Type aliases</strong></td><td>Give reusable names to primitives, object shapes, and function signatures.</td><td><a href="exercises/13-type-aliases.html">Open lesson</a></td></tr>
+<tr><td>14</td><td><strong>Union and intersection types</strong></td><td>Use unions for alternatives and intersections when every contract must be satisfied.</td><td><a href="exercises/14-union-and-intersection-types.html">Open lesson</a></td></tr>
+<tr><td>15</td><td><strong>Functions</strong></td><td>Type parameters, return values, optional arguments, and default values.</td><td><a href="exercises/15-functions.html">Open lesson</a></td></tr>
+<tr><td>16</td><td><strong>Rest and spread</strong></td><td>Collect many arguments or expand and merge arrays and objects.</td><td><a href="exercises/16-rest-and-spread.html">Open lesson</a></td></tr>
+<tr><td>17</td><td><strong>Function types</strong></td><td>Treat a function as typed data that can be passed into another function.</td><td><a href="exercises/17-function-types.html">Open lesson</a></td></tr>
+<tr><td>18</td><td><strong>Call signatures</strong></td><td>Describe callable values that also have their own properties.</td><td><a href="exercises/18-call-signatures.html">Open lesson</a></td></tr>
+<tr><td>19</td><td><strong>Function overloading</strong></td><td>Support several call shapes while keeping one implementation.</td><td><a href="exercises/19-function-overloading.html">Open lesson</a></td></tr>
+<tr><td>20</td><td><strong>Arrow functions</strong></td><td>Write concise functions and understand their lexical 	his behavior.</td><td><a href="exercises/20-arrow-functions.html">Open lesson</a></td></tr>
+<tr><td>21</td><td><strong>Object types</strong></td><td>Model structured data with required, optional, and readonly properties.</td><td><a href="exercises/21-object-types.html">Open lesson</a></td></tr>
+<tr><td>22</td><td><strong>Interfaces</strong></td><td>Create object contracts that values and classes can follow.</td><td><a href="exercises/22-interfaces.html">Open lesson</a></td></tr>
+<tr><td>23</td><td><strong>Index signatures</strong></td><td>Type dictionary-like data when property names are discovered at runtime.</td><td><a href="exercises/23-index-signatures.html">Open lesson</a></td></tr>
+<tr><td>24</td><td><strong>Type narrowing</strong></td><td>Use checks and guards to safely work with broad input types.</td><td><a href="exercises/24-type-narrowing.html">Open lesson</a></td></tr>
+<tr><td>25</td><td><strong>Literal types</strong></td><td>Restrict a value to a precise set of allowed literals.</td><td><a href="exercises/25-literal-types.html">Open lesson</a></td></tr>
+<tr><td>26</td><td><strong>Mapped types</strong></td><td>Transform every property of an existing type without repeating its structure.</td><td><a href="exercises/26-mapped-types.html">Open lesson</a></td></tr>
+<tr><td>27</td><td><strong>Conditional types</strong></td><td>Choose a result type based on the input type.</td><td><a href="exercises/27-conditional-types.html">Open lesson</a></td></tr>
+<tr><td>28</td><td><strong>Utility types</strong></td><td>Apply standard helpers such as Partial, Pick, and Omit.</td><td><a href="exercises/28-utility-types.html">Open lesson</a></td></tr>
+<tr><td>29</td><td><strong>Record types</strong></td><td>Model a key-to-value map with consistent value types.</td><td><a href="exercises/29-record-types.html">Open lesson</a></td></tr>
+<tr><td>30</td><td><strong>Generics</strong></td><td>Preserve the caller&#39;s type while creating reusable functions.</td><td><a href="exercises/30-generics.html">Open lesson</a></td></tr>
+<tr><td>31</td><td><strong>Classes and OOP</strong></td><td>Use classes, constructors, inheritance, and polymorphism.</td><td><a href="exercises/31-classes-and-oop.html">Open lesson</a></td></tr>
+<tr><td>32</td><td><strong>Access modifiers</strong></td><td>Control class access with public, private, and protected members.</td><td><a href="exercises/32-access-modifiers.html">Open lesson</a></td></tr>
+<tr><td>33</td><td><strong>Abstract classes and interfaces</strong></td><td>Share base behavior while requiring subclasses to provide specific behavior.</td><td><a href="exercises/33-abstract-classes-and-interfaces.html">Open lesson</a></td></tr>
+<tr><td>34</td><td><strong>Static members</strong></td><td>Store shared utility behavior and state on a class rather than an instance.</td><td><a href="exercises/34-static-members.html">Open lesson</a></td></tr>
+<tr><td>35</td><td><strong>Getters and setters</strong></td><td>Validate or transform a value behind simple property syntax.</td><td><a href="exercises/35-getters-and-setters.html">Open lesson</a></td></tr>
+<tr><td>36</td><td><strong>Modules: consumer</strong></td><td>Combine imports to use APIs from several module files.</td><td><a href="exercises/36-modules-consumer.html">Open lesson</a></td></tr>
+<tr><td>37</td><td><strong>Modules: named export</strong></td><td>Export a named type or value for use in another file.</td><td><a href="exercises/37-modules-named-export.html">Open lesson</a></td></tr>
+<tr><td>38</td><td><strong>Modules: class import</strong></td><td>Import a class and keep responsibilities separated across files.</td><td><a href="exercises/38-modules-class-import.html">Open lesson</a></td></tr>
+<tr><td>39</td><td><strong>Modules: default export</strong></td><td>Export one primary value and import it with a meaningful local name.</td><td><a href="exercises/39-modules-default-export.html">Open lesson</a></td></tr>
+<tr><td>40</td><td><strong>Modules: utility functions</strong></td><td>Expose small reusable functions from a focused module.</td><td><a href="exercises/40-modules-utility-functions.html">Open lesson</a></td></tr>
+<tr><td>41</td><td><strong>Namespaces</strong></td><td>Recognize the namespace pattern and why modules are preferred in modern code.</td><td><a href="exercises/41-namespaces.html">Open lesson</a></td></tr>
+<tr><td>42</td><td><strong>Decorators</strong></td><td>Observe how a decorator can add behavior around a class or member.</td><td><a href="exercises/42-decorators.html">Open lesson</a></td></tr>
+<tr><td>43</td><td><strong>Promises</strong></td><td>Use Promise&lt;T&gt; to describe a value that becomes available asynchronously.</td><td><a href="exercises/43-promises.html">Open lesson</a></td></tr>
+<tr><td>44</td><td><strong>Typed API calls</strong></td><td>Describe response data so consumers know what an HTTP call returns.</td><td><a href="exercises/44-typed-api-calls.html">Open lesson</a></td></tr></tbody></table></div></section></main>
+    </div>
+    <script src="../../assets/app.js"></script>
+  </body>
+</html>
