@@ -23,6 +23,14 @@ function resolveMainHomeHref() {
     return '../../pages/playwright-api.html';
   }
 
+  if (/(^|\/)pages\/playwright-api\.html$/.test(path)) {
+    return 'playwright-api.html';
+  }
+
+  if (/(^|\/)pages\/kernal-api-step-reference\.html$/.test(path)) {
+    return 'playwright-api.html';
+  }
+
   const markers = ['lessons', 'pages'];
 
   for (const marker of markers) {
@@ -36,6 +44,20 @@ function resolveMainHomeHref() {
   }
 
   return 'index.html';
+}
+
+function syncBrandHomeLink() {
+  const brandLink = document.querySelector('.topbar .brand');
+  if (!brandLink) {
+    return;
+  }
+
+  const resolvedHomeHref = resolveMainHomeHref();
+  const currentHref = brandLink.getAttribute('href') || '';
+
+  if (!currentHref || currentHref === 'index.html' || currentHref === '../index.html' || currentHref === '../../index.html') {
+    brandLink.setAttribute('href', resolvedHomeHref);
+  }
 }
 
 function injectHomeButton() {
@@ -445,6 +467,7 @@ function normalizePlaywrightSidebar() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+  syncBrandHomeLink();
   injectHomeButton();
   normalizePlaywrightSidebar();
   toggleMenu();
